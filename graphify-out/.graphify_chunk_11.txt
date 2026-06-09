@@ -1,0 +1,25 @@
+/mnt/devssd/projects/PL PCP/cp-platform/docs/reference/changelog.md
+/mnt/devssd/projects/PL PCP/cp-platform/index.html
+/mnt/devssd/projects/PL PCP/cp-platform/mkdocs.yml
+/mnt/devssd/projects/PL PCP/cp-platform/requirements.txt
+/mnt/devssd/projects/PL PCP/cp-platform/site/404.html
+/mnt/devssd/projects/PL PCP/cp-platform/site/architecture/overview/index.html
+/mnt/devssd/projects/PL PCP/cp-platform/site/development/ci-cd/index.html
+/mnt/devssd/projects/PL PCP/cp-platform/site/development/security/index.html
+/mnt/devssd/projects/PL PCP/cp-platform/site/development/testing/index.html
+/mnt/devssd/projects/PL PCP/cp-platform/site/engineering/calculations/index.html
+/mnt/devssd/projects/PL PCP/cp-platform/site/engineering/formulas/index.html
+/mnt/devssd/projects/PL PCP/cp-platform/site/engineering/golden-datasets/index.html
+/mnt/devssd/projects/PL PCP/cp-platform/site/engineering/verification/index.html
+/mnt/devssd/projects/PL PCP/cp-platform/site/index.html
+/mnt/devssd/projects/PL PCP/cp-platform/site/reference/changelog/index.html
+/mnt/devssd/projects/PL PCP/docker-compose.yml
+/mnt/devssd/projects/PL PCP/graphify-out/converted/PCP Calculation sheet_b3459730.md
+/mnt/devssd/projects/PL PCP/Reference/CP2.pdf
+/mnt/devssd/projects/PL PCP/Reference/CP3.pdf
+/mnt/devssd/projects/PL PCP/Reference/CP4.pdf
+/mnt/devssd/projects/PL PCP/cp-platform/public/favicon.svg
+/mnt/devssd/projects/PL PCP/cp-platform/public/icons.svg
+/mnt/devssd/projects/PL PCP/cp-platform/site/assets/images/favicon.png
+/mnt/devssd/projects/PL PCP/cp-platform/src/assets/hero.png
+/mnt/devssd/projects/PL PCP/cp-platform/src/assets/react.svg

@@ -1,0 +1,105 @@
+site_name: CP Designer — Permanent ICCP Engineering Platform
+site_description: Engineering calculation platform for Impressed Current Cathodic Protection design
+site_author: Engineering Team
+site_url: https://your-org.github.io/PL_PCP/
+repo_url: https://github.com/your-org/PL_PCP
+repo_name: PL_PCP
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  palette:
+    primary: indigo
+    accent: blue
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.indexes
+    - navigation.top
+    - search.highlight
+    - search.share
+    - search.suggest
+    - content.code.copy
+    - content.tabs.link
+    - content.tooltips
+  icon:
+    repo: fontawesome/brands/github
+  language: en
+
+extra_css:
+  - stylesheets/extra.css
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.details
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - admonition
+  - footnotes
+  - toc:
+      permalink: true
+  - attr_list
+  - md_in_html
+
+plugins:
+  - search
+  - mermaid2:
+      version: 11.4.1
+      arguments:
+        theme: base
+        themeVariables:
+          primaryColor: "#3949ab"
+          primaryTextColor: "#fff"
+          primaryBorderColor: "#1a237e"
+          lineColor: "#3949ab"
+          fontSize: "14px"
+
+nav:
+  - Home: index.md
+  - Architecture:
+      - Overview: architecture/overview.md
+      - Architecture Review: ARCHITECTURE_REVIEW.md
+  - Engineering:
+      - Calculation Modules: engineering/calculations.md
+      - Formula Inventory: engineering/FORMULA_INVENTORY.md
+      - Engineering Assumptions: engineering/ENGINEERING_ASSUMPTIONS.md
+      - Calculation Flow: engineering/CALCULATION_FLOW.md
+      - Dependency Map: engineering/DEPENDENCY_MAP.md
+      - Excel Inventory: engineering/EXCEL_INVENTORY.md
+      - Formula Catalog: engineering/FORMULA_CATALOG.md
+      - Excel vs App Comparison: engineering/EXCEL_VS_APPLICATION.md
+      - Formula Optimization: engineering/FORMULA_OPTIMIZATION_REPORT.md
+      - Engineering Validation: engineering/ENGINEERING_VALIDATION_REPORT.md
+      - Missing Logic Audit: engineering/MISSING_LOGIC_REPORT.md
+      - Phase 8 Recommendations: engineering/PHASE8_RECOMMENDATIONS.md
+      - Verification Report: engineering/verification.md
+      - Golden Datasets: engineering/golden-datasets.md
+  - Performance & UX:
+      - Performance Report: PERFORMANCE_REPORT.md
+      - UI/UX Audit: UI_UX_AUDIT.md
+  - Development:
+      - Testing Strategy: development/testing.md
+      - CI/CD: development/ci-cd.md
+      - Security: development/security.md
+  - Reference:
+      - Changelog: reference/changelog.md
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/your-org/PL_PCP
+  version:
+    provider: mike

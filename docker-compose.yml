@@ -1,0 +1,30 @@
+version: "3.9"
+
+services:
+  cp-platform-dev:
+    build:
+      context: ./cp-platform
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+      - "8000:8000"
+    volumes:
+      - ./cp-platform:/workspace
+      - /workspace/node_modules
+    working_dir: /workspace
+    command: >
+      sh -c "npm ci --no-audit --no-fund &&
+             npx playwright install chromium --with-deps &&
+             pip install -r requirements.txt &&
+             npm run dev"
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=1
+
+  cp-platform-prod:
+    build:
+      context: ./cp-platform
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    restart: unless-stopped

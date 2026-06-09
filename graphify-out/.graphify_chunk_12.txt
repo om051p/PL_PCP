@@ -1,0 +1,1 @@
+/mnt/devssd/projects/PL PCP/cp-platform/src/assets/vite.svg

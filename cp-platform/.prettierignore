@@ -1,0 +1,12 @@
+dist/
+node_modules/
+coverage/
+.vite/
+.claude/
+.claude-flow/
+.gitnexus/
+*.md
+*.mdx
+CHANGELOG.*
+LICENSE
+package-lock.json

@@ -1,0 +1,37 @@
+{
+  "tasks": {
+    "task-1781031681056-1fl8yr": {
+      "taskId": "task-1781031681056-1fl8yr",
+      "type": "implementation",
+      "description": "Implement CSV BOM Export (ticket RPT-005) under src/reporting",
+      "priority": "normal",
+      "status": "in_progress",
+      "progress": 0,
+      "assignedTo": [
+        "coder-1"
+      ],
+      "tags": [],
+      "createdAt": "2026-06-09T19:01:21.056Z",
+      "startedAt": "2026-06-09T19:02:13.588Z",
+      "completedAt": null
+    },
+    "task-1781032003939-x6koqb": {
+      "taskId": "task-1781032003939-x6koqb",
+      "type": "hive-mind",
+      "description": "Implement CSV BOM Export (ticket RPT-005) under src/reporting",
+      "priority": "normal",
+      "status": "pending",
+      "progress": 0,
+      "assignedTo": [],
+      "tags": [
+        "hive-mind",
+        "consensus:none",
+        "timeout:undefineds"
+      ],
+      "createdAt": "2026-06-09T19:06:43.939Z",
+      "startedAt": null,
+      "completedAt": null
+    }
+  },
+  "version": "3.0.0"
+}

@@ -1,0 +1,16 @@
+node_modules/
+dist/
+site/
+dist-types/
+build/
+.vite/
+coverage/
+playwright-report/
+test-results/
+docs-site/
+.env
+.env.local
+.env.*.local
+*.log
+.DS_Store
+.gitnexus/

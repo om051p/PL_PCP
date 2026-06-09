@@ -1,0 +1,19 @@
+{
+  "agents": {
+    "agent-1781031719867-iqkt0j": {
+      "agentId": "agent-1781031719867-iqkt0j",
+      "agentType": "coder",
+      "status": "idle",
+      "health": 1,
+      "taskCount": 0,
+      "config": {
+        "provider": "anthropic",
+        "task": "task-1781031681056-1fl8yr"
+      },
+      "createdAt": "2026-06-09T19:01:59.873Z",
+      "model": "opus",
+      "modelRoutedBy": "router"
+    }
+  },
+  "version": "3.0.0"
+}

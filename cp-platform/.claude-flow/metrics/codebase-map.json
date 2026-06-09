@@ -1,0 +1,11 @@
+{
+  "timestamp": "2026-06-09T21:00:11.674Z",
+  "projectRoot": "/mnt/devssd/projects/PL PCP/cp-platform",
+  "structure": {
+    "hasPackageJson": true,
+    "hasTsConfig": true,
+    "hasClaudeConfig": true,
+    "hasClaudeFlow": true
+  },
+  "scannedAt": 1781038811674
+}
