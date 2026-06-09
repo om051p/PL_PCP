@@ -52,6 +52,11 @@
 | `MEMORY.md` | AI agent memory/persistence strategy | Tooling |
 | `CLAUDE.md` | Claude Code-specific rules and agent comms | Tooling |
 
+### Reference Documents
+| Document | Purpose | Priority |
+|----------|---------|----------|
+| `../PCP Calculation sheet.xlsx` | Source engineering workbook — original spreadsheet the app was built to match | Reference |
+
 ---
 
 ## Directory Map
@@ -75,7 +80,8 @@ cp-platform/
 ├── .claude/                # Ruflo AI agent config
 ├── .claude-flow/           # Ruflo runtime data
 ├── .gitnexus/              # GitNexus knowledge graph
-└── graphify-out/           # Graphify knowledge graph (when run)
+├── graphify-out/           # Graphify knowledge graph (when run)
+├── ../PCP Calculation sheet.xlsx   # Source engineering workbook (parent dir)
 ```
 
 ---
@@ -115,6 +121,7 @@ cp-platform/
 - [ ] Review `PRODUCT_REQUIREMENTS.md` — what we build
 - [ ] Review `FEATURE_TICKETS.md` — what's coming
 - [ ] Review `KNOWN_ISSUES.md` — what's broken
+- [ ] Open `../PCP Calculation sheet.xlsx` — source engineering workbook the app was built from
 
 ---
 

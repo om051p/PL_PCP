@@ -127,7 +127,22 @@ As a PM, I want multi-user collaboration so that my team can work simultaneously
 
 ---
 
-## 4. Out of Scope
+## 4. Reference Engineering Workbook
+
+The application was built to digitize and automate an existing engineering spreadsheet:
+
+| Field | Value |
+|-------|-------|
+| Path | `/workspaces/PL_PCP/PCP Calculation sheet.xlsx` (parent of `cp-platform/`) |
+| Description | Original engineering calculation workbook — the source-of-truth CP Designer was built to match |
+| Sheets | `Cal.(DW)` — Full pipeline/groundbed/TR/design-life calculations for 2 stations; `BOM-(DW)` — Deepwell Bill of Materials; `BOM-(HA)` — Hajar IPP Bill of Materials |
+| Standards | NACE SP0169, Dwight (1936), Sunde (1968), 17-SAMSS series |
+| Code mapping | `src/engine/modules/calculations.js` maps to `Cal.(DW)` rows; `src/engine/rules/bomEngine.js` maps to BOM sheets |
+| Usage | Reference when verifying calculation accuracy (±0.1% target) or adding new design modes |
+
+---
+
+## 5. Out of Scope
 
 | Feature | Rationale |
 |---------|-----------|
