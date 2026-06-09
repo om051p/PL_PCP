@@ -6,7 +6,6 @@
  */
 
 import { jsPDF } from 'jspdf'
-import { THRESHOLDS } from '../constants/index.js'
 
 // ─── Colour palette ───────────────────────────────────────────────────────────
 const C = {
@@ -31,7 +30,6 @@ const C = {
 const f2  = v => (v == null ? '—' : Number(v).toFixed(2))
 const f4  = v => (v == null ? '—' : Number(v).toFixed(4))
 const f1  = v => (v == null ? '—' : Number(v).toFixed(1))
-const fn  = v => (v == null ? '—' : String(v))
 
 function setFont(doc, size, style = 'normal', color = C.black) {
   doc.setFontSize(size)

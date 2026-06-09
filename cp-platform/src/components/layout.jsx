@@ -1,10 +1,9 @@
 import { useProjectStore } from '../store/projectStore.js'
-import { DESIGN_MODES, WORKFLOW_STATUS_MAP } from '../constants/index.js'
 import { StatusBadge } from '../components/ui.jsx'
 import {
   FolderOpen, Route, Zap, Layers, Cable, Cpu, ClipboardCheck,
-  List, FileText, Settings, ChevronLeft, ChevronRight,
-  Plus, Activity, AlertTriangle, CheckCircle2, RefreshCw, Upload
+  List, FileText, Activity, ChevronLeft, ChevronRight,
+  RefreshCw, Upload
 } from 'lucide-react'
 
 const NAV_ITEMS = [

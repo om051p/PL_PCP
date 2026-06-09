@@ -176,7 +176,7 @@ export function StatusBadge({ status, label }) {
 
 // ─── WorkflowStepper ─────────────────────────────────────────────────────────
 
-export function WorkflowStepper({ currentStatus, onAdvance }) {
+export function WorkflowStepper({ currentStatus }) {
   const STEPS = [
     { id: 'draft', label: 'Draft' },
     { id: 'input_complete', label: 'Input Complete' },

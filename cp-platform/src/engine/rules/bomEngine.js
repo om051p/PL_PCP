@@ -151,7 +151,7 @@ function bomRules_Deepwell(station, result) {
 
 // ─── Shallow Vertical Groundbed Rules ────────────────────────────────────────
 
-function bomRules_ShallowVertical(station, result) {
+function bomRules_ShallowVertical(station) {
   const N = station.proposedAnodes
   const gb = station.groundbed
   const items = []
@@ -184,7 +184,7 @@ function bomRules_ShallowVertical(station, result) {
 
 // ─── Cable Rules ──────────────────────────────────────────────────────────────
 
-function bomRules_Cables(station, result) {
+function bomRules_Cables(station) {
   const cb = station.cables
   const N = station.proposedAnodes
 
@@ -226,7 +226,7 @@ function bomRules_Cables(station, result) {
 
 // ─── Junction Box Rules ───────────────────────────────────────────────────────
 
-function bomRules_JunctionBoxes(station, result) {
+function bomRules_JunctionBoxes(station) {
   const N = station.proposedAnodes
   const boxSize = N <= 12 ? '12-terminal' : '20-terminal'
 
@@ -250,7 +250,7 @@ function bomRules_JunctionBoxes(station, result) {
 
 // ─── Test Station Rules ───────────────────────────────────────────────────────
 
-function bomRules_TestStation(station) {
+function bomRules_TestStation() {
   return [
     {
       tag: 'Test Station',
@@ -271,7 +271,7 @@ function bomRules_TestStation(station) {
 
 // ─── Miscellaneous Rules ──────────────────────────────────────────────────────
 
-function bomRules_Misc(station, result) {
+function bomRules_Misc(station) {
   const N = station.proposedAnodes
   return [
     {

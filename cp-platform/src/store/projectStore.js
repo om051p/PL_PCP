@@ -13,7 +13,7 @@ import { runStationCalculations } from '../engine/modules/calculations.js'
 import { runRules } from '../engine/rules/rulesEngine.js'
 import { generateAlternatives } from '../engine/optimizer/optimizer.js'
 import { generateBOM } from '../engine/rules/bomEngine.js'
-import { ANODE_SPECS, CABLE_SPECS, BOM_ALLOWED_STATUSES } from '../constants/index.js'
+import { ANODE_SPECS, BOM_ALLOWED_STATUSES } from '../constants/index.js'
 
 // ─── Default Factory Functions ────────────────────────────────────────────────
 

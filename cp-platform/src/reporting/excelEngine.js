@@ -6,7 +6,7 @@
 
 import * as XLSX from 'xlsx'
 import { v4 as uuid } from 'uuid'
-import { ANODE_SPECS, CABLE_SPECS } from '../constants/index.js'
+import { ANODE_SPECS } from '../constants/index.js'
 
 // ─── EXPORT ──────────────────────────────────────────────────────────────────
 

@@ -8,20 +8,20 @@
 import { useProjectStore } from '../store/projectStore.js'
 import {
   FieldInput, SelectField, ResultRow, CheckRow, InsightCard,
-  StatCard, SectionCard, WorkflowStepper, InfoBox, Divider, Grid2, Grid3, StatusBadge
+  StatCard, SectionCard, WorkflowStepper, InfoBox, Divider, Grid2, StatusBadge
 } from '../components/ui.jsx'
 import {
-  DESIGN_MODES, ANODE_SPECS, CABLE_SPECS, WORKFLOW_STATUSES,
-  WORKFLOW_STATUS_MAP, BOM_ALLOWED_STATUSES, getSoilClassification
+  DESIGN_MODES, ANODE_SPECS, CABLE_SPECS,
+  BOM_ALLOWED_STATUSES, getSoilClassification
 } from '../constants/index.js'
 import { generateBOM } from '../engine/rules/bomEngine.js'
 import { downloadEngineeringReport } from '../reporting/pdfGenerator.js'
 import { exportToExcel, importFromExcel } from '../reporting/excelEngine.js'
 import {
   Building2, Route, Zap, Layers, Cable, Cpu,
-  ClipboardCheck, List, FileText, Activity, Plus, Trash2,
-  ChevronDown, ChevronRight, CheckCircle2, XCircle, AlertTriangle,
-  TrendingUp, Download, BarChart3, FileSpreadsheet, Upload
+  List, FileText, Plus, Trash2,
+  CheckCircle2, XCircle, AlertTriangle,
+  Download, BarChart3, FileSpreadsheet, Upload
 } from 'lucide-react'
 import { useState, useRef } from 'react'
 
@@ -370,7 +370,6 @@ export function PageGroundbed() {
 export function PageCableResistance() {
   const station = useProjectStore(s => s.getActiveStation())
   const updateStation = useProjectStore(s => s.updateStation)
-  const calculateStation = useProjectStore(s => s.calculateStation)
   if (!station) return null
   const r = station.lastCalcResult
   const cb = station.cables
@@ -658,7 +657,6 @@ export function PageOptimizer() {
 
 export function PageBOM() {
   const stations = useProjectStore(s => s.project.stations)
-  const getBOM = useProjectStore(s => s.getBOMForStation)
   const projectStatus = useProjectStore(s => s.project.status)
 
   const canViewBOM = BOM_ALLOWED_STATUSES.includes(projectStatus) ||
@@ -851,7 +849,6 @@ export function PageReport() {
 // ─── PAGE: Import (Excel) ─────────────────────────────────────────────────────
 
 export function PageImport() {
-  const newProject = useProjectStore(s => s.newProject)
   const updateProject = useProjectStore(s => s.updateProject)
   const fileRef = useRef(null)
   const [status, setStatus] = useState(null)  // null | 'loading' | {errors, count}

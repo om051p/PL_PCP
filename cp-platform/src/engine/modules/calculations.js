@@ -54,10 +54,6 @@ export function calcCurrentRequirement(segments) {
   for (const seg of segments) {
     const area = calcSurfaceArea(seg.od, seg.lengthM)
     const iTemp = calcTempCorrectedCurrentDensity(seg.currentDensityBase, seg.opTempC)
-    const coatingFactor = 1 - (seg.coatingEfficiency ?? 0.98)
-    // Effective current needed = area × current density × coating factor (bare area fraction)
-    // For heavily coated pipe, coatingFactor approaches 0 (very little bare area)
-    // Standard practice: use base mA/m² without coating reduction for design conservatism
     const segCurrentA = (area * iTemp) / 1000   // mA → A
     totalAreaM2 += area
     totalCurrentA += segCurrentA
@@ -141,7 +137,7 @@ export function calcShallowVerticalGroundbedResistance(
 /**
  * Route groundbed resistance calculation based on design mode.
  */
-export function calcGroundbedResistance(groundbed, soilResistivityOhmCm, numAnodes, anodeSpec) {
+export function calcGroundbedResistance(groundbed, soilResistivityOhmCm, numAnodes) {
   const { type, startDepthM, anodeLengthM, anodeSpacingM, boreholeDiaM } = groundbed
 
   if (type === 'deepwell') {
@@ -291,7 +287,7 @@ export function runStationCalculations(station, systemDesignLifeYears) {
   const currentResult = calcCurrentRequirement(pipelineSegments)
 
   // 2. Groundbed resistance
-  const gbResult = calcGroundbedResistance(groundbed, soilResistivityOhmCm, proposedAnodes, anodeSpec)
+  const gbResult = calcGroundbedResistance(groundbed, soilResistivityOhmCm, proposedAnodes)
 
   // 3. Cable resistances
   const cableResult = calcCableResistances(cables, proposedAnodes)
