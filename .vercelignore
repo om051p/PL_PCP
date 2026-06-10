@@ -1,0 +1,41 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+.vite/
+coverage/
+test-results/
+playwright-report/
+docs-site/
+
+# Secrets & env
+.env
+.env.*
+firebase-service-account.json
+
+# Logs
+*.log
+firebase-debug.log
+
+# IDE & VCS
+.git/
+.gitnexus/
+.DS_Store
+.vscode/
+
+# AI agent metadata
+.hive-mind/
+.claude/
+.claude-flow/
+.swarm/
+graphify-out/
+
+# Other projects
+ila-earth-marketing/
+cp-platform-dist-only/
+Reference/
+
+# Draft files
+draft-*.md
