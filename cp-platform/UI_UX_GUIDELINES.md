@@ -1,7 +1,12 @@
 # UI/UX Design Guidelines
 
-**Version:** 1.0  
+**Version:** 1.1  
 **Framework:** React 19 + CSS Custom Properties  
+
+### v1.1 Changes (2026-06-10)
+- Dynamic formula display: `ResultRow` formula strings sourced from active standard config, not hardcoded.
+- Spare factor labels now reflect active standard (e.g., "+25% spare" vs "+30% spare").
+- `SelectField` and `FieldInput` use defensive null-safe label-to-id generation with `useId()` fallback.
 
 ---
 

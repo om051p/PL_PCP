@@ -11,6 +11,8 @@ docs-site/
 .env
 .env.local
 .env.*.local
+.env.seed
+firebase-service-account.json
 *.log
 .DS_Store
 .gitnexus/

@@ -1,0 +1,25 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Default: deny all access
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+
+    // User-specific upload directory
+    match /users/{userId}/{allPaths=**} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // User-specific project files — ownership via path userId
+    match /users/{userId}/projects/{projectId}/{allPaths=**} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Legacy project files directory (for backward compatibility)
+    match /projects/{projectId}/{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

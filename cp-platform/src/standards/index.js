@@ -18,6 +18,9 @@
 
 import SAUDI_ARAMCO from './saudiAramco.js'
 import NACE_SP0169 from './naceSP0169.js'
+import ISO_15589 from './iso15589.js'
+import PDO from './pdo.js'
+import ADNOC from './adnoc.js'
 
 /**
  * Registry of all available standards.
@@ -26,6 +29,9 @@ import NACE_SP0169 from './naceSP0169.js'
 const STANDARD_REGISTRY = {
   saudiAramco: SAUDI_ARAMCO,
   nace: NACE_SP0169,
+  iso15589: ISO_15589,
+  pdo: PDO,
+  adnoc: ADNOC,
 }
 
 /**
@@ -41,7 +47,7 @@ export const STANDARD_OPTIONS = Object.values(STANDARD_REGISTRY).map((s) => ({
  * Resolve a standard configuration by ID.
  * Falls back to Saudi Aramco (the default) if the ID is unknown.
  *
- * @param {string} standardId  - One of: 'saudiAramco', 'nace'
+ * @param {string} standardId  - One of: 'saudiAramco', 'nace', 'iso15589', 'pdo', 'adnoc'
  * @returns {object} Full standard configuration object
  */
 export function getStandard(standardId) {

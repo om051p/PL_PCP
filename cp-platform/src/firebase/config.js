@@ -1,0 +1,41 @@
+import { initializeApp } from 'firebase/app'
+import { getAuth, connectAuthEmulator } from 'firebase/auth'
+import { initializeAppCheck, ReCaptchaV3Provider } from 'firebase/app-check'
+
+const firebaseConfig = {
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+}
+
+let app = null
+let auth = null
+let appCheck = null
+
+try {
+  app = initializeApp(firebaseConfig)
+  auth = getAuth(app)
+
+  // Initialize App Check in production only
+  // Set VITE_RECAPTCHA_SITE_KEY in production to enable
+  // Requires reCAPTCHA v3 site key configured in Firebase Console
+  if (!import.meta.env.DEV && import.meta.env.VITE_RECAPTCHA_SITE_KEY) {
+    appCheck = initializeAppCheck(app, {
+      provider: new ReCaptchaV3Provider(import.meta.env.VITE_RECAPTCHA_SITE_KEY),
+      isTokenAutoRefreshEnabled: true,
+    })
+  }
+
+  if (import.meta.env.DEV && import.meta.env.VITE_FIREBASE_AUTH_EMULATOR) {
+    connectAuthEmulator(auth, import.meta.env.VITE_FIREBASE_AUTH_EMULATOR)
+  }
+} catch (err) {
+  console.error('[Firebase] Failed to initialize:', err.message)
+  console.error('[Firebase] Check that .env file exists with valid VITE_FIREBASE_* values')
+}
+
+// appCheck exported for future use when App Check enforcement is enabled
+export { app, auth, appCheck }

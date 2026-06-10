@@ -1,0 +1,435 @@
+{
+  "_metadata": {
+    "description": "Attenuation module sample datasets",
+    "source": "Reverse-engineered from BB-2 Shore to Berri attenuation.xlsx",
+    "version": "1.0.0",
+    "potentialConvention": "Positive magnitudes in mV vs Cu/CuSO4 (e.g. -850 mV CSE = 850)"
+  },
+
+  "datasets": {
+
+    "DS-001": {
+      "name": "BB-2 Shore to Berri — Four Stations (Reference / Spreadsheet Match)",
+      "description": "Exact parameters from the reference spreadsheet. Use to verify engine output against known spreadsheet values.",
+      "category": "reference",
+      "input": {
+        "pipe": {
+          "diameterInches": 30,
+          "wallThicknessInches": 1.27,
+          "totalLengthKm": 44,
+          "maxProtectionLengthKm": 25,
+          "steelResistivityMicroOhmCm": 18
+        },
+        "coating": {
+          "conductivityMicroSiemensPerM2": 300,
+          "soilResistivityOhmCm": 1000,
+          "currentDensityMaPerM2": 0.175
+        },
+        "potentials": {
+          "naturalMv": 550,
+          "drainPointMv": 1100,
+          "minimumMv": 1000
+        },
+        "stations": [
+          { "id": "CP3",  "positionKm": 44, "label": "CP#3 @ KM 44+635" },
+          { "id": "CP4",  "positionKm": 69, "label": "CP#4 KRT-122 @ KM 69+017" },
+          { "id": "CP5",  "positionKm": 73, "label": "CP#5 KRT-122 @ KM 73+300" },
+          { "id": "CP6",  "positionKm": 82, "label": "CP#6 KRT-131 @ KM 82+520" }
+        ],
+        "profileConfig": {
+          "startKm": 44,
+          "endKm": 89,
+          "stepKm": 1.0
+        }
+      },
+      "expectedIntermediates": {
+        "pipeSteelAreaM2":                0.07399102439772913,
+        "unitSurfaceAreaM2PerM":          2.3945065957239278,
+        "surfaceAreaToX_M2":             59862.664893098197,
+        "currentRequiredToX_A":          10.475966356292183,
+        "currentRequiredTotal_A":        18.437700787074245,
+        "unitPipeResistance_OhmPerM":     2.432727502628338e-6,
+        "coatingLeakageResistance_OhmM": 1392.0752355771112,
+        "alpha":                          4.1803763170231051e-5,
+        "deltaE0_V":                      0.55,
+        "deltaERequired_V":               0.45
+      },
+      "expectedCheckPoint": {
+        "checkPointKm":               25,
+        "deltaECalculated_V":          0.34425295624970809,
+        "potentialCalculated_mV":    894.25295624970813,
+        "criterionMet":              false,
+        "comment": "Single-station check point fails — requires combined station coverage"
+      },
+      "expectedProfileSamplePoints": [
+        { "km": 44, "combinedPotentialMv": 1960.55, "perStation_CP3_V": 1.1 },
+        { "km": 69, "combinedPotentialMv_approx": 2464.0 },
+        { "km": 82, "note": "Peak combined potential zone between CP5 and CP6" }
+      ]
+    },
+
+    "DS-002": {
+      "name": "Single Station — Mid-Pipeline",
+      "description": "Single CP station at the midpoint of a 20 km pipeline. Tests single-station attenuation decay in both directions.",
+      "category": "single_station",
+      "input": {
+        "pipe": {
+          "diameterInches": 16,
+          "wallThicknessInches": 0.75,
+          "totalLengthKm": 20,
+          "maxProtectionLengthKm": 10,
+          "steelResistivityMicroOhmCm": 18
+        },
+        "coating": {
+          "conductivityMicroSiemensPerM2": 150,
+          "soilResistivityOhmCm": 2000,
+          "currentDensityMaPerM2": 0.10
+        },
+        "potentials": {
+          "naturalMv": 550,
+          "drainPointMv": 1050,
+          "minimumMv": 850
+        },
+        "stations": [
+          { "id": "CP1", "positionKm": 10, "label": "Station A @ KM 10+000" }
+        ],
+        "profileConfig": {
+          "startKm": 0,
+          "endKm": 20,
+          "stepKm": 0.5
+        }
+      },
+      "notes": [
+        "Higher soil resistivity (2000 Ω·cm) → larger RL → smaller α → longer protection reach",
+        "Good coating (150 µS/m²) reduces current demand and extends reach",
+        "Single station symmetric decay — profile should be bell-shaped around KM 10"
+      ]
+    },
+
+    "DS-003": {
+      "name": "High Soil Resistivity — Long Reach",
+      "description": "High resistivity desert soil (5000 Ω·cm). Attenuation is very slow, giving excellent protection reach from a single station.",
+      "category": "high_resistivity",
+      "input": {
+        "pipe": {
+          "diameterInches": 24,
+          "wallThicknessInches": 0.875,
+          "totalLengthKm": 60,
+          "maxProtectionLengthKm": 30,
+          "steelResistivityMicroOhmCm": 18
+        },
+        "coating": {
+          "conductivityMicroSiemensPerM2": 100,
+          "soilResistivityOhmCm": 5000,
+          "currentDensityMaPerM2": 0.05
+        },
+        "potentials": {
+          "naturalMv": 550,
+          "drainPointMv": 1100,
+          "minimumMv": 850
+        },
+        "stations": [
+          { "id": "CP1", "positionKm": 0,  "label": "Station A @ KM 0+000" },
+          { "id": "CP2", "positionKm": 60, "label": "Station B @ KM 60+000" }
+        ],
+        "profileConfig": {
+          "startKm": 0,
+          "endKm": 60,
+          "stepKm": 1.0
+        }
+      },
+      "notes": [
+        "RL will be very high (~4700 Ω·m) → α will be very small → slow decay",
+        "Two end-of-pipe stations protect 60 km total",
+        "Expected protection reach from single station: >30 km"
+      ]
+    },
+
+    "DS-004": {
+      "name": "Low Soil Resistivity — Coastal / Swamp Soil",
+      "description": "Low resistivity coastal soil (200 Ω·cm). Attenuation is rapid — stations must be closely spaced.",
+      "category": "low_resistivity",
+      "input": {
+        "pipe": {
+          "diameterInches": 20,
+          "wallThicknessInches": 0.75,
+          "totalLengthKm": 30,
+          "maxProtectionLengthKm": 5,
+          "steelResistivityMicroOhmCm": 18
+        },
+        "coating": {
+          "conductivityMicroSiemensPerM2": 500,
+          "soilResistivityOhmCm": 200,
+          "currentDensityMaPerM2": 0.50
+        },
+        "potentials": {
+          "naturalMv": 550,
+          "drainPointMv": 1200,
+          "minimumMv": 850
+        },
+        "stations": [
+          { "id": "CP1", "positionKm": 0,  "label": "Station A @ KM 0" },
+          { "id": "CP2", "positionKm": 10, "label": "Station B @ KM 10" },
+          { "id": "CP3", "positionKm": 20, "label": "Station C @ KM 20" },
+          { "id": "CP4", "positionKm": 30, "label": "Station D @ KM 30" }
+        ],
+        "profileConfig": {
+          "startKm": 0,
+          "endKm": 30,
+          "stepKm": 0.5
+        }
+      },
+      "notes": [
+        "Damaged/poor coating (500 µS/m²) + low resistivity soil = high α",
+        "High current density (0.5 mA/m²) due to poor coating condition",
+        "Stations every 10 km needed to maintain −850 mV criterion",
+        "Drain point potential raised to 1200 mV to compensate for rapid decay"
+      ]
+    },
+
+    "DS-005": {
+      "name": "Long Pipeline — 150 km, Six Stations",
+      "description": "Long overland pipeline with six equally spaced CP stations. Tests superposition across a large km range.",
+      "category": "long_pipeline",
+      "input": {
+        "pipe": {
+          "diameterInches": 36,
+          "wallThicknessInches": 1.0,
+          "totalLengthKm": 150,
+          "maxProtectionLengthKm": 25,
+          "steelResistivityMicroOhmCm": 18
+        },
+        "coating": {
+          "conductivityMicroSiemensPerM2": 200,
+          "soilResistivityOhmCm": 3000,
+          "currentDensityMaPerM2": 0.08
+        },
+        "potentials": {
+          "naturalMv": 550,
+          "drainPointMv": 1100,
+          "minimumMv": 850
+        },
+        "stations": [
+          { "id": "CP1", "positionKm": 0,   "label": "Station A" },
+          { "id": "CP2", "positionKm": 30,  "label": "Station B" },
+          { "id": "CP3", "positionKm": 60,  "label": "Station C" },
+          { "id": "CP4", "positionKm": 90,  "label": "Station D" },
+          { "id": "CP5", "positionKm": 120, "label": "Station E" },
+          { "id": "CP6", "positionKm": 150, "label": "Station F" }
+        ],
+        "profileConfig": {
+          "startKm": 0,
+          "endKm": 150,
+          "stepKm": 1.0
+        }
+      },
+      "notes": [
+        "Good coating + moderate soil = moderate α",
+        "30 km spacing should be achievable with −850 mV criterion",
+        "Verify midpoint potentials at KM 15, 45, 75, 105, 135 are protected"
+      ]
+    },
+
+    "DS-006": {
+      "name": "Short Pipeline — 5 km, Single Station",
+      "description": "Short spur or terminal pipeline. Tests that protection easily covers the full length.",
+      "category": "short_pipeline",
+      "input": {
+        "pipe": {
+          "diameterInches": 8,
+          "wallThicknessInches": 0.5,
+          "totalLengthKm": 5,
+          "maxProtectionLengthKm": 5,
+          "steelResistivityMicroOhmCm": 18
+        },
+        "coating": {
+          "conductivityMicroSiemensPerM2": 200,
+          "soilResistivityOhmCm": 1500,
+          "currentDensityMaPerM2": 0.12
+        },
+        "potentials": {
+          "naturalMv": 550,
+          "drainPointMv": 1050,
+          "minimumMv": 850
+        },
+        "stations": [
+          { "id": "CP1", "positionKm": 0, "label": "End-of-line Station" }
+        ],
+        "profileConfig": {
+          "startKm": 0,
+          "endKm": 5,
+          "stepKm": 0.25
+        }
+      },
+      "notes": [
+        "Small diameter pipe — lower surface area per unit length",
+        "Single drain point at pipe origin",
+        "Entire 5 km should be well within protection reach",
+        "Profile step 0.25 km for better resolution on short pipeline"
+      ]
+    },
+
+    "DS-007": {
+      "name": "Marginal Design — Criterion Just Met",
+      "description": "Parameters tuned so the minimum potential at check point X is just at the criterion boundary. Tests boundary arithmetic and floating-point precision.",
+      "category": "boundary_test",
+      "input": {
+        "pipe": {
+          "diameterInches": 24,
+          "wallThicknessInches": 0.75,
+          "totalLengthKm": 40,
+          "maxProtectionLengthKm": 20,
+          "steelResistivityMicroOhmCm": 18
+        },
+        "coating": {
+          "conductivityMicroSiemensPerM2": 250,
+          "soilResistivityOhmCm": 1200,
+          "currentDensityMaPerM2": 0.15
+        },
+        "potentials": {
+          "naturalMv": 550,
+          "drainPointMv": 1100,
+          "minimumMv": 850
+        },
+        "stations": [
+          { "id": "CP1", "positionKm": 0, "label": "Station A" }
+        ],
+        "profileConfig": {
+          "startKm": 0,
+          "endKm": 40,
+          "stepKm": 1.0
+        }
+      },
+      "notes": [
+        "Use this to test the criterionMet boundary condition",
+        "Expected: potential at KM 20 is close to 850 mV",
+        "Adjust drainPointMv or minimumMv to straddle the boundary for pass/fail tests"
+      ]
+    },
+
+    "DS-008": {
+      "name": "New Coating — Low Current Demand",
+      "description": "Freshly coated pipeline with very good coating integrity. Tests low-current, long-reach scenario.",
+      "category": "new_coating",
+      "input": {
+        "pipe": {
+          "diameterInches": 30,
+          "wallThicknessInches": 1.0,
+          "totalLengthKm": 80,
+          "maxProtectionLengthKm": 40,
+          "steelResistivityMicroOhmCm": 18
+        },
+        "coating": {
+          "conductivityMicroSiemensPerM2": 50,
+          "soilResistivityOhmCm": 2000,
+          "currentDensityMaPerM2": 0.02
+        },
+        "potentials": {
+          "naturalMv": 550,
+          "drainPointMv": 1050,
+          "minimumMv": 850
+        },
+        "stations": [
+          { "id": "CP1", "positionKm": 0,  "label": "Station A" },
+          { "id": "CP2", "positionKm": 80, "label": "Station B" }
+        ],
+        "profileConfig": {
+          "startKm": 0,
+          "endKm": 80,
+          "stepKm": 1.0
+        }
+      },
+      "notes": [
+        "g = 50 µS/m² represents new or excellent FBE condition",
+        "Very low current density (0.02 mA/m²) — new coating requires little current",
+        "Two end-stations for 80 km pipeline",
+        "Expected: excellent coverage with very low α"
+      ]
+    },
+
+    "DS-009": {
+      "name": "Aggressive Environment — High Current Demand",
+      "description": "Highly corrosive environment (low resistivity, damaged coating). Maximum stress test for protection design.",
+      "category": "aggressive_environment",
+      "input": {
+        "pipe": {
+          "diameterInches": 12,
+          "wallThicknessInches": 0.5,
+          "totalLengthKm": 20,
+          "maxProtectionLengthKm": 3,
+          "steelResistivityMicroOhmCm": 18
+        },
+        "coating": {
+          "conductivityMicroSiemensPerM2": 2000,
+          "soilResistivityOhmCm": 100,
+          "currentDensityMaPerM2": 2.0
+        },
+        "potentials": {
+          "naturalMv": 600,
+          "drainPointMv": 1300,
+          "minimumMv": 1000
+        },
+        "stations": [
+          { "id": "CP1", "positionKm": 0,  "label": "A" },
+          { "id": "CP2", "positionKm": 5,  "label": "B" },
+          { "id": "CP3", "positionKm": 10, "label": "C" },
+          { "id": "CP4", "positionKm": 15, "label": "D" },
+          { "id": "CP5", "positionKm": 20, "label": "E" }
+        ],
+        "profileConfig": {
+          "startKm": 0,
+          "endKm": 20,
+          "stepKm": 0.25
+        }
+      },
+      "notes": [
+        "Very low soil resistivity (100 Ω·cm) — saline / waterlogged environment",
+        "Very high coating conductance (2000 µS/m²) — severely damaged coating",
+        "α will be very large — rapid potential decay",
+        "Close station spacing (5 km) required",
+        "Tests numerical stability near limits of cosh"
+      ]
+    },
+
+    "DS-010": {
+      "name": "Unequal Station Spacing",
+      "description": "Three stations with non-uniform spacing. Tests superposition with asymmetric geometry.",
+      "category": "multi_station",
+      "input": {
+        "pipe": {
+          "diameterInches": 20,
+          "wallThicknessInches": 0.625,
+          "totalLengthKm": 60,
+          "maxProtectionLengthKm": 20,
+          "steelResistivityMicroOhmCm": 18
+        },
+        "coating": {
+          "conductivityMicroSiemensPerM2": 250,
+          "soilResistivityOhmCm": 1500,
+          "currentDensityMaPerM2": 0.12
+        },
+        "potentials": {
+          "naturalMv": 550,
+          "drainPointMv": 1100,
+          "minimumMv": 850
+        },
+        "stations": [
+          { "id": "CP1", "positionKm": 0,  "label": "Station A @ KM 0" },
+          { "id": "CP2", "positionKm": 22, "label": "Station B @ KM 22 (asymmetric)" },
+          { "id": "CP3", "positionKm": 60, "label": "Station C @ KM 60" }
+        ],
+        "profileConfig": {
+          "startKm": 0,
+          "endKm": 60,
+          "stepKm": 1.0
+        }
+      },
+      "notes": [
+        "Station B is not at the midpoint — offset to left",
+        "Gap between A and B is 22 km; between B and C is 38 km",
+        "Expected: right segment (B→C) may show protection gap near midpoint KM 41",
+        "Use to verify superposition handles asymmetry correctly"
+      ]
+    }
+  }
+}

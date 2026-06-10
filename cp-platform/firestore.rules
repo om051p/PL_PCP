@@ -1,0 +1,40 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default: deny all access
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Users collection — read by owner, write restricted (admin creates via Console/Cloud Function)
+    match /users/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow create: if false;  // Admin creates via Firebase Console or Cloud Function
+      allow update: if request.auth != null && request.auth.uid == userId
+        // Prevent self-role-escalation: cannot change own role
+        && request.resource.data.role == resource.data.role;
+      allow delete: if false;  // Admin deletes via Firebase Console
+    }
+
+    // Projects collection - authenticated users only
+    match /projects/{projectId} {
+      // Users can only read/write their own projects
+      allow read: if request.auth != null && resource.data.userId == request.auth.uid;
+      allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
+      allow update: if request.auth != null && resource.data.userId == request.auth.uid;
+      allow delete: if request.auth != null && resource.data.userId == request.auth.uid;
+
+      // Subcollections — ownership enforced via parent project check
+      match /stations/{stationId} {
+        allow read, write: if request.auth != null
+          && get(/databases/$(database)/documents/projects/$(projectId)).data.userId == request.auth.uid;
+      }
+
+      match /revisions/{revisionId} {
+        allow read, write: if request.auth != null
+          && get(/databases/$(database)/documents/projects/$(projectId)).data.userId == request.auth.uid;
+      }
+    }
+  }
+}

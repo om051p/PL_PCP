@@ -2,6 +2,11 @@ import { Component, useState, useEffect } from 'react'
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { useProjectStore } from './store/projectStore.js'
 import { Sidebar, TopBar } from './components/layout.jsx'
+import { ProtectedRoute, PublicRoute, RoleRoute } from './components/ProtectedRoute.jsx'
+import { SessionTimeoutDialog } from './components/SessionTimeoutDialog.jsx'
+import { useSessionTimeout } from './hooks/useSessionTimeout.js'
+import { LoginPage } from './pages/LoginPage.jsx'
+import { ForgotPasswordPage } from './pages/ForgotPasswordPage.jsx'
 import {
   PageProjectSetup,
   PagePipeline,
@@ -14,7 +19,11 @@ import {
   PageBOM,
   PageReport,
   PageImport,
+  PageAttenuation,
 } from './pages/index.jsx'
+import PageDashboard from './pages/PageDashboard.jsx'
+import SettingsPage from './pages/SettingsPage.jsx'
+import UserManagementPage from './pages/UserManagementPage.jsx'
 
 class ErrorBoundary extends Component {
   constructor(props) {
@@ -81,11 +90,12 @@ function getInitialTheme() {
   return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
 }
 
-export default function App() {
+function AppShell() {
   const [collapsed, setCollapsed] = useState(false)
   const { pathname } = useLocation()
   const theme = useProjectStore((s) => s.ui.theme)
   const setTheme = useProjectStore((s) => s.setTheme)
+  const { showWarning, timeRemaining, staySignedIn } = useSessionTimeout()
 
   // Apply theme class on mount and on change
   useEffect(() => {
@@ -110,7 +120,9 @@ export default function App() {
     if (content) content.scrollTop = 0
   }, [pathname])
 
-  const stations = useProjectStore((s) => s.project.stations)
+  const getProject = useProjectStore((s) => s.getProject)
+  const project = getProject()
+  const stations = project?.stations || []
   const activeStationId = useProjectStore((s) => s.activeStationId)
   const setActiveStation = useProjectStore((s) => s.setActiveStation)
   if (!activeStationId && stations.length > 0) {
@@ -125,7 +137,8 @@ export default function App() {
         <main className="page-content">
           <ErrorBoundary>
             <Routes>
-              <Route path="/" element={<Navigate to="/project" replace />} />
+              <Route path="/" element={<Navigate to="/dashboard" replace />} />
+              <Route path="/dashboard" element={<PageDashboard />} />
               <Route path="/project" element={<PageProjectSetup />} />
               <Route path="/pipeline" element={<PagePipeline />} />
               <Route path="/current" element={<PageCurrentRequirement />} />
@@ -137,11 +150,39 @@ export default function App() {
               <Route path="/bom" element={<PageBOM />} />
               <Route path="/report" element={<PageReport />} />
               <Route path="/import" element={<PageImport />} />
-              <Route path="*" element={<Navigate to="/project" replace />} />
+              <Route path="/attenuation" element={<PageAttenuation />} />
+              <Route path="/settings" element={<RoleRoute requiredRole="admin"><SettingsPage /></RoleRoute>} />
+              <Route path="/users" element={<RoleRoute requiredRole="admin"><UserManagementPage /></RoleRoute>} />
+              <Route path="*" element={<Navigate to="/dashboard" replace />} />
             </Routes>
           </ErrorBoundary>
         </main>
       </div>
+      <SessionTimeoutDialog
+        show={showWarning}
+        timeRemaining={timeRemaining}
+        onStaySignedIn={staySignedIn}
+      />
     </div>
+  )
+}
+
+export default function App() {
+  return (
+    <Routes>
+      {/* Public routes — no sidebar/topbar */}
+      <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
+      <Route path="/forgot-password" element={<PublicRoute><ForgotPasswordPage /></PublicRoute>} />
+
+      {/* Protected routes — full app shell */}
+      <Route
+        path="/*"
+        element={
+          <ProtectedRoute>
+            <AppShell />
+          </ProtectedRoute>
+        }
+      />
+    </Routes>
   )
 }

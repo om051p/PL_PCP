@@ -1,0 +1,90 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  --color-bg: #070809;
+  --color-bg-surface: #0f1114;
+  --color-bg-elevated: #181b20;
+  --color-bg-card: rgba(15, 17, 20, 0.65);
+
+  --color-green: #00D26A;
+  --color-green-light: #00E676;
+  --color-green-dim: rgba(0, 210, 106, 0.12);
+  --color-green-glow: rgba(0, 210, 106, 0.35);
+
+  --color-text-primary: #E8ECF1;
+  --color-text-secondary: #8B949E;
+  --color-text-tertiary: #5B6572;
+
+  --color-border: rgba(255, 255, 255, 0.06);
+  --color-border-light: rgba(255, 255, 255, 0.10);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background-color: #00D26A;
+  color: #070809;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-bg-elevated);
+  border-radius: 3px;
+}
+
+.glass {
+  background: rgba(15, 17, 20, 0.65);
+  backdrop-filter: blur(16px) saturate(120%);
+  -webkit-backdrop-filter: blur(16px) saturate(120%);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.glow-green {
+  box-shadow: 0 0 40px rgba(0, 210, 106, 0.10), 0 0 80px rgba(0, 210, 106, 0.05);
+}
+
+.text-gradient-green {
+  background: linear-gradient(135deg, #00D26A, #00E676);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.section-label {
+  @apply text-xs font-semibold tracking-[0.15em] uppercase;
+}
+
+.section-title {
+  @apply text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight;
+}
+
+.text-balance {
+  text-wrap: balance;
+}

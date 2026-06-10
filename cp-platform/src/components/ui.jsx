@@ -3,7 +3,7 @@
  * Reusable, domain-agnostic engineering UI primitives.
  */
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useId } from 'react'
 import {
   ChevronDown,
   ChevronUp,
@@ -37,7 +37,8 @@ export function FieldInput({
   className = '',
   ariaLabel,
 }) {
-  const inputId = ((ariaLabel || label || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')) || 'field-input'
+  const generatedId = useId().replace(/[^a-z0-9]/g, '')
+  const inputId = ((ariaLabel || label || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')) || `field-input-${generatedId}`
   return (
     <div className={`field ${className}`}>
       {label && <label className="field-label" htmlFor={inputId}>{label}</label>}
@@ -77,7 +78,7 @@ export function FieldInput({
 // ─── SelectField ──────────────────────────────────────────────────────────────
 
 export function SelectField({ label, value, onChange, options, hint }) {
-  const selectId = (label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')) || 'select-field'
+  const selectId = ((label || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')) || 'select-field'
   return (
     <div className="field">
       <label className="field-label" htmlFor={selectId}>{label}</label>
@@ -379,6 +380,49 @@ export function ThemeToggle() {
       title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
     >
       {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
+    </button>
+  )
+}
+
+// ─── Dropdown ──────────────────────────────────────────────────────────────────
+
+export function Dropdown({ trigger, children }) {
+  const [open, setOpen] = useState(false)
+  const triggerRef = useRef(null)
+  const contentRef = useRef(null)
+
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (triggerRef.current && !triggerRef.current.contains(e.target)) {
+        if (contentRef.current && !contentRef.current.contains(e.target)) {
+          setOpen(false)
+        }
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+
+  return (
+    <div className="dropdown" ref={triggerRef}>
+      <div className="dropdown-trigger" onClick={() => setOpen(!open)}>{trigger}</div>
+      {open && (
+        <div className="dropdown-content" ref={contentRef}>{children}</div>
+      )}
+    </div>
+  )
+}
+
+export function DropdownItem({ children, onClick, icon, className = '' }) {
+  return (
+    <button
+      className={`dropdown-item ${className}`}
+      onClick={() => {
+        onClick?.()
+      }}
+    >
+      {icon && <span className="dropdown-item-icon">{icon}</span>}
+      <span>{children}</span>
     </button>
   )
 }

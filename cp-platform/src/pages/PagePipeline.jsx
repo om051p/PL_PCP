@@ -1,0 +1,190 @@
+/**
+ * PagePipeline.jsx
+ *
+ * Pipeline geometry, operating conditions, soil resistivity, and groundbed location.
+ */
+
+import { useProjectStore } from '../store/projectStore.js'
+import StationTabs from '../components/StationTabs.jsx'
+import {
+  FieldInput,
+  SelectField,
+  ResultRow,
+  SectionCard,
+  InfoBox,
+  Divider,
+  Grid2,
+} from '../components/ui.jsx'
+import { getSoilClassification } from '../constants/index.js'
+import { Route, Zap, Layers, Plus, Trash2 } from 'lucide-react'
+
+export function PagePipeline() {
+  const station = useProjectStore((s) => s.getActiveStation())
+  const updateStation = useProjectStore((s) => s.updateStation)
+  const updateSegment = useProjectStore((s) => s.updateSegment)
+  const addSegment = useProjectStore((s) => s.addSegment)
+  const removeSegment = useProjectStore((s) => s.removeSegment)
+
+  if (!station) return null
+  const soilClass = getSoilClassification(station.soilResistivityOhmCm)
+
+  return (
+    <div className="page">
+      <StationTabs />
+
+      {station.pipelineSegments.map((seg, idx) => {
+        const odM = (seg.od * 0.0254).toFixed(4)
+        const area = (Math.PI * seg.od * 0.0254 * seg.lengthM).toFixed(2)
+
+        return (
+          <div key={seg.id} className="segment-group" style={{ marginBottom: 32 }}>
+            <Divider
+              label={`Segment ${idx + 1}: ${seg.name}`}
+              action={
+                station.pipelineSegments.length > 1 && (
+                  <button
+                    className="btn btn-sm btn-icon-ghost"
+                    onClick={() => removeSegment(station.id, seg.id)}
+                    title="Remove segment"
+                  >
+                    <Trash2 size={14} />
+                  </button>
+                )
+              }
+            />
+            <Grid2>
+              <SectionCard title="Pipeline Geometry" icon={Route}>
+                <FieldInput
+                  label="Segment Name"
+                  value={seg.name}
+                  type="text"
+                  onChange={(v) => updateSegment(station.id, seg.id, { name: v })}
+                />
+                <Grid2>
+                  <FieldInput
+                    label="Outside Diameter"
+                    value={seg.od}
+                    unit="inches"
+                    hint={`= ${odM} m`}
+                    min={0}
+                    step={0.5}
+                    onChange={(v) => updateSegment(station.id, seg.id, { od: v })}
+                  />
+                  <FieldInput
+                    label="Wall Thickness"
+                    value={seg.wallThk}
+                    unit="inches"
+                    min={0}
+                    step={0.001}
+                    onChange={(v) => updateSegment(station.id, seg.id, { wallThk: v })}
+                  />
+                </Grid2>
+                <FieldInput
+                  label="Section Length"
+                  value={seg.lengthM}
+                  unit="m"
+                  min={0}
+                  onChange={(v) => updateSegment(station.id, seg.id, { lengthM: v })}
+                />
+                <div className="calc-preview">
+                  <ResultRow label="External Surface Area" symbol="A" value={area} unit="m²" />
+                </div>
+              </SectionCard>
+
+              <SectionCard title="Operating Conditions" icon={Zap}>
+                <FieldInput
+                  label="Operating Temperature"
+                  value={seg.opTempC}
+                  unit="°C"
+                  step={0.1}
+                  onChange={(v) => updateSegment(station.id, seg.id, { opTempC: v })}
+                />
+                <FieldInput
+                  label="Base Current Density @ 25°C"
+                  value={seg.currentDensityBase}
+                  unit="mA/m²"
+                  min={0}
+                  step={0.01}
+                  onChange={(v) => updateSegment(station.id, seg.id, { currentDensityBase: v })}
+                />
+                <SelectField
+                  label="Coating System"
+                  value={seg.coatingType}
+                  onChange={(v) => updateSegment(station.id, seg.id, { coatingType: v })}
+                  options={[
+                    { value: 'fusion_bonded_epoxy', label: 'Fusion Bonded Epoxy (FBE)' },
+                    { value: 'three_layer_polyethylene', label: '3-Layer Polyethylene (3LPE)' },
+                    { value: 'coal_tar_enamel', label: 'Coal Tar Enamel' },
+                    { value: 'bare', label: 'Bare Steel' },
+                  ]}
+                />
+              </SectionCard>
+            </Grid2>
+          </div>
+        )
+      })}
+
+      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 32 }}>
+        <button className="btn btn-secondary" onClick={() => addSegment(station.id)}>
+          <Plus size={14} /> Add Pipeline Segment
+        </button>
+      </div>
+
+      <Grid2>
+        <SectionCard title="Soil Conditions" icon={Layers}>
+          <FieldInput
+            label="Soil Resistivity (at anode depth)"
+            value={station.soilResistivityOhmCm}
+            unit="Ω·cm"
+            min={0}
+            onChange={(v) =>
+              updateStation(station.id, (s) => {
+                s.soilResistivityOhmCm = v
+              })
+            }
+          />
+          <div className="calc-preview">
+            <ResultRow label="Soil Classification" value={soilClass.label} />
+            <ResultRow label="Description" value={soilClass.description} />
+          </div>
+          {station.soilResistivityOhmCm > 10000 && (
+            <InfoBox type="warning">
+              High soil resistivity detected. Deepwell groundbed recommended.
+            </InfoBox>
+          )}
+        </SectionCard>
+
+        <SectionCard title="Groundbed Location" icon={Layers}>
+          <FieldInput
+            label="Actual Groundbed Distance to Pipeline"
+            value={station.actualRemotenesM}
+            unit="m"
+            min={0}
+            onChange={(v) =>
+              updateStation(station.id, (s) => {
+                s.actualRemotenesM = v
+              })
+            }
+          />
+          <FieldInput
+            label="Required Minimum Distance"
+            value={station.requiredRemotenesM}
+            unit="m"
+            min={0}
+            onChange={(v) =>
+              updateStation(station.id, (s) => {
+                s.requiredRemotenesM = v
+              })
+            }
+          />
+          {station.actualRemotenesM < station.requiredRemotenesM && (
+            <InfoBox type="error">
+              Groundbed is too close to pipeline. Minimum {station.requiredRemotenesM}m required.
+            </InfoBox>
+          )}
+        </SectionCard>
+      </Grid2>
+    </div>
+  )
+}
+

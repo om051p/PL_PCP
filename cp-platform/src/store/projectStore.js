@@ -1,7 +1,7 @@
 /**
  * PROJECT STORE
  * Zustand store with Immer for immutable state updates.
- * Single source of truth for all project and station data.
+ * Multi-project support: manages a collection of projects with an active project context.
  * Handles: project CRUD, station CRUD, calculations, workflow, revisions.
  */
 
@@ -45,12 +45,10 @@ function getInitialTheme() {
 }
 
 import { v4 as uuid } from 'uuid'
-import { runStationCalculations } from '../engine/modules/calculations.js'
-import { runRules } from '../engine/rules/rulesEngine.js'
-import { generateAlternatives } from '../engine/optimizer/optimizer.js'
-import { generateBOM } from '../engine/rules/bomEngine.js'
-import { ANODE_SPECS, BOM_ALLOWED_STATUSES, getActiveStandard } from '../constants/index.js'
-import { validateStation } from '../engine/modules/validation.js'
+import { ANODE_SPECS } from '../constants/index.js'
+import { runFullCalculation } from '../services/calculationService.js'
+import { generateStationBOM } from '../services/bomService.js'
+import { computeAttenuation } from '../services/attenuationService.js'
 
 // ─── Default Factory Functions ────────────────────────────────────────────────
 
@@ -115,7 +113,8 @@ export function makeDefaultStation(overrides = {}) {
   }
 }
 
-export function makeDefaultProject() {
+export function makeDefaultProject(overrides = {}) {
+  const now = new Date().toISOString()
   return {
     id: uuid(),
     projectNumber: 'ECP25-0292',
@@ -123,24 +122,123 @@ export function makeDefaultProject() {
     endClient: '-',
     projectName: 'PERMANENT CATHODIC PROTECTION DESIGN',
     designer: '',
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
+    createdAt: now,
+    updatedAt: now,
     status: 'draft',
     designStandard: 'saudiAramco',
     systemDesignLifeYears: 25,
     stations: [makeDefaultStation()],
     revisions: [],
     currentRevision: null,
+    archived: false,
+    ...overrides,
+  }
+}
+
+// ─── Migration: convert legacy single-project format to multi-project ────────
+
+function migrateLegacyState(state) {
+  // If the state already has a projects array, it's already migrated
+  if (Array.isArray(state.projects)) return state
+
+  // Legacy format: has a single `project` object
+  if (state.project && typeof state.project === 'object') {
+    const project = state.project
+    // Ensure the project has an archived field
+    if (typeof project.archived !== 'boolean') {
+      project.archived = false
+    }
+    return {
+      ...state,
+      projects: [project],
+      activeProjectId: project.id,
+      project: undefined,
+    }
+  }
+
+  // No project at all — create a fresh one
+  const fresh = makeDefaultProject()
+  return {
+    ...state,
+    projects: [fresh],
+    activeProjectId: fresh.id,
+    project: undefined,
   }
 }
 
 // ─── Store ────────────────────────────────────────────────────────────────────
 
+// ─── Export / Import ─────────────────────────────────────────────────────────
+
+const EXPORT_VERSION = 1
+
+/** Validate that an imported object has the minimum required project fields */
+function validateImportedProject(data) {
+  if (!data || typeof data !== 'object') return { valid: false, error: 'Invalid file format' }
+  if (!data.projectNumber || typeof data.projectNumber !== 'string')
+    return { valid: false, error: 'Missing or invalid project number' }
+  if (!Array.isArray(data.stations))
+    return { valid: false, error: 'Missing or invalid stations array' }
+  return { valid: true }
+}
+
+/** Export a single project as a downloadable JSON file */
+export function exportProjectAsJSON(projectId) {
+  const state = useProjectStore.getState()
+  const project = state.projects.find((p) => p.id === projectId)
+  if (!project) return
+
+  const payload = {
+    _format: 'cp-designer-project',
+    _version: EXPORT_VERSION,
+    _exportedAt: new Date().toISOString(),
+    project: JSON.parse(JSON.stringify(project)),
+  }
+
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = `${project.projectNumber.replace(/[^a-zA-Z0-9_-]/g, '_')}.cp-project.json`
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
+  URL.revokeObjectURL(url)
+}
+
+/** Import a project from a .cp-project.json file — returns { success, project?, error? } */
+export function parseImportedFile(fileContent) {
+  try {
+    const data = JSON.parse(fileContent)
+
+    // Handle both wrapped format (with _format header) and raw project JSON
+    const project = data._format === 'cp-designer-project' ? data.project : data
+
+    const validation = validateImportedProject(project)
+    if (!validation.valid) return { success: false, error: validation.error }
+
+    // Assign a new ID so it never collides with existing projects
+    project.id = uuid()
+    project.archived = false
+    project.updatedAt = new Date().toISOString()
+
+    // Give all stations new IDs to avoid collisions
+    project.stations.forEach((st) => {
+      st.id = uuid()
+    })
+
+    return { success: true, project }
+  } catch (e) {
+    return { success: false, error: `Failed to parse file: ${e.message}` }
+  }
+}
+
 export const useProjectStore = create(
   persist(
     immer((set, get) => ({
-      // ── State ──────────────────────────────────────────────────────────────
-      project: makeDefaultProject(),
+      // ── State (multi-project) ─────────────────────────────────────────────
+      projects: [makeDefaultProject()],
+      activeProjectId: null,
       activeStationId: null,
       ui: {
         sidebarCollapsed: false,
@@ -148,18 +246,141 @@ export const useProjectStore = create(
         theme: getInitialTheme(),
       },
 
-      // ── Project Actions ────────────────────────────────────────────────────
+      // ── Attenuation (per-project, stored in active project context) ──
+      attenuationInput: null,
+      attenuationResult: null,
+      attenuationDirty: false,
+
+      // ── Computed: current project ─────────────────────────────────────────
+
+      /** Returns the currently active project object */
+      getProject: () => {
+        const { projects, activeProjectId } = get()
+        return projects.find((p) => p.id === activeProjectId) || projects[0]
+      },
+
+      /** Import a validated project into the store and switch to it */
+      importProject: (project) =>
+        set((state) => {
+          state.projects.push(project)
+          state.activeProjectId = project.id
+          state.activeStationId = project.stations[0]?.id || null
+          state.attenuationInput = null
+          state.attenuationResult = null
+          state.attenuationDirty = false
+        }),
+
+      // ── Project Management Actions ────────────────────────────────────────
+
+      /** Switch to a different project */
+      switchProject: (projectId) =>
+        set((state) => {
+          const target = state.projects.find((p) => p.id === projectId)
+          if (!target) return
+          state.activeProjectId = projectId
+          state.activeStationId = target.stations[0]?.id || null
+          state.attenuationInput = null
+          state.attenuationResult = null
+          state.attenuationDirty = false
+        }),
+
+      /** Create a new project and switch to it */
+      createProject: (overrides = {}) =>
+        set((state) => {
+          const newProj = makeDefaultProject(overrides)
+          state.projects.push(newProj)
+          state.activeProjectId = newProj.id
+          state.activeStationId = newProj.stations[0].id
+          state.attenuationInput = null
+          state.attenuationResult = null
+          state.attenuationDirty = false
+        }),
+
+      /** Duplicate the current project (or any project by id) */
+      duplicateProject: (projectId) =>
+        set((state) => {
+          const source = state.projects.find((p) => p.id === projectId)
+          if (!source) return
+          const now = new Date().toISOString()
+          const duplicate = JSON.parse(JSON.stringify(source))
+          duplicate.id = uuid()
+          duplicate.projectNumber = `${source.projectNumber} (Copy)`
+          duplicate.projectName = `${source.projectName} — Copy`
+          duplicate.createdAt = now
+          duplicate.updatedAt = now
+          duplicate.revisions = []
+          duplicate.currentRevision = null
+          duplicate.archived = false
+          // Give stations new IDs
+          duplicate.stations.forEach((st) => {
+            st.id = uuid()
+            st.lastCalcResult = null
+            st.insights = []
+            st.alternatives = []
+          })
+          state.projects.push(duplicate)
+          state.activeProjectId = duplicate.id
+          state.activeStationId = duplicate.stations[0]?.id || null
+        }),
+
+      /** Archive a project (soft-delete) */
+      archiveProject: (projectId) =>
+        set((state) => {
+          const proj = state.projects.find((p) => p.id === projectId)
+          if (!proj) return
+          proj.archived = true
+          proj.updatedAt = new Date().toISOString()
+          // If we archived the active project, switch to the first non-archived one
+          if (state.activeProjectId === projectId) {
+            const next = state.projects.find((p) => !p.archived && p.id !== projectId)
+            if (next) {
+              state.activeProjectId = next.id
+              state.activeStationId = next.stations[0]?.id || null
+            }
+          }
+        }),
+
+      /** Unarchive a project */
+      unarchiveProject: (projectId) =>
+        set((state) => {
+          const proj = state.projects.find((p) => p.id === projectId)
+          if (!proj) return
+          proj.archived = false
+          proj.updatedAt = new Date().toISOString()
+        }),
+
+      /** Permanently delete a project */
+      deleteProject: (projectId) =>
+        set((state) => {
+          if (state.projects.length <= 1) return // Must keep at least one
+          state.projects = state.projects.filter((p) => p.id !== projectId)
+          if (state.activeProjectId === projectId) {
+            const next = state.projects.find((p) => !p.archived) || state.projects[0]
+            state.activeProjectId = next.id
+            state.activeStationId = next.stations[0]?.id || null
+          }
+        }),
+
+      /** Convenience: create a new project with default values */
+      newProject: () =>
+        set((state) => {
+          const proj = makeDefaultProject()
+          state.projects.push(proj)
+          state.activeProjectId = proj.id
+          state.activeStationId = proj.stations[0].id
+          state.attenuationInput = null
+          state.attenuationResult = null
+          state.attenuationDirty = false
+        }),
+
+      // ── Project Data Actions (operate on active project) ──────────────────
 
       updateProject: (fields) =>
         set((state) => {
-          Object.assign(state.project, fields)
-          state.project.updatedAt = new Date().toISOString()
-        }),
-
-      newProject: () =>
-        set((state) => {
-          state.project = makeDefaultProject()
-          state.activeStationId = state.project.stations[0].id
+          const proj = state.projects.find((p) => p.id === state.activeProjectId)
+          if (!proj) return
+          Object.assign(proj, fields)
+          proj.updatedAt = new Date().toISOString()
         }),
 
       // ── Station Actions ────────────────────────────────────────────────────
@@ -171,26 +392,32 @@ export const useProjectStore = create(
 
       addStation: () =>
         set((state) => {
-          const n = state.project.stations.length + 1
+          const proj = state.projects.find((p) => p.id === state.activeProjectId)
+          if (!proj) return
+          const n = proj.stations.length + 1
           const newStation = makeDefaultStation({ name: `ICCP Station-${n}` })
-          state.project.stations.push(newStation)
+          proj.stations.push(newStation)
           state.activeStationId = newStation.id
-          state.project.updatedAt = new Date().toISOString()
+          proj.updatedAt = new Date().toISOString()
         }),
 
       removeStation: (stationId) =>
         set((state) => {
-          if (state.project.stations.length <= 1) return
-          state.project.stations = state.project.stations.filter((s) => s.id !== stationId)
+          const proj = state.projects.find((p) => p.id === state.activeProjectId)
+          if (!proj) return
+          if (proj.stations.length <= 1) return
+          proj.stations = proj.stations.filter((s) => s.id !== stationId)
           if (state.activeStationId === stationId) {
-            state.activeStationId = state.project.stations[0].id
+            state.activeStationId = proj.stations[0].id
           }
-          state.project.updatedAt = new Date().toISOString()
+          proj.updatedAt = new Date().toISOString()
         }),
 
       updateStation: (stationId, updater) =>
         set((state) => {
-          const station = state.project.stations.find((s) => s.id === stationId)
+          const proj = state.projects.find((p) => p.id === state.activeProjectId)
+          if (!proj) return
+          const station = proj.stations.find((s) => s.id === stationId)
           if (!station) return
           if (typeof updater === 'function') {
             updater(station)
@@ -200,23 +427,27 @@ export const useProjectStore = create(
           // Mark as needing recalculation
           station.lastCalcResult = null
           station.status = station.status === 'draft' ? 'draft' : 'input_complete'
-          state.project.updatedAt = new Date().toISOString()
+          proj.updatedAt = new Date().toISOString()
         }),
 
       updateSegment: (stationId, segmentId, fields) =>
         set((state) => {
-          const station = state.project.stations.find((s) => s.id === stationId)
+          const proj = state.projects.find((p) => p.id === state.activeProjectId)
+          if (!proj) return
+          const station = proj.stations.find((s) => s.id === stationId)
           if (!station) return
           const seg = station.pipelineSegments.find((s) => s.id === segmentId)
           if (!seg) return
           Object.assign(seg, fields)
           station.lastCalcResult = null
-          state.project.updatedAt = new Date().toISOString()
+          proj.updatedAt = new Date().toISOString()
         }),
 
       addSegment: (stationId) =>
         set((state) => {
-          const station = state.project.stations.find((s) => s.id === stationId)
+          const proj = state.projects.find((p) => p.id === state.activeProjectId)
+          if (!proj) return
+          const station = proj.stations.find((s) => s.id === stationId)
           if (!station) return
           const segCount = station.pipelineSegments.length
           const lastSeg = station.pipelineSegments[segCount - 1]
@@ -233,133 +464,111 @@ export const useProjectStore = create(
           }
           station.pipelineSegments.push(newSeg)
           station.lastCalcResult = null
-          state.project.updatedAt = new Date().toISOString()
+          proj.updatedAt = new Date().toISOString()
         }),
 
       removeSegment: (stationId, segmentId) =>
         set((state) => {
-          const station = state.project.stations.find((s) => s.id === stationId)
+          const proj = state.projects.find((p) => p.id === state.activeProjectId)
+          if (!proj) return
+          const station = proj.stations.find((s) => s.id === stationId)
           if (!station) return
           if (station.pipelineSegments.length <= 1) return
           station.pipelineSegments = station.pipelineSegments.filter((s) => s.id !== segmentId)
           station.lastCalcResult = null
-          state.project.updatedAt = new Date().toISOString()
+          proj.updatedAt = new Date().toISOString()
         }),
 
       // ── Calculation Actions ────────────────────────────────────────────────
 
-      calculateStation: (stationId) =>
-        set((state) => {
-          const station = state.project.stations.find((s) => s.id === stationId)
-          if (!station) return
+      calculateStation: (stationId) => {
+        const proj = get().getProject()
+        if (!proj) return
+        const station = proj.stations.find((s) => s.id === stationId)
+        if (!station) return
 
-          // Validate inputs before running calculations
-          const validation = validateStation({
-            pipelineSegments: station.pipelineSegments,
-            groundbed: station.groundbed,
-            anodeSpec: station.anodeSpec,
-            proposedAnodes: station.proposedAnodes,
-            cables: station.cables,
-            tr: station.tr,
-            soilResistivityOhmCm: station.soilResistivityOhmCm,
-            actualRemotenesM: station.actualRemotenesM,
-            requiredRemotenesM: station.requiredRemotenesM,
-            designLifeYears: station.designLifeYears,
+        // Set loading indicator
+        set((state) => { state.ui.calculatingStationId = stationId })
+
+        try {
+          // Delegate to calculation service (pure business logic)
+          const calcResult = runFullCalculation(station, proj)
+
+          // Update state with results
+          set((state) => {
+            const p = state.projects.find((pp) => pp.id === state.activeProjectId)
+            if (!p) return
+            const st = p.stations.find((s) => s.id === stationId)
+            if (!st) return
+
+            if (!calcResult.success) {
+              st.validationErrors = calcResult.validationErrors
+              st.lastCalcResult = null
+              st.status = st.status === 'draft' ? 'draft' : 'input_complete'
+              p.updatedAt = new Date().toISOString()
+              return
+            }
+
+            st.validationErrors = null
+            st.lastCalcResult = calcResult.result
+            st.insights = calcResult.insights
+            st.alternatives = calcResult.alternatives
+            st.status = 'calculated'
+            p.updatedAt = new Date().toISOString()
           })
-
-          if (!validation.valid) {
-            station.validationErrors = validation.errors
-            station.lastCalcResult = null
-            station.status = station.status === 'draft' ? 'draft' : 'input_complete'
-            state.ui.calculatingStationId = null
-            state.project.updatedAt = new Date().toISOString()
-            return
-          }
-
-          // Clear any previous validation errors
-          station.validationErrors = null
-          state.ui.calculatingStationId = stationId
-
-          try {
-            const activeStandard = getActiveStandard(state.project)
-            const result = runStationCalculations(station, state.project.systemDesignLifeYears, activeStandard)
-            const { checks, insights, allPassed } = runRules(station, result, activeStandard)
-            const bom = state.project.status !== 'draft' ? generateBOM(station, result, activeStandard) : []
-            const alternatives = generateAlternatives(
-              station,
-              result,
-              state.project.systemDesignLifeYears,
-              activeStandard,
-            )
-
-            result.checks = checks
-            result.insights = insights
-            result.allChecksPassed = allPassed
-            result.bom = bom
-
-            station.lastCalcResult = result
-            station.insights = insights
-            station.alternatives = alternatives
-            station.status = 'calculated'
-          } finally {
-            state.ui.calculatingStationId = null
-          }
-
-          state.project.updatedAt = new Date().toISOString()
-        }),
+        } finally {
+          set((state) => { state.ui.calculatingStationId = null })
+        }
+      },
 
       calculateAllStations: () => {
-        const { project } = get()
-        project.stations.forEach((s) => {
+        const proj = get().getProject()
+        if (!proj) return
+        proj.stations.forEach((s) => {
           get().calculateStation(s.id)
         })
       },
 
       getBOMForStation: (stationId) => {
-        const { project } = get()
-        const station = project.stations.find((s) => s.id === stationId)
-        if (!station?.lastCalcResult) return []
-        if (
-          !BOM_ALLOWED_STATUSES.includes(project.status) &&
-          !BOM_ALLOWED_STATUSES.includes(station.status)
-        ) {
-          return {
-            locked: true,
-            reason: `BOM requires station status: Approved or Issued for Construction. Current: ${station.status}`,
-          }
-        }
-        return generateBOM(station, station.lastCalcResult)
+        const proj = get().getProject()
+        if (!proj) return []
+        const station = proj.stations.find((s) => s.id === stationId)
+        return generateStationBOM(station, proj)
       },
 
       // ── Workflow Actions ───────────────────────────────────────────────────
 
       advanceWorkflow: (stationId, newStatus, notes = '') =>
         set((state) => {
-          const station = state.project.stations.find((s) => s.id === stationId)
+          const proj = state.projects.find((p) => p.id === state.activeProjectId)
+          if (!proj) return
+          const station = proj.stations.find((s) => s.id === stationId)
           if (!station) return
           station.status = newStatus
           station.statusNotes = notes
           station.statusUpdatedAt = new Date().toISOString()
-          state.project.updatedAt = new Date().toISOString()
+          proj.updatedAt = new Date().toISOString()
         }),
 
       // ── Revision Actions ───────────────────────────────────────────────────
 
       createRevision: (description, createdBy = 'Engineer') =>
         set((state) => {
-          const revNum = `REV-${state.project.revisions.length}`
+          const proj = state.projects.find((p) => p.id === state.activeProjectId)
+          if (!proj) return
+          const revNum = `REV-${proj.revisions.length}`
           const revision = {
             id: uuid(),
             revNumber: revNum,
             description,
             createdAt: new Date().toISOString(),
             createdBy,
-            status: state.project.status,
-            snapshot: JSON.parse(JSON.stringify(state.project)),
+            status: proj.status,
+            snapshot: JSON.parse(JSON.stringify(proj)),
           }
-          state.project.revisions.push(revision)
-          state.project.currentRevision = revNum
-          state.project.updatedAt = new Date().toISOString()
+          proj.revisions.push(revision)
+          proj.currentRevision = revNum
+          proj.updatedAt = new Date().toISOString()
         }),
 
       // ── UI Actions ─────────────────────────────────────────────────────────
@@ -379,32 +588,127 @@ export const useProjectStore = create(
           state.ui.theme = state.ui.theme === 'light' ? 'dark' : 'light'
         }),
 
+      // ── Attenuation Actions ─────────────────────────────────────────────────
+
+      setAttenuationInput: (inputPatch) =>
+        set((state) => {
+          if (!state.attenuationInput) {
+            state.attenuationInput = inputPatch
+          } else {
+            Object.keys(inputPatch).forEach((key) => {
+              if (Array.isArray(inputPatch[key])) {
+                state.attenuationInput[key] = inputPatch[key]
+              } else if (typeof inputPatch[key] === 'object' && inputPatch[key] !== null) {
+                state.attenuationInput[key] = {
+                  ...state.attenuationInput[key],
+                  ...inputPatch[key],
+                }
+              } else {
+                state.attenuationInput[key] = inputPatch[key]
+              }
+            })
+          }
+          state.attenuationDirty = true
+        }),
+
+      replaceAttenuationInput: (input) =>
+        set((state) => {
+          state.attenuationInput = input
+          state.attenuationResult = null
+          state.attenuationDirty = true
+        }),
+
+      runAttenuationCalculation: () =>
+        set((state) => {
+          state.attenuationResult = computeAttenuation(state.attenuationInput)
+          state.attenuationDirty = false
+        }),
+
+      addAttenuationStation: (station) =>
+        set((state) => {
+          if (!state.attenuationInput) return
+          if (!state.attenuationInput.stations) {
+            state.attenuationInput.stations = []
+          }
+          state.attenuationInput.stations.push(station)
+          state.attenuationDirty = true
+        }),
+
+      removeAttenuationStation: (stationId) =>
+        set((state) => {
+          if (!state.attenuationInput?.stations) return
+          state.attenuationInput.stations = state.attenuationInput.stations.filter(
+            (s) => s.id !== stationId,
+          )
+          state.attenuationDirty = true
+        }),
+
+      updateAttenuationStation: (stationId, patch) =>
+        set((state) => {
+          if (!state.attenuationInput?.stations) return
+          const idx = state.attenuationInput.stations.findIndex((s) => s.id === stationId)
+          if (idx === -1) return
+          Object.assign(state.attenuationInput.stations[idx], patch)
+          state.attenuationDirty = true
+        }),
+
+      clearAttenuation: () =>
+        set((state) => {
+          state.attenuationInput = null
+          state.attenuationResult = null
+          state.attenuationDirty = false
+        }),
+
+      isAttenuationResultFresh: () => {
+        const state = get()
+        return state.attenuationResult?.success === true && state.attenuationDirty === false
+      },
+
+      getAttenuationProfile: () => {
+        return get().attenuationResult?.profile ?? []
+      },
+
+      getAttenuationSummary: () => {
+        return get().attenuationResult?.summary ?? null
+      },
+
       // ── Selectors (derived state) ──────────────────────────────────────────
 
       getActiveStation: () => {
-        const { project, activeStationId } = get()
-        return project.stations.find((s) => s.id === activeStationId) || project.stations[0]
+        const proj = get().getProject()
+        if (!proj) return null
+        return proj.stations.find((s) => s.id === get().activeStationId) || proj.stations[0]
       },
 
       getTotalValidationFailCount: () => {
-        const { project } = get()
-        return project.stations.reduce((acc, s) => {
+        const proj = get().getProject()
+        if (!proj) return 0
+        return proj.stations.reduce((acc, s) => {
           if (!s.lastCalcResult) return acc
           return acc + (s.lastCalcResult.checks || []).filter((c) => c.status === 'fail').length
         }, 0)
       },
 
       getAllStationsCalculated: () => {
-        const { project } = get()
-        return project.stations.every((s) => s.lastCalcResult !== null)
+        const proj = get().getProject()
+        if (!proj) return false
+        return proj.stations.every((s) => s.lastCalcResult !== null)
       },
     })),
     {
       name: 'cp-platform-project',
-      version: 1,
+      version: 3,
       storage: safeStorage,
+      // Migrate legacy single-project format to multi-project
+      migrate: migrateLegacyState,
       // Only persist project data, not transient UI state
-      partialize: (state) => ({ project: state.project, activeStationId: state.activeStationId }),
+      partialize: (state) => ({
+        projects: state.projects,
+        activeProjectId: state.activeProjectId,
+        activeStationId: state.activeStationId,
+        attenuationInput: state.attenuationInput,
+        attenuationResult: state.attenuationResult,
+      }),
     },
   ),
 )

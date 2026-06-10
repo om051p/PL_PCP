@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.1.1] — 2026-06-10
+
+### Fixed
+- Fixed `SelectField` crash when `label` prop is `undefined` or `null`.
+- Fixed hardcoded linear formula string in `PageCurrentRequirement` ResultRow; now reads formula dynamically from active standard config.
+- Fixed hardcoded `"30% spare"` labels in `PageCurrentRequirement` to reflect actual `spareFactor` from standard.
+- Added `useId()` fallback for unique `FieldInput` IDs when no label/ariaLabel provided, preventing duplicate DOM IDs.
+
+### Changed
+- `PageCurrentRequirement` now reads `spareFactor`, `temperatureCorrection.formula` from `getActiveStandard()` for accurate labeling.
+
 ## [1.1.0] — 2026-06-09
 
 ### Fixed
