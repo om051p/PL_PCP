@@ -1451,6 +1451,28 @@ body {
 .password-toggle:hover {
   color: var(--text-secondary);
 }
+.login-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin-top: 16px;
+  font-size: 12px;
+}
+.login-link-separator {
+  color: var(--text-tertiary);
+}
+.login-link-text {
+  color: var(--text-tertiary);
+}
+.login-forgot-link {
+  color: var(--brand-mid);
+  text-decoration: none;
+  font-weight: 500;
+}
+.login-forgot-link:hover {
+  text-decoration: underline;
+}
 .login-submit {
   margin-top: 8px;
   padding: 10px 16px;

@@ -3,11 +3,12 @@ import { persist } from 'zustand/middleware'
 import { immer } from 'zustand/middleware/immer'
 import {
   signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
   sendPasswordResetEmail,
 } from 'firebase/auth'
-import { getFirestore, doc, getDoc } from 'firebase/firestore'
+import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore'
 import { auth } from '../firebase/config.js'
 import { mapFirebaseError } from '../config/errorMessages.js'
 import { validateUserDomain, DOMAIN_RESTRICTION_MESSAGE, DEFAULT_ROLE, DEACTIVATION_MESSAGE } from '../config/authPolicy.js'
@@ -120,6 +121,58 @@ export const useAuthStore = create()(
           })
         } catch (err) {
           const message = err instanceof Error ? err.message : 'Login failed'
+          set((state) => {
+            state.loading = false
+            state.error = message
+          })
+          throw err
+        }
+      },
+
+      register: async (email, password) => {
+        if (!auth) throw new Error('Firebase is not configured. Check your .env file.')
+        set((state) => {
+          state.loading = true
+          state.error = null
+        })
+        try {
+          // Validate email domain BEFORE creating the Firebase account
+          const domainCheck = validateUserDomain({ email })
+          if (!domainCheck.allowed) {
+            set((state) => {
+              state.loading = false
+              state.error = domainCheck.reason || DOMAIN_RESTRICTION_MESSAGE
+            })
+            throw new Error(domainCheck.reason || DOMAIN_RESTRICTION_MESSAGE)
+          }
+
+          const userCredential = await createUserWithEmailAndPassword(auth, email, password).catch((err) => {
+            throw new Error(mapFirebaseError(err))
+          })
+
+          // Create user profile in Firestore with default role
+          try {
+            const db = getFirestore()
+            await setDoc(doc(db, 'users', userCredential.user.uid), {
+              email: userCredential.user.email,
+              role: DEFAULT_ROLE,
+              isActive: true,
+              createdAt: new Date().toISOString(),
+            })
+          } catch (firestoreErr) {
+            console.warn('[Auth] Could not create user profile in Firestore:', firestoreErr.message)
+            // Account created in Firebase Auth; Firestore profile can be created later
+          }
+
+          const user = mapFirebaseUser(userCredential.user, DEFAULT_ROLE, true)
+
+          set((state) => {
+            state.user = user
+            state.loading = false
+            state.error = null
+          })
+        } catch (err) {
+          const message = err instanceof Error ? err.message : 'Registration failed'
           set((state) => {
             state.loading = false
             state.error = message

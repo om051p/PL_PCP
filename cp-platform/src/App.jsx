@@ -7,6 +7,7 @@ import { SessionTimeoutDialog } from './components/SessionTimeoutDialog.jsx'
 import { useSessionTimeout } from './hooks/useSessionTimeout.js'
 import { LoginPage } from './pages/LoginPage.jsx'
 import { ForgotPasswordPage } from './pages/ForgotPasswordPage.jsx'
+import { RegisterPage } from './pages/RegisterPage.jsx'
 import {
   PageProjectSetup,
   PagePipeline,
@@ -173,6 +174,7 @@ export default function App() {
       {/* Public routes — no sidebar/topbar */}
       <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
       <Route path="/forgot-password" element={<PublicRoute><ForgotPasswordPage /></PublicRoute>} />
+      <Route path="/register" element={<PublicRoute><RegisterPage /></PublicRoute>} />
 
       {/* Protected routes — full app shell */}
       <Route

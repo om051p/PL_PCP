@@ -1,23 +1,27 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useLocation, Link } from 'react-router-dom'
-import { Lock, AlertCircle, Eye, EyeOff, Loader2, Zap } from 'lucide-react'
+import { Lock, AlertCircle, Eye, EyeOff, Loader2, Zap, UserPlus } from 'lucide-react'
 import { useAuthStore } from '../store/authStore.js'
 import { useRateLimit } from '../hooks/useRateLimit.js'
 import { AUTH_ALLOWED_DOMAINS } from '../config/authPolicy.js'
 
-
-export function LoginPage() {
+export function RegisterPage() {
   const navigate = useNavigate()
   const location = useLocation()
-  const { login, loading, error, clearError } = useAuthStore()
+  const { register, loading, error, clearError } = useAuthStore()
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [localError, setLocalError] = useState('')
 
   const from = location.state?.from?.pathname || '/project'
-  const { isRateLimited, recordAttempt, attemptsRemaining, cooldownRemaining } = useRateLimit({ maxAttempts: 5, windowMs: 5 * 60 * 1000, cooldownMs: 60 * 1000 })
+  const { isRateLimited, recordAttempt, attemptsRemaining, cooldownRemaining } = useRateLimit({
+    maxAttempts: 5,
+    windowMs: 5 * 60 * 1000,
+    cooldownMs: 60 * 1000,
+  })
 
   useEffect(() => {
     if (error) {
@@ -30,18 +34,28 @@ export function LoginPage() {
     e.preventDefault()
     setLocalError('')
 
-    if (!email || !password) {
-      setLocalError('Please enter both email and password')
+    if (!email || !password || !confirmPassword) {
+      setLocalError('Please fill in all fields')
+      return
+    }
+
+    if (password.length < 8) {
+      setLocalError('Password must be at least 8 characters')
+      return
+    }
+
+    if (password !== confirmPassword) {
+      setLocalError('Passwords do not match')
       return
     }
 
     if (isRateLimited()) {
-      setLocalError(`Too many failed attempts. Please try again in ${cooldownRemaining}s.`)
+      setLocalError(`Too many attempts. Please try again in ${cooldownRemaining}s.`)
       return
     }
 
     try {
-      await login(email, password)
+      await register(email, password)
       navigate(from, { replace: true })
     } catch {
       recordAttempt()
@@ -54,10 +68,10 @@ export function LoginPage() {
         <div className="login-card">
           <div className="login-header">
             <div className="login-logo">
-              <Zap size={32} className="login-icon" />
+              <UserPlus size={32} className="login-icon" />
             </div>
-            <h1 className="login-title">CP Designer</h1>
-            <p className="login-subtitle">ICCP Engineering Platform</p>
+            <h1 className="login-title">Create Account</h1>
+            <p className="login-subtitle">Join the ICCP Engineering Platform</p>
           </div>
 
           {localError && (
@@ -96,8 +110,8 @@ export function LoginPage() {
                   className="field-input"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  autoComplete="current-password"
+                  placeholder="Min. 8 characters"
+                  autoComplete="new-password"
                   disabled={loading}
                   required
                 />
@@ -112,8 +126,36 @@ export function LoginPage() {
               </div>
             </div>
 
-            <button type="submit" className="btn btn-primary login-submit" disabled={loading || cooldownRemaining > 0}>
-              {loading ? <Loader2 size={18} className="spin" /> : cooldownRemaining > 0 ? `Try again in ${cooldownRemaining}s` : 'Sign In'}
+            <div className="form-group">
+              <label className="field-label" htmlFor="confirm-password">Confirm Password</label>
+              <div className="input-wrapper">
+                <Lock size={18} className="input-icon" />
+                <input
+                  id="confirm-password"
+                  type={showPassword ? 'text' : 'password'}
+                  className="field-input"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="Re-enter password"
+                  autoComplete="new-password"
+                  disabled={loading}
+                  required
+                />
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              className="btn btn-primary login-submit"
+              disabled={loading || cooldownRemaining > 0}
+            >
+              {loading ? (
+                <Loader2 size={18} className="spin" />
+              ) : cooldownRemaining > 0 ? (
+                `Try again in ${cooldownRemaining}s`
+              ) : (
+                'Create Account'
+              )}
             </button>
             {!loading && attemptsRemaining < 5 && attemptsRemaining > 0 && (
               <div className="rate-limit-warning" style={{ fontSize: '0.75rem', color: 'var(--warn)', marginTop: '0.25rem' }}>
@@ -123,17 +165,14 @@ export function LoginPage() {
           </form>
 
           <div className="login-links">
-            <Link to="/forgot-password" className="login-forgot-link">
-              Forgot password?
-            </Link>
-            <span className="login-link-separator"> · </span>
-            <Link to="/register" className="login-forgot-link">
-              Create Account
+            <span className="login-link-text">Already have an account?</span>{' '}
+            <Link to="/login" className="login-forgot-link">
+              Sign In
             </Link>
           </div>
 
           <div className="login-footer">
-            <p>IKK Group accounts only · {AUTH_ALLOWED_DOMAINS.length > 0 ? AUTH_ALLOWED_DOMAINS.join(', ') : 'Contact admin'}</p>
+            <p>{AUTH_ALLOWED_DOMAINS.length > 0 ? `${AUTH_ALLOWED_DOMAINS.join(', ')} accounts` : 'Contact admin for access'}</p>
           </div>
         </div>
 
@@ -155,4 +194,3 @@ export function LoginPage() {
     </div>
   )
 }
-
