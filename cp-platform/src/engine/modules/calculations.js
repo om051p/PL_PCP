@@ -456,6 +456,7 @@ export function runStationCalculations(station, systemDesignLifeYears, standardC
   const structureResistance = project?.structure_resistance_ohm !== undefined ? project.structure_resistance_ohm : tr.structureResistance
   const actualRemoteness = project?.actual_remoteness_distance_m !== undefined ? project.actual_remoteness_distance_m : station.actualRemotenesM
   const minRemoteness = project?.min_remoteness_distance_m !== undefined ? project.min_remoteness_distance_m : station.requiredRemotenesM
+  const soilResistivity = project?.soil_resistivity_ohm_cm !== undefined ? project.soil_resistivity_ohm_cm : soilResistivityOhmCm
 
   // ── Extract standard-driven values ───────────────────────────────────────
   const cr = standardConfig?.currentRequirement || {}
@@ -471,7 +472,7 @@ export function runStationCalculations(station, systemDesignLifeYears, standardC
   })
 
   // 2. Groundbed resistance (no standard-specific values — pure geometry/soil)
-  const gbResult = calcGroundbedResistance(groundbed, soilResistivityOhmCm, proposedAnodes)
+  const gbResult = calcGroundbedResistance(groundbed, soilResistivity, proposedAnodes)
 
   // 3. Cable resistances (no standard-specific values — pure cable specs)
   const cableResult = calcCableResistances(cables, proposedAnodes)

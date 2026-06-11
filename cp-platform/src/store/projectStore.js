@@ -141,6 +141,7 @@ export function makeDefaultProject(overrides = {}) {
     coke_contingency_pct: 10,
     min_remoteness_distance_m: 20,
     actual_remoteness_distance_m: 56,
+    soil_resistivity_ohm_cm: 361,
     ...overrides,
   }
 }
@@ -638,6 +639,19 @@ export const useProjectStore = create(
 
       runAttenuationCalculation: () =>
         set((state) => {
+          if (state.attenuationInput) {
+            const proj = state.projects.find((p) => p.id === state.activeProjectId) || state.projects[0]
+            const activeStation = proj?.stations.find((s) => s.id === state.activeStationId) || proj?.stations[0]
+            const firstSegment = activeStation?.pipelineSegments?.[0]
+            if (firstSegment) {
+              state.attenuationInput.pipe.diameterInches = firstSegment.od
+              state.attenuationInput.pipe.wallThicknessInches = firstSegment.wallThk
+            }
+            const soilRes = proj?.soil_resistivity_ohm_cm !== undefined ? proj.soil_resistivity_ohm_cm : activeStation?.soilResistivityOhmCm
+            if (soilRes !== undefined) {
+              state.attenuationInput.coating.soilResistivityOhmCm = soilRes
+            }
+          }
           state.attenuationResult = computeAttenuation(state.attenuationInput)
           state.attenuationDirty = false
         }),

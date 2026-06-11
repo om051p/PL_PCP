@@ -114,10 +114,18 @@ export function PageProjectSetup() {
         <SectionCard title="Central Design Settings" icon={Settings}>
           <FieldInput
             label="Design Life Target"
-            value={project.design_life_target}
+            value={project.systemDesignLifeYears}
             type="number"
             unit="yrs"
-            onChange={(v) => updateProject({ design_life_target: parseInt(v) || 25 })}
+            readOnly={true}
+            hint="Locked to System Configuration"
+          />
+          <FieldInput
+            label="Design Soil Resistivity"
+            value={project.soil_resistivity_ohm_cm || 361}
+            type="number"
+            unit="Ω·cm"
+            onChange={(v) => updateProject({ soil_resistivity_ohm_cm: parseInt(v) || 361 })}
           />
           <FieldInput
             label="Back EMF Voltage"

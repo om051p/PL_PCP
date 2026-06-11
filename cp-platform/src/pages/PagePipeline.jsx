@@ -31,7 +31,8 @@ export function PagePipeline() {
   const isEngineerOrReviewer = user?.role === 'engineer' || user?.role === 'reviewer' || user?.role === 'viewer'
 
   if (!station) return null
-  const soilClass = getSoilClassification(station.soilResistivityOhmCm)
+  const soilResistivity = project?.soil_resistivity_ohm_cm !== undefined ? project.soil_resistivity_ohm_cm : station.soilResistivityOhmCm
+  const soilClass = getSoilClassification(soilResistivity)
 
   return (
     <div className="page">
@@ -140,21 +141,17 @@ export function PagePipeline() {
       <Grid2>
         <SectionCard title="Soil Conditions" icon={Layers}>
           <FieldInput
-            label="Soil Resistivity (at anode depth)"
-            value={station.soilResistivityOhmCm}
+            label="Soil Resistivity"
+            value={soilResistivity}
             unit="Ω·cm"
-            min={0}
-            onChange={(v) =>
-              updateStation(station.id, (s) => {
-                s.soilResistivityOhmCm = v
-              })
-            }
+            readOnly={true}
+            hint="Locked to Central Design Settings"
           />
           <div className="calc-preview">
             <ResultRow label="Soil Classification" value={soilClass.label} />
             <ResultRow label="Description" value={soilClass.description} />
           </div>
-          {station.soilResistivityOhmCm > 10000 && (
+          {soilResistivity > 10000 && (
             <InfoBox type="warning">
               High soil resistivity detected. Deepwell groundbed recommended.
             </InfoBox>

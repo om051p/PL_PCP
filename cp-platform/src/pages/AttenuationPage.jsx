@@ -296,6 +296,13 @@ export default function AttenuationPage() {
   } = useProjectStore()
 
   const [activeTab, setActiveTab] = useState('inputs')
+  const project = useProjectStore((s) => s.getProject())
+  const activeStation = useProjectStore((s) => s.getActiveStation())
+  const firstSegment = activeStation?.pipelineSegments?.[0]
+
+  const diameter = firstSegment ? firstSegment.od : (attenuationInput || DEFAULT_INPUT).pipe.diameterInches
+  const wallThickness = firstSegment ? firstSegment.wallThk : (attenuationInput || DEFAULT_INPUT).pipe.wallThicknessInches
+  const soilResistivity = project?.soil_resistivity_ohm_cm !== undefined ? project.soil_resistivity_ohm_cm : activeStation?.soilResistivityOhmCm || (attenuationInput || DEFAULT_INPUT).coating.soilResistivityOhmCm
 
   // Seed default input on first mount
   useEffect(() => {
@@ -409,19 +416,17 @@ export default function AttenuationPage() {
           <SectionCard title="Pipe geometry & material">
             <FieldInput
               label="Outside diameter"
-              value={input.pipe.diameterInches}
+              value={diameter}
               unit="inches"
-              step="0.5"
-              min={1}
-              onChange={(v) => setPipe('diameterInches', v)}
+              readOnly={true}
+              hint="Locked to Pipeline Page (Segment 1)"
             />
             <FieldInput
               label="Wall thickness"
-              value={input.pipe.wallThicknessInches}
+              value={wallThickness}
               unit="inches"
-              step="0.01"
-              min={0.1}
-              onChange={(v) => setPipe('wallThicknessInches', v)}
+              readOnly={true}
+              hint="Locked to Pipeline Page (Segment 1)"
             />
             <FieldInput
               label="Total pipe length"
@@ -463,11 +468,10 @@ export default function AttenuationPage() {
             />
             <FieldInput
               label="Soil resistivity (ρ)"
-              value={input.coating.soilResistivityOhmCm}
+              value={soilResistivity}
               unit="Ω·cm"
-              step="100"
-              min={1}
-              onChange={(v) => setCoating('soilResistivityOhmCm', v)}
+              readOnly={true}
+              hint="Locked to Central Design Settings"
             />
             <FieldInput
               label="Design current density"
