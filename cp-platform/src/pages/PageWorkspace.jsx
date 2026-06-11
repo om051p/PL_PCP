@@ -3,6 +3,16 @@ import { useProjectStore } from '../store/projectStore.js'
 import { useNavigate } from 'react-router-dom'
 import { Route, Layers, Database, Cpu, Signal, Shield, LogOut, Zap } from 'lucide-react'
 import { ThemeToggle } from '../components/ui.jsx'
+import { workspaceRegistry } from '../config/workspaceRegistry.js'
+
+const ICON_MAP = {
+  Route,
+  Layers,
+  Database,
+  Cpu,
+  Signal,
+  Shield,
+}
 
 export function PageWorkspace() {
   const navigate = useNavigate()
@@ -10,9 +20,16 @@ export function PageWorkspace() {
   const setActiveWorkspace = useProjectStore((s) => s.setActiveWorkspace)
 
   const handleSelectWorkspace = (workspaceId) => {
-    if (workspaceId === 'pipeline') {
-      setActiveWorkspace('pipeline')
-      navigate('/dashboard')
+    const registryEntry = workspaceRegistry[workspaceId]
+    if (registryEntry && registryEntry.enabled) {
+      setActiveWorkspace(workspaceId)
+      if (workspaceId === 'pipeline') {
+        navigate('/dashboard')
+      } else if (workspaceId === 'tank') {
+        navigate('/tank')
+      } else if (workspaceId === 'vessel') {
+        navigate('/vessel')
+      }
     }
   }
 
@@ -21,50 +38,7 @@ export function PageWorkspace() {
     navigate('/login')
   }
 
-  const modules = [
-    {
-      id: 'pipeline',
-      name: 'Raxa Pipeline',
-      status: 'available',
-      description: 'Impressed Current Cathodic Protection (ICCP) & Galvanic design for transmission pipelines.',
-      icon: Route,
-    },
-    {
-      id: 'tank',
-      name: 'Raxa Tank',
-      status: 'coming_soon',
-      description: 'Cathodic protection design for above-ground storage tank bottoms.',
-      icon: Layers,
-    },
-    {
-      id: 'vessel',
-      name: 'Raxa Vessel',
-      status: 'coming_soon',
-      description: 'Internal and external corrosion protection for pressure vessels and separators.',
-      icon: Database,
-    },
-    {
-      id: 'plant',
-      name: 'Raxa Plant',
-      status: 'coming_soon',
-      description: 'Complex grounding and cathodic protection grid analysis for industrial facilities.',
-      icon: Cpu,
-    },
-    {
-      id: 'survey',
-      name: 'Raxa Survey',
-      status: 'coming_soon',
-      description: 'CIS (Close Interval Survey) and DCVG data processing and visualization.',
-      icon: Signal,
-    },
-    {
-      id: 'integrity',
-      name: 'Raxa Integrity',
-      status: 'coming_soon',
-      description: 'Pipeline fitness-for-service (FFS), crack growth, and anomaly assessment.',
-      icon: Shield,
-    },
-  ]
+  const modules = Object.values(workspaceRegistry)
 
   return (
     <div className="workspace-page">
@@ -129,12 +103,12 @@ export function PageWorkspace() {
 
         <div className="workspace-grid">
           {modules.map((m) => {
-            const IconComponent = m.icon
-            const isAvailable = m.status === 'available'
+            const IconComponent = ICON_MAP[m.iconName] || Route
+            const isAvailable = m.enabled
             return (
               <div
                 key={m.id}
-                className={`workspace-card ${m.status}`}
+                className={`workspace-card ${isAvailable ? 'available' : 'coming_soon'}`}
                 onClick={() => isAvailable && handleSelectWorkspace(m.id)}
               >
                 <div className="workspace-card-header">
