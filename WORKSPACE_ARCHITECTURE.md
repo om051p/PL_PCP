@@ -29,20 +29,64 @@ graph TD
 
 ---
 
-## 2. Workspace Portal Metadata & Badges
+## 2. Workspace Registry & Portal Metadata
 
-Upon successful login, the user lands on the **RAXA Workspace Hub** (`/workspace`). This hub displays cards for all platform modules:
+Rather than hardcoding workspace availability inside UI views, RAXA utilizes a central **Workspace Registry** at [workspaceRegistry.js](file:///home/rworld_pop/projects/PL%20PCP/cp-platform/src/config/workspaceRegistry.js) to dynamically configure modules. This allows the administrator to activate/deactivate modules or roll out new features without editing routing or dashboard markup.
 
-| Module Name | Status | Description | Icon |
-|:---|:---|:---|:---|
-| **Raxa Pipeline** | `available` | Impressed Current Cathodic Protection (ICCP) & Galvanic design for transmission pipelines. | `Route` / `Activity` |
-| **Raxa Tank** | `coming_soon` | Cathodic protection design for above-ground storage tank bottoms. | `Layers` |
-| **Raxa Vessel** | `coming_soon` | Internal and external corrosion protection for pressure vessels and separators. | `Database` |
-| **Raxa Plant** | `coming_soon` | Complex grounding and cathodic protection grid analysis for industrial facilities. | `Cpu` |
-| **Raxa Survey** | `coming_soon` | CIS (Close Interval Survey) and DCVG data processing and visualization. | `Signal` |
-| **Raxa Integrity** | `coming_soon` | Pipeline fitness-for-service (FFS), crack growth, and anomaly assessment. | `Shield` |
+### Registry Schema (`workspaceRegistry.js`)
+
+```javascript
+export const WORKSPACE_REGISTRY = {
+  pipeline: {
+    name: "Raxa Pipeline",
+    enabled: true,
+    description: "Impressed Current Cathodic Protection (ICCP) & Galvanic design for transmission pipelines.",
+    icon: "Route"
+  },
+  tank: {
+    name: "Raxa Tank",
+    enabled: false,
+    description: "Cathodic protection design for above-ground storage tank bottoms.",
+    icon: "Layers"
+  },
+  vessel: {
+    name: "Raxa Vessel",
+    enabled: false,
+    description: "Internal and external corrosion protection for pressure vessels and separators.",
+    icon: "Database"
+  },
+  plant: {
+    name: "Raxa Plant",
+    enabled: false,
+    description: "Complex grounding and cathodic protection grid analysis for industrial facilities.",
+    icon: "Cpu"
+  },
+  survey: {
+    name: "Raxa Survey",
+    enabled: false,
+    description: "CIS (Close Interval Survey) and DCVG data processing and visualization.",
+    icon: "Signal"
+  },
+  integrity: {
+    name: "Raxa Integrity",
+    enabled: false,
+    description: "Pipeline fitness-for-service (FFS), crack growth, and anomaly assessment.",
+    icon: "Shield"
+  }
+};
+```
+
+### Dynamic Badge Mapping & Rendering
+
+The Workspace Selection Dashboard (`PageWorkspace.jsx`) imports the registry and maps over its keys to render cards dynamically:
+
+*   **Available**: If `enabled: true`, the workspace is selectable and links to the sub-app.
+*   **Coming Soon**: If `enabled: false`, the card renders in a disabled style with a "Coming Soon" badge.
+
+This design enables seamless scaling when new modules (such as Tank or Vessel) are activated—simply setting their `enabled` value to `true` activates them across the platform.
 
 ---
+
 
 ## 3. Global Routing & Layout Strategy
 
