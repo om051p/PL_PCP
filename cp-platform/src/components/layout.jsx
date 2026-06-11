@@ -32,7 +32,7 @@ import {
   Users,
 } from 'lucide-react'
 
-const NAV_ITEMS = [
+const PIPELINE_NAV_ITEMS = [
   {
     section: 'WORKSPACE',
     items: [{ id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard }],
@@ -84,6 +84,36 @@ const NAV_ITEMS = [
   },
 ]
 
+const TANK_NAV_ITEMS = [
+  {
+    section: 'WORKSPACE',
+    items: [{ id: 'tank', label: 'Tank Bottom CP', icon: Layers }],
+  },
+  {
+    section: 'Administration',
+    adminOnly: true,
+    items: [
+      { id: 'settings', label: 'Settings', icon: Settings },
+      { id: 'users', label: 'User Management', icon: Users },
+    ],
+  },
+]
+
+const VESSEL_NAV_ITEMS = [
+  {
+    section: 'WORKSPACE',
+    items: [{ id: 'vessel', label: 'Vessel CP', icon: Database }],
+  },
+  {
+    section: 'Administration',
+    adminOnly: true,
+    items: [
+      { id: 'settings', label: 'Settings', icon: Settings },
+      { id: 'users', label: 'User Management', icon: Users },
+    ],
+  },
+]
+
 const PAGE_META = {
   dashboard: { title: 'Project Dashboard', sub: 'Overview of all projects and recent activity' },
   project: { title: 'Design Basis', sub: 'Client details, station count, system configuration' },
@@ -100,6 +130,8 @@ const PAGE_META = {
   attenuation: { title: 'Attenuation Analysis', sub: 'Transmission-line cosh model · NACE SP0169 · ISO 15589-1' },
   settings: { title: 'Settings', sub: 'Application settings and configuration' },
   users: { title: 'User Management', sub: 'Manage user access and roles' },
+  tank: { title: 'Tank Bottom CP Design', sub: 'Concentric ring and grid MMO ribbon anode design for storage tanks' },
+  vessel: { title: 'Vessel CP Design', sub: 'Sacrificial and ICCP anode design for vessels and separators' },
 }
 
 // ─── Project Selector Dropdown ───────────────────────────────────────────────
@@ -328,6 +360,19 @@ export function Sidebar({ collapsed, onToggle }) {
   const navigate = useNavigate()
   const user = useAuthStore((s) => s.user)
   const setActiveWorkspace = useProjectStore((s) => s.setActiveWorkspace)
+  const activeWorkspace = useProjectStore((s) => s.activeWorkspace)
+
+  const navItems = activeWorkspace === 'tank'
+    ? TANK_NAV_ITEMS
+    : activeWorkspace === 'vessel'
+    ? VESSEL_NAV_ITEMS
+    : PIPELINE_NAV_ITEMS
+
+  const logoText = activeWorkspace === 'tank'
+    ? '⚡ RAXA Tank'
+    : activeWorkspace === 'vessel'
+    ? '⚡ RAXA Vessel'
+    : '⚡ RAXA Pipeline'
 
   return (
     <aside className={`sidebar ${collapsed ? 'sidebar--collapsed' : ''}`}>
@@ -337,7 +382,7 @@ export function Sidebar({ collapsed, onToggle }) {
             setActiveWorkspace(null)
             navigate('/workspace')
           }}>
-            <div className="sidebar-logo">⚡ RAXA Pipeline</div>
+            <div className="sidebar-logo">{logoText}</div>
             <div className="sidebar-sub">Infrastructure Protection</div>
           </div>
         )}
@@ -354,7 +399,7 @@ export function Sidebar({ collapsed, onToggle }) {
       )}
 
       <nav className="sidebar-nav">
-        {NAV_ITEMS.map((group) => {
+        {navItems.map((group) => {
           // Filter admin-only sections based on user role
           if (group.adminOnly && !hasRole(user, 'admin')) return null
 

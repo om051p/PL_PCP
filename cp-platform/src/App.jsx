@@ -22,6 +22,8 @@ import {
   PageImport,
   PageAttenuation,
   PageWorkspace,
+  PageTank,
+  PageVessel,
 } from './pages/index.jsx'
 import PageDashboard from './pages/PageDashboard.jsx'
 import SettingsPage from './pages/SettingsPage.jsx'
@@ -180,7 +182,11 @@ function AppShell() {
         <main className="page-content">
           <ErrorBoundary>
             <Routes>
-              <Route path="/" element={<Navigate to="/dashboard" replace />} />
+              <Route path="/" element={
+                activeWorkspace === 'tank' ? <Navigate to="/tank" replace /> :
+                activeWorkspace === 'vessel' ? <Navigate to="/vessel" replace /> :
+                <Navigate to="/dashboard" replace />
+              } />
               <Route path="/dashboard" element={<PageDashboard />} />
               <Route path="/project" element={<PageProjectSetup />} />
               <Route path="/pipeline" element={<PagePipeline />} />
@@ -194,9 +200,15 @@ function AppShell() {
               <Route path="/report" element={<PageReport />} />
               <Route path="/import" element={<PageImport />} />
               <Route path="/attenuation" element={<PageAttenuation />} />
+              <Route path="/tank" element={<PageTank />} />
+              <Route path="/vessel" element={<PageVessel />} />
               <Route path="/settings" element={<RoleRoute requiredRole="admin"><SettingsPage /></RoleRoute>} />
               <Route path="/users" element={<RoleRoute requiredRole="admin"><UserManagementPage /></RoleRoute>} />
-              <Route path="*" element={<Navigate to="/dashboard" replace />} />
+              <Route path="*" element={
+                activeWorkspace === 'tank' ? <Navigate to="/tank" replace /> :
+                activeWorkspace === 'vessel' ? <Navigate to="/vessel" replace /> :
+                <Navigate to="/dashboard" replace />
+              } />
             </Routes>
           </ErrorBoundary>
         </main>

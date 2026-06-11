@@ -9,14 +9,14 @@ export const workspaceRegistry = {
   tank: {
     id: 'tank',
     name: 'Raxa Tank',
-    enabled: false,
+    enabled: true,
     description: 'Cathodic protection design for above-ground storage tank bottoms.',
     iconName: 'Layers',
   },
   vessel: {
     id: 'vessel',
     name: 'Raxa Vessel',
-    enabled: false,
+    enabled: true,
     description: 'Internal and external corrosion protection for pressure vessels and separators.',
     iconName: 'Database',
   },

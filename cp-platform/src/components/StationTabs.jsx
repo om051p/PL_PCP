@@ -41,7 +41,7 @@ export default function StationTabs() {
               <span
                 className={`tab-dot ${st.lastCalcResult.allChecksPassed ? 'tab-dot--pass' : 'tab-dot--fail'}`}
               />
-            )}
+            ) : null}
           </button>
         ))}
         {stations.length > 1 && activeId && (
