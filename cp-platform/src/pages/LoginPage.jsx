@@ -9,7 +9,7 @@ import { AUTH_ALLOWED_DOMAINS } from '../config/authPolicy.js'
 export function LoginPage() {
   const navigate = useNavigate()
   const location = useLocation()
-  const { login, simulationLogin, loading, error, clearError } = useAuthStore()
+  const { login, loading, error, clearError } = useAuthStore()
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -45,16 +45,6 @@ export function LoginPage() {
       navigate(from, { replace: true })
     } catch {
       recordAttempt()
-    }
-  }
-
-  const handleSimulationLogin = async (simEmail) => {
-    setLocalError('')
-    try {
-      await simulationLogin(simEmail)
-      navigate(from, { replace: true })
-    } catch (err) {
-      setLocalError(err.message || 'Simulation login failed')
     }
   }
 
@@ -140,27 +130,6 @@ export function LoginPage() {
             <Link to="/register" className="login-forgot-link">
               Create Account
             </Link>
-          </div>
-
-          <div className="simulation-login-card" style={{ marginTop: '20px', borderTop: '1px dashed var(--border)', paddingTop: '20px' }}>
-            <h3 style={{ fontSize: '13px', fontWeight: '600', marginBottom: '10px', textAlign: 'center' }}>Simulation Mode Quick Sign-in</h3>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
-              <button type="button" className="btn btn-sm" onClick={() => handleSimulationLogin('admin@ikkgroup.com')} disabled={loading}>
-                Admin
-              </button>
-              <button type="button" className="btn btn-sm" onClick={() => handleSimulationLogin('manager@ikkgroup.com')} disabled={loading}>
-                Manager
-              </button>
-              <button type="button" className="btn btn-sm" onClick={() => handleSimulationLogin('engineer@ikkgroup.com')} disabled={loading}>
-                Engineer
-              </button>
-              <button type="button" className="btn btn-sm" onClick={() => handleSimulationLogin('reviewer@ikkgroup.com')} disabled={loading}>
-                Reviewer
-              </button>
-            </div>
-            <button type="button" className="btn btn-sm" style={{ width: '100%', marginTop: '8px', color: 'var(--fail)', borderColor: 'var(--fail-bg)' }} onClick={() => handleSimulationLogin('inactive@ikkgroup.com')} disabled={loading}>
-              Login as Inactive User
-            </button>
           </div>
 
           <div className="login-footer">

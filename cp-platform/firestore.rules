@@ -2,39 +2,97 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Default: deny all access
+    
+    // Helper: get the authenticated user's profile document
+    function getUserRecord() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    // Helper: verify user exists, is approved, and status is active
+    function isApproved() {
+      return request.auth != null &&
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        getUserRecord().approved == true &&
+        getUserRecord().status == 'active';
+    }
+
+    // Default: deny all
     match /{document=**} {
       allow read, write: if false;
     }
 
-    // Users collection — read by owner, write restricted (admin creates via Console/Cloud Function)
+    // Users Collection
     match /users/{userId} {
-      allow read: if request.auth != null && request.auth.uid == userId;
-      allow create: if false;  // Admin creates via Firebase Console or Cloud Function
-      allow update: if request.auth != null && request.auth.uid == userId
-        // Prevent self-role-escalation: cannot change own role
-        && request.resource.data.role == resource.data.role;
-      allow delete: if false;  // Admin deletes via Firebase Console
+      // Allow read if authenticated and in same organization (or reading self)
+      allow read: if request.auth != null && (
+        request.auth.uid == userId ||
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+         getUserRecord().organizationId == resource.data.organizationId)
+      );
+
+      // Allow self-registration or admin bootstrap creation
+      allow create: if request.auth != null && request.auth.uid == userId && (
+        // Self registration: must be pending engineer under 'ikk' organization
+        (request.resource.data.approved == false &&
+         request.resource.data.status == 'pending' &&
+         request.resource.data.role == 'engineer' &&
+         request.resource.data.organizationId == 'ikk') ||
+        // Bootstrap: specifically allowed for rahul.panchal@ikkgroup.com
+        (request.auth.token.email.toLowerCase() == 'rahul.panchal@ikkgroup.com')
+      );
+
+      // Allow updates by admin (in same org) or self (without self-escalation)
+      allow update: if request.auth != null && (
+        // Admin update within same organization
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+         getUserRecord().role == 'admin' &&
+         getUserRecord().organizationId == resource.data.organizationId &&
+         getUserRecord().organizationId == request.resource.data.organizationId) ||
+        // Self update: displayName only, preventing self-role-escalation/self-approval
+        (request.auth.uid == userId &&
+         request.resource.data.role == resource.data.role &&
+         request.resource.data.approved == resource.data.approved &&
+         request.resource.data.status == resource.data.status &&
+         request.resource.data.organizationId == resource.data.organizationId)
+      );
+
+      allow delete: if false;
     }
 
-    // Projects collection - authenticated users only
+    // Projects Collection
     match /projects/{projectId} {
-      // Users can only read/write their own projects
-      allow read: if request.auth != null && resource.data.userId == request.auth.uid;
-      allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
-      allow update: if request.auth != null && resource.data.userId == request.auth.uid;
-      allow delete: if request.auth != null && resource.data.userId == request.auth.uid;
+      allow read: if isApproved() && getUserRecord().organizationId == resource.data.organizationId;
+      
+      allow create: if isApproved() && 
+        request.resource.data.organizationId == getUserRecord().organizationId &&
+        getUserRecord().role in ['admin', 'manager', 'engineer'];
 
-      // Subcollections — ownership enforced via parent project check
+      allow update: if isApproved() && 
+        resource.data.organizationId == getUserRecord().organizationId &&
+        request.resource.data.organizationId == getUserRecord().organizationId &&
+        getUserRecord().role in ['admin', 'manager', 'engineer'];
+
+      allow delete: if isApproved() && 
+        resource.data.organizationId == getUserRecord().organizationId &&
+        getUserRecord().role in ['admin', 'manager'];
+
+      // Nested Subcollections (inherit parent project organization checks)
       match /stations/{stationId} {
-        allow read, write: if request.auth != null
-          && get(/databases/$(database)/documents/projects/$(projectId)).data.userId == request.auth.uid;
+        allow read, write: if isApproved() &&
+          get(/databases/$(database)/documents/projects/$(projectId)).data.organizationId == getUserRecord().organizationId;
       }
 
       match /revisions/{revisionId} {
-        allow read, write: if request.auth != null
-          && get(/databases/$(database)/documents/projects/$(projectId)).data.userId == request.auth.uid;
+        allow read, write: if isApproved() &&
+          get(/databases/$(database)/documents/projects/$(projectId)).data.organizationId == getUserRecord().organizationId;
       }
+    }
+
+    // Audit Logs (Write-only / Immutable once created; read-only for Admins)
+    match /audit_logs/{logId} {
+      allow create: if request.auth != null;
+      allow read: if isApproved() && getUserRecord().role == 'admin';
+      allow update, delete: if false;
     }
   }
 }

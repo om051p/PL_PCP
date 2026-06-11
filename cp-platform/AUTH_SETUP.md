@@ -1,135 +1,107 @@
-# Firebase Authentication Setup
+# RAXA Authentication & Access Setup
 
 ## Overview
 
-CP Designer uses Firebase Authentication for user management. The app requires a Firebase project with Email/Password authentication enabled.
+RAXA uses Firebase Authentication for user identity management combined with a Cloud Firestore approved user registry to enforce role-based access control (RBAC) and logical tenant isolation.
 
-## Environment Variables
+---
+
+## 1. Environment Variables
 
 All Firebase credentials are stored in `cp-platform/.env` (never committed to git):
 
-```
-VITE_FIREBASE_API_KEY=...
-VITE_FIREBASE_AUTH_DOMAIN=...
-VITE_FIREBASE_PROJECT_ID=...
-VITE_FIREBASE_STORAGE_BUCKET=...
-VITE_FIREBASE_MESSAGING_SENDER_ID=...
-VITE_FIREBASE_APP_ID=...
-```
-
-## Firebase Console Setup
-
-1. **Create Firebase Project:**
-   - Go to [console.firebase.google.com](https://console.firebase.google.com)
-   - Click "Add project"
-   - Enter project name (e.g., "rworld-pcp-pl")
-   - Follow prompts to complete setup
-
-2. **Enable Authentication:**
-   - In Firebase Console, go to **Authentication** → **Sign-in method**
-   - Enable **Email/Password** provider
-   - Save changes
-
-3. **Create User Accounts:**
-   - Go to **Authentication** → **Users**
-   - Click "Add user"
-   - Enter email and password
-   - Repeat for each engineer who needs access
-
-4. **Get Config Values:**
-   - Go to **Project Settings** (gear icon) → **General** tab
-   - Scroll to "Your apps" section
-   - Click Web icon (`</>`) to register a web app
-   - Copy the config values to your `.env` file
-
-## Architecture
-
-### Files Modified
-
-| File | Purpose |
-|------|---------|
-| `src/firebase/config.js` | Firebase initialization, exports `app` and `auth` |
-| `src/store/authStore.js` | Zustand store for auth state, login/logout/initialize |
-| `src/components/ProtectedRoute.jsx` | Route guards for authenticated/public routes |
-| `src/pages/LoginPage.jsx` | Login form UI |
-| `src/components/layout.jsx` | TopBar with user profile display and logout |
-
-### Auth Flow
-
-```
-App Load
-  ↓
-ProtectedRoute calls initialize()
-  ↓
-authStore.initialize() subscribes to onAuthStateChanged
-  ↓
-┌─────────────────────────────────────────┐
-│ User logged in?                         │
-│   YES → setUser(firebaseUser) → App     │
-│   NO  → setUser(null) → Redirect /login │
-└─────────────────────────────────────────┘
-```
-
-### Session Persistence
-
-Firebase Auth persists sessions automatically using IndexedDB. Users remain logged in across browser sessions until they explicitly sign out.
-
-### Route Protection
-
-- **ProtectedRoute**: Wraps all app routes except `/login`. Redirects to `/login` if no user.
-- **PublicRoute**: Wraps `/login`. Redirects to `/project` if user is already authenticated.
-
-## Development
-
-### Local Development
-
-For local development without Firebase:
-
 ```bash
-# Option 1: Use Firebase Emulator
-# Uncomment in .env:
-VITE_FIREBASE_AUTH_EMULATOR=http://localhost:9099
-
-# Then start emulator:
-firebase emulators:start --only auth
+VITE_FIREBASE_API_KEY=your-api-key
+VITE_FIREBASE_AUTH_DOMAIN=your-auth-domain.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=your-project-id
+VITE_FIREBASE_STORAGE_BUCKET=your-storage-bucket.appspot.com
+VITE_FIREBASE_MESSAGING_SENDER_ID=your-messaging-sender-id
+VITE_FIREBASE_APP_ID=your-app-id
 ```
 
-### Testing
+---
 
-Tests use mocked Firebase auth. No real credentials needed for unit tests.
+## 2. Hardened Access Flow
 
-## Security Notes
+RAXA enforces a 5-step access validation workflow on register and login to ensure engineering platform security:
 
-- **Never commit `.env`** — It's in `.gitignore`
-- **Restrict API key** — In Firebase Console, go to **Project Settings** → **General** → **Web API Key** → Restrict to your domain
-- **Enable App Check** — For production, enable Firebase App Check to prevent abuse
-- **Use Firebase Security Rules** — When adding Firestore/Storage later
+```text
+Firebase Login
+      ↓
+Email Verified? ──────[No]──► Access Denied (Please verify email)
+      ↓ [Yes]
+User Record Exists? ──[No]──► Access Denied (Record missing)
+      ↓ [Yes]
+Approved? ────────────[No]──► Account Pending Approval
+      ↓ [Yes]
+Status Active? ───────[No]──► Account Disabled / Suspended
+      ↓ [Yes]
+Initialize RAXA Session
+```
 
-## Troubleshooting
+---
 
-### "Firebase: No Firebase App has been created"
+## 3. Firestore Schemas
 
-- Ensure `.env` file exists with all 6 variables
-- Restart dev server after creating/modifying `.env`
+### Users Collection (`/users/{uid}`)
+Keyed by the user's Firebase Auth `uid`:
 
-### "auth/invalid-api-key"
+```json
+{
+  "uid": "fb-auth-uid-12345",
+  "email": "engineer@ikkgroup.com",
+  "displayName": "Eyad Engineer",
+  "role": "engineer",
+  "approved": false,
+  "status": "pending",
+  "organizationId": "ikk",
+  "createdAt": "2026-06-11T16:00:00Z"
+}
+```
 
-- Check `VITE_FIREBASE_API_KEY` in `.env`
-- Ensure no extra spaces or quotes around values
+### Audit Logs Collection (`/audit_logs/{logId}`)
+Write-only log index tracking system activities:
 
-### "auth/user-not-found"
+```json
+{
+  "action": "USER_APPROVED",
+  "targetUser": "engineer@ikkgroup.com",
+  "performedBy": "rahul.panchal@ikkgroup.com",
+  "timestamp": "2026-06-11T19:00:00Z",
+  "details": {},
+  "organizationId": "ikk"
+}
+```
 
-- User doesn't exist in Firebase
-- Create user in Firebase Console → Authentication → Users
+---
 
-### "auth/wrong-password"
+## 4. Administrative Controls & Bootstrap
 
-- Password doesn't match
-- Reset password in Firebase Console if needed
+### Admin Console (`UserManagementPage.jsx`)
+Administrators manage access via the User Management Console:
+*   **Pending Queue**: Review pending registrations; Approve or Reject users.
+*   **Managed Users**: View active users, modify roles, Suspend, Disable, or trigger password resets.
 
-## Production Deployment
+### Cold-Start Bootstrapping
+When the system is first initialized, if administrator `rahul.panchal@ikkgroup.com` logs in and their Firestore user document does not exist, the auth store automatically bootstraps their approved `Admin` document:
 
-1. Ensure `.env` is set in your hosting environment (Vercel, Netlify, etc.)
-2. Build: `npm run build`
-3. Deploy `dist/` folder
-4. Configure Firebase authorized domains in Console → Authentication → Settings → Authorized domains
+```json
+{
+  "uid": "rahul-uid",
+  "email": "rahul.panchal@ikkgroup.com",
+  "displayName": "Rahul Panchal",
+  "role": "admin",
+  "approved": true,
+  "status": "active",
+  "organizationId": "ikk"
+}
+```
+
+---
+
+## 5. Security & Isolation Rules
+
+Tenant isolation is enforced via Firestore Security Rules, verifying that:
+*   Users can only query/write documents matching their profile `organizationId`.
+*   Audit logs are write-only for users once created (immutable) and read-only for admins.
+*   Self-registration enforces default unapproved `engineer` parameters to prevent privilege escalation.

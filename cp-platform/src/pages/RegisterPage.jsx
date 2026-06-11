@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useLocation, Link } from 'react-router-dom'
-import { Lock, AlertCircle, Eye, EyeOff, Loader2, Zap, UserPlus } from 'lucide-react'
+import { Lock, AlertCircle, Eye, EyeOff, Loader2, UserPlus, CheckCircle, ArrowLeft } from 'lucide-react'
 import { useAuthStore } from '../store/authStore.js'
 import { useRateLimit } from '../hooks/useRateLimit.js'
 import { AUTH_ALLOWED_DOMAINS } from '../config/authPolicy.js'
@@ -15,6 +15,7 @@ export function RegisterPage() {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [localError, setLocalError] = useState('')
+  const [success, setSuccess] = useState(false)
 
   const from = location.state?.from?.pathname || '/project'
   const { isRateLimited, recordAttempt, attemptsRemaining, cooldownRemaining } = useRateLimit({
@@ -56,7 +57,7 @@ export function RegisterPage() {
 
     try {
       await register(email, password)
-      navigate(from, { replace: true })
+      setSuccess(true)
     } catch {
       recordAttempt()
     }
@@ -81,88 +82,105 @@ export function RegisterPage() {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="login-form">
-            <div className="form-group">
-              <label className="field-label" htmlFor="email">Email</label>
-              <div className="input-wrapper">
-                <Lock size={18} className="input-icon" />
-                <input
-                  id="email"
-                  type="email"
-                  className="field-input"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="engineer@company.com"
-                  autoComplete="email"
-                  disabled={loading}
-                  required
-                />
-              </div>
+          {success ? (
+            <div className="login-success" style={{ textAlign: 'center', padding: '10px 0' }}>
+              <CheckCircle size={48} color="var(--pass)" style={{ margin: '0 auto 16px', display: 'block' }} />
+              <h3 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '8px', color: 'var(--text-primary)' }}>Account Created</h3>
+              <p style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: '1.6', marginBottom: '16px' }}>
+                We've sent a verification email to <strong>{email}</strong>. Please check your inbox and click the verification link.
+              </p>
+              <p style={{ fontSize: '12px', color: 'var(--text-tertiary)', lineHeight: '1.5', padding: '10px', background: 'var(--brand-light)', borderRadius: '6px', marginBottom: '24px' }}>
+                Once verified, your account will enter the administrator approval queue. You will gain access as soon as an admin approves your registration.
+              </p>
+              <Link to="/login" className="btn btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', textDecoration: 'none', justifyContent: 'center', width: '100%', padding: '10px 16px' }}>
+                <ArrowLeft size={16} />
+                Back to Sign In
+              </Link>
             </div>
-
-            <div className="form-group">
-              <label className="field-label" htmlFor="password">Password</label>
-              <div className="input-wrapper">
-                <Lock size={18} className="input-icon" />
-                <input
-                  id="password"
-                  type={showPassword ? 'text' : 'password'}
-                  className="field-input"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Min. 8 characters"
-                  autoComplete="new-password"
-                  disabled={loading}
-                  required
-                />
-                <button
-                  type="button"
-                  className="password-toggle"
-                  onClick={() => setShowPassword(!showPassword)}
-                  aria-label={showPassword ? 'Hide password' : 'Show password'}
-                >
-                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                </button>
+          ) : (
+            <form onSubmit={handleSubmit} className="login-form">
+              <div className="form-group">
+                <label className="field-label" htmlFor="email">Email</label>
+                <div className="input-wrapper">
+                  <Lock size={18} className="input-icon" />
+                  <input
+                    id="email"
+                    type="email"
+                    className="field-input"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="engineer@company.com"
+                    autoComplete="email"
+                    disabled={loading}
+                    required
+                  />
+                </div>
               </div>
-            </div>
 
-            <div className="form-group">
-              <label className="field-label" htmlFor="confirm-password">Confirm Password</label>
-              <div className="input-wrapper">
-                <Lock size={18} className="input-icon" />
-                <input
-                  id="confirm-password"
-                  type={showPassword ? 'text' : 'password'}
-                  className="field-input"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  placeholder="Re-enter password"
-                  autoComplete="new-password"
-                  disabled={loading}
-                  required
-                />
+              <div className="form-group">
+                <label className="field-label" htmlFor="password">Password</label>
+                <div className="input-wrapper">
+                  <Lock size={18} className="input-icon" />
+                  <input
+                    id="password"
+                    type={showPassword ? 'text' : 'password'}
+                    className="field-input"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Min. 8 characters"
+                    autoComplete="new-password"
+                    disabled={loading}
+                    required
+                  />
+                  <button
+                    type="button"
+                    className="password-toggle"
+                    onClick={() => setShowPassword(!showPassword)}
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
               </div>
-            </div>
 
-            <button
-              type="submit"
-              className="btn btn-primary login-submit"
-              disabled={loading || cooldownRemaining > 0}
-            >
-              {loading ? (
-                <Loader2 size={18} className="spin" />
-              ) : cooldownRemaining > 0 ? (
-                `Try again in ${cooldownRemaining}s`
-              ) : (
-                'Create Account'
+              <div className="form-group">
+                <label className="field-label" htmlFor="confirm-password">Confirm Password</label>
+                <div className="input-wrapper">
+                  <Lock size={18} className="input-icon" />
+                  <input
+                    id="confirm-password"
+                    type={showPassword ? 'text' : 'password'}
+                    className="field-input"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="Re-enter password"
+                    autoComplete="new-password"
+                    disabled={loading}
+                    required
+                  />
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                className="btn btn-primary login-submit"
+                disabled={loading || cooldownRemaining > 0}
+              >
+                {loading ? (
+                  <Loader2 size={18} className="spin" />
+                ) : cooldownRemaining > 0 ? (
+                  `Try again in ${cooldownRemaining}s`
+                ) : (
+                  'Create Account'
+                )}
+              </button>
+              {!loading && attemptsRemaining < 5 && attemptsRemaining > 0 && (
+                <div className="rate-limit-warning" style={{ fontSize: '0.75rem', color: 'var(--warn)', marginTop: '0.25rem' }}>
+                  {attemptsRemaining} attempt{attemptsRemaining !== 1 ? 's' : ''} remaining before lockout
+                </div>
               )}
-            </button>
-            {!loading && attemptsRemaining < 5 && attemptsRemaining > 0 && (
-              <div className="rate-limit-warning" style={{ fontSize: '0.75rem', color: 'var(--warn)', marginTop: '0.25rem' }}>
-                {attemptsRemaining} attempt{attemptsRemaining !== 1 ? 's' : ''} remaining before lockout
-              </div>
-            )}
-          </form>
+            </form>
+          )}
 
           <div className="login-links">
             <span className="login-link-text">Already have an account?</span>{' '}

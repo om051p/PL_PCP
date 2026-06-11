@@ -7,8 +7,9 @@ import {
   signOut,
   onAuthStateChanged,
   sendPasswordResetEmail,
+  sendEmailVerification,
 } from 'firebase/auth'
-import { getFirestore, doc, getDoc, setDoc, deleteDoc } from 'firebase/firestore'
+import { getFirestore, doc, getDoc, setDoc, collection, getDocs } from 'firebase/firestore'
 import { auth } from '../firebase/config.js'
 import { mapFirebaseError } from '../config/errorMessages.js'
 import { validateUserDomain, DOMAIN_RESTRICTION_MESSAGE, DEFAULT_ROLE, DEACTIVATION_MESSAGE } from '../config/authPolicy.js'
@@ -21,10 +22,32 @@ import { validateUserDomain, DOMAIN_RESTRICTION_MESSAGE, DEFAULT_ROLE, DEACTIVAT
  * @property {string | null} photoURL
  * @property {string} role - User role: 'admin', 'manager', 'engineer', 'reviewer', or 'viewer'
  * @property {boolean} isActive - Whether user account is active
- * @property {boolean} [isSimulation] - Whether this is a simulation account
+ * @property {boolean} approved - Whether user account is approved
+ * @property {string} status - User status: 'pending', 'active', 'suspended', 'disabled', 'rejected'
+ * @property {string} organizationId - Tenant organization ID
  */
 
-function mapFirebaseUser(firebaseUser, role = DEFAULT_ROLE, isActive = true, name = '') {
+/**
+ * Helper to log immutable audit events to Firestore.
+ */
+export async function logAuditEvent(action, targetUser, performedBy, details = {}) {
+  try {
+    const db = getFirestore()
+    const logId = `log-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+    await setDoc(doc(db, 'audit_logs', logId), {
+      action,
+      targetUser,
+      performedBy: performedBy || 'system',
+      timestamp: new Date().toISOString(),
+      details,
+      organizationId: 'ikk'
+    })
+  } catch (err) {
+    console.warn('[AuditLog] Failed to write audit log:', err.message)
+  }
+}
+
+function mapFirebaseUser(firebaseUser, role = DEFAULT_ROLE, isActive = true, name = '', approved = false, status = 'pending', organizationId = 'ikk') {
   /** @type {User} */
   return {
     uid: firebaseUser.uid,
@@ -33,20 +56,23 @@ function mapFirebaseUser(firebaseUser, role = DEFAULT_ROLE, isActive = true, nam
     photoURL: firebaseUser.photoURL,
     role,
     isActive,
+    approved,
+    status,
+    organizationId,
   }
 }
 
 /**
- * Fetch user profile from Firestore or local simulation fallback.
+ * Fetch user profile from Firestore or bootstrap rahul.panchal@ikkgroup.com
  */
-async function fetchUserProfile(email, uid) {
-  if (!email) return null
+async function fetchUserProfile(uid, email = null) {
+  if (!uid) return null
   
   try {
     const db = getFirestore()
     
     // Wrap Firestore fetch in a 2-second timeout to prevent blocking the UI
-    const fetchPromise = getDoc(doc(db, 'users', email.toLowerCase()))
+    const fetchPromise = getDoc(doc(db, 'users', uid))
     const timeoutPromise = new Promise((_, reject) =>
       setTimeout(() => reject(new Error('Firestore request timed out')), 2000)
     )
@@ -54,27 +80,37 @@ async function fetchUserProfile(email, uid) {
     const userDoc = await Promise.race([fetchPromise, timeoutPromise])
     
     if (userDoc.exists()) {
-      const data = userDoc.data()
-      return {
-        role: data.role || DEFAULT_ROLE,
-        isActive: data.active === true || data.isActive === true,
-        name: data.name || email.split('@')[0],
-      }
+      return userDoc.data()
     }
   } catch (err) {
-    console.warn('[Auth] Firestore fetch failed or timed out, falling back to local registry:', err.message)
+    console.warn('[Auth] Firestore fetch failed or timed out:', err.message)
   }
 
-  // Fallback to local simulation registry
-  const store = useAuthStore.getState()
-  const localUser = store?.usersRegistry?.find((u) => u.email.toLowerCase() === email.toLowerCase())
-  if (localUser) {
-    return {
-      role: localUser.role,
-      isActive: localUser.active,
-      name: localUser.name,
+  // Admin Bootstrap Account for rahul.panchal@ikkgroup.com
+  if (email && email.toLowerCase() === 'rahul.panchal@ikkgroup.com') {
+    try {
+      const db = getFirestore()
+      const data = {
+        uid,
+        email: 'rahul.panchal@ikkgroup.com',
+        displayName: 'Rahul Panchal',
+        organizationId: 'ikk',
+        role: 'admin',
+        approved: true,
+        status: 'active',
+        active: true,
+        createdAt: new Date().toISOString(),
+        approvedBy: 'system_bootstrap',
+        approvedAt: new Date().toISOString()
+      }
+      await setDoc(doc(db, 'users', uid), data)
+      await logAuditEvent('USER_APPROVED', 'rahul.panchal@ikkgroup.com', 'system_bootstrap', { reason: 'bootstrap' })
+      return data
+    } catch (bootstrapErr) {
+      console.warn('[Auth] Failed to bootstrap admin user:', bootstrapErr.message)
     }
   }
+
   return null
 }
 
@@ -87,15 +123,7 @@ export const useAuthStore = create()(
       /** @type {string | null} */
       error: null,
       initialized: false,
-
-      // Approved User Registry (in memory & localStorage, synced with Firestore)
-      usersRegistry: [
-        { email: 'admin@ikkgroup.com', name: 'Ahmad Admin', role: 'admin', active: true },
-        { email: 'manager@ikkgroup.com', name: 'Mazen Manager', role: 'manager', active: true },
-        { email: 'engineer@ikkgroup.com', name: 'Eyad Engineer', role: 'engineer', active: true },
-        { email: 'reviewer@ikkgroup.com', name: 'Rayan Reviewer', role: 'reviewer', active: true },
-        { email: 'inactive@ikkgroup.com', name: 'Imad Inactive', role: 'engineer', active: false },
-      ],
+      usersList: [], // Dynamically loaded from Firestore
 
       login: async (email, password) => {
         if (!auth) throw new Error('Firebase is not configured. Check your .env file.')
@@ -108,8 +136,23 @@ export const useAuthStore = create()(
             throw new Error(mapFirebaseError(err))
           })
 
+          const firebaseUser = userCredential.user
+
+          // Validation 1: Email Verified?
+          if (!firebaseUser.emailVerified) {
+            try { await signOut(auth) } catch {}
+            const errMessage = 'Please verify your email before logging in.'
+            set((state) => {
+              state.user = null
+              state.loading = false
+              state.error = errMessage
+            })
+            await logAuditEvent('LOGIN_FAILED_UNVERIFIED', email, 'system')
+            throw new Error(errMessage)
+          }
+
           // Verify email domain is allowed
-          const tempUser = mapFirebaseUser(userCredential.user)
+          const tempUser = mapFirebaseUser(firebaseUser)
           const { allowed, reason } = validateUserDomain(tempUser)
           if (!allowed) {
             try { await signOut(auth) } catch {}
@@ -121,79 +164,74 @@ export const useAuthStore = create()(
             throw new Error(reason || DOMAIN_RESTRICTION_MESSAGE)
           }
 
-          // Fetch user profile from approved registry
-          const profile = await fetchUserProfile(userCredential.user.email, userCredential.user.uid)
+          // Fetch user profile from Firestore users/{uid}
+          const profile = await fetchUserProfile(firebaseUser.uid, firebaseUser.email)
+
+          // Validation 2: User Record Exists?
           if (!profile) {
             try { await signOut(auth) } catch {}
-            const errMessage = 'Access Denied. You are not in the approved users list.'
+            const errMessage = 'Access Denied. User record does not exist.'
             set((state) => {
               state.user = null
               state.loading = false
               state.error = errMessage
             })
+            await logAuditEvent('LOGIN_FAILED_RECORD_MISSING', email, 'system')
             throw new Error(errMessage)
           }
 
-          const { role, isActive, name } = profile
-          if (!isActive) {
+          // Validation 3: Approved?
+          if (!profile.approved) {
             try { await signOut(auth) } catch {}
+            const errMessage = 'Your account is pending administrator approval.'
             set((state) => {
               state.user = null
               state.loading = false
-              state.error = DEACTIVATION_MESSAGE
+              state.error = errMessage
             })
-            throw new Error(DEACTIVATION_MESSAGE)
+            await logAuditEvent('LOGIN_FAILED_PENDING', email, 'system')
+            throw new Error(errMessage)
           }
 
-          const user = mapFirebaseUser(userCredential.user, role, isActive, name)
+          // Validation 4: Status Active?
+          const isActive = profile.status === 'active' || profile.active === true
+          if (!isActive) {
+            try { await signOut(auth) } catch {}
+            const errMessage = profile.status === 'suspended'
+              ? 'Your account has been suspended. Contact your administrator.'
+              : DEACTIVATION_MESSAGE
+            set((state) => {
+              state.user = null
+              state.loading = false
+              state.error = errMessage
+            })
+            await logAuditEvent('LOGIN_FAILED_DISABLED', email, 'system', { status: profile.status })
+            throw new Error(errMessage)
+          }
+
+          const user = mapFirebaseUser(
+            firebaseUser,
+            profile.role,
+            isActive,
+            profile.displayName || profile.name,
+            profile.approved,
+            profile.status,
+            profile.organizationId || 'ikk'
+          )
+
           set((state) => {
             state.user = user
             state.loading = false
             state.error = null
           })
+
+          await logAuditEvent('USER_LOGIN', email, email)
           return user
         } catch (err) {
           const message = err instanceof Error ? err.message : 'Login failed'
           set((state) => {
             state.loading = false
             state.error = message
-          })
-          throw err
-        }
-      },
-
-      simulationLogin: async (email) => {
-        set((state) => {
-          state.loading = true
-          state.error = null
-        })
-        try {
-          const registeredUser = get().usersRegistry.find((u) => u.email.toLowerCase() === email.toLowerCase())
-          if (!registeredUser) {
-            throw new Error('Access Denied. You are not in the approved users list.')
-          }
-          if (!registeredUser.active) {
-            throw new Error(DEACTIVATION_MESSAGE)
-          }
-          const user = {
-            uid: `sim-${registeredUser.role}-${registeredUser.email}`,
-            email: registeredUser.email,
-            displayName: registeredUser.name,
-            photoURL: null,
-            role: registeredUser.role,
-            isActive: registeredUser.active,
-            isSimulation: true,
-          }
-          set((state) => {
-            state.user = user
-            state.loading = false
-            state.error = null
-          })
-          return user
-        } catch (err) {
-          set((state) => {
-            state.loading = false
-            state.error = err.message
           })
           throw err
         }
@@ -206,8 +244,10 @@ export const useAuthStore = create()(
           state.error = null
         })
         try {
+          const emailTrimmed = email.trim().toLowerCase()
+
           // Validate email domain BEFORE creating the Firebase account
-          const domainCheck = validateUserDomain({ email })
+          const domainCheck = validateUserDomain({ email: emailTrimmed })
           if (!domainCheck.allowed) {
             set((state) => {
               state.loading = false
@@ -216,39 +256,42 @@ export const useAuthStore = create()(
             throw new Error(domainCheck.reason || DOMAIN_RESTRICTION_MESSAGE)
           }
 
-          // Check if email exists in the approved users registry first
-          const profile = await fetchUserProfile(email, '')
-          if (!profile) {
-            const errMessage = 'Access Denied. You are not in the approved users list.'
-            set((state) => {
-              state.loading = false
-              state.error = errMessage
-            })
-            throw new Error(errMessage)
-          }
-
-          const userCredential = await createUserWithEmailAndPassword(auth, email, password).catch((err) => {
+          // Create Firebase account
+          const userCredential = await createUserWithEmailAndPassword(auth, emailTrimmed, password).catch((err) => {
             throw new Error(mapFirebaseError(err))
           })
 
-          // Update/Set user profile in Firestore
+          const firebaseUser = userCredential.user
+
+          // Send verification email immediately
+          await sendEmailVerification(firebaseUser)
+
+          // Save pending profile in Firestore users/{uid}
           try {
             const db = getFirestore()
-            await setDoc(doc(db, 'users', email.toLowerCase()), {
-              email: email,
-              role: profile.role,
-              active: profile.isActive,
-              name: profile.name,
-              uid: userCredential.user.uid,
+            await setDoc(doc(db, 'users', firebaseUser.uid), {
+              uid: firebaseUser.uid,
+              email: emailTrimmed,
+              displayName: emailTrimmed.split('@')[0],
+              organizationId: 'ikk',
+              role: 'engineer',
+              approved: false,
+              status: 'pending',
+              active: false,
               createdAt: new Date().toISOString(),
-            }, { merge: true })
+            })
           } catch (firestoreErr) {
-            console.warn('[Auth] Could not update user profile in Firestore:', firestoreErr.message)
+            console.warn('[Auth] Could not create user profile in Firestore:', firestoreErr.message)
           }
 
-          const user = mapFirebaseUser(userCredential.user, profile.role, profile.isActive, profile.name)
+          // Write audit log
+          await logAuditEvent('USER_REGISTERED', emailTrimmed, 'system')
+
+          // Sign out immediately (since user needs to verify email and await approval)
+          await signOut(auth)
+
           set((state) => {
-            state.user = user
+            state.user = null
             state.loading = false
             state.error = null
           })
@@ -263,12 +306,16 @@ export const useAuthStore = create()(
       },
 
       logout: async () => {
+        const currentUser = get().user
         set((state) => {
           state.loading = true
         })
         try {
           if (auth) {
             await signOut(auth)
+          }
+          if (currentUser) {
+            await logAuditEvent('USER_LOGOUT', currentUser.email, currentUser.email)
           }
           set((state) => {
             state.user = null
@@ -295,6 +342,7 @@ export const useAuthStore = create()(
           await sendPasswordResetEmail(auth, email).catch((err) => {
             throw new Error(mapFirebaseError(err))
           })
+          await logAuditEvent('PASSWORD_RESET_SENT', email, get().user?.email || 'system')
           set((state) => {
             state.loading = false
             state.error = null
@@ -320,74 +368,137 @@ export const useAuthStore = create()(
           state.loading = false
         }),
 
-      // Admin Approved Users Management Actions
-      addUserRegistry: async (newUser) => {
-        set((state) => {
-          const exists = state.usersRegistry.some((u) => u.email.toLowerCase() === newUser.email.toLowerCase())
-          if (exists) return
-          state.usersRegistry.push(newUser)
-        })
-        
+      // Admin console operations
+      fetchUsersList: async () => {
         try {
           const db = getFirestore()
-          await setDoc(doc(db, 'users', newUser.email.toLowerCase()), {
-            email: newUser.email,
-            name: newUser.name,
-            role: newUser.role,
-            active: newUser.active,
-            createdAt: new Date().toISOString(),
+          const querySnapshot = await getDocs(collection(db, 'users'))
+          const list = []
+          querySnapshot.forEach((doc) => {
+            list.push(doc.data())
+          })
+          set((state) => {
+            state.usersList = list
           })
         } catch (err) {
-          console.warn('[Auth] Could not write user to Firestore:', err.message)
+          console.warn('[Auth] Failed to fetch users list:', err.message)
         }
       },
 
-      updateUserRegistry: async (email, fields) => {
-        set((state) => {
-          const user = state.usersRegistry.find((u) => u.email.toLowerCase() === email.toLowerCase())
-          if (user) {
-            Object.assign(user, fields)
-            if (state.user && state.user.email.toLowerCase() === email.toLowerCase()) {
-              if (fields.active === false) {
-                state.user = null
-                state.error = DEACTIVATION_MESSAGE
-              } else {
-                if (fields.role) state.user.role = fields.role
-                if (fields.name) state.user.displayName = fields.name
-              }
-            }
-          }
-        })
-
+      approveUser: async (uid, email) => {
+        const adminEmail = get().user?.email || 'admin'
         try {
           const db = getFirestore()
-          const docRef = doc(db, 'users', email.toLowerCase())
-          const updateData = {}
-          if (fields.name !== undefined) updateData.name = fields.name
-          if (fields.role !== undefined) updateData.role = fields.role
-          if (fields.active !== undefined) updateData.active = fields.active
-          updateData.modifiedAt = new Date().toISOString()
-          updateData.modifiedBy = get().user?.email || 'system'
+          await setDoc(doc(db, 'users', uid), {
+            approved: true,
+            status: 'active',
+            active: true,
+            approvedBy: adminEmail,
+            approvedAt: new Date().toISOString()
+          }, { merge: true })
           
-          await setDoc(docRef, updateData, { merge: true })
+          await logAuditEvent('USER_APPROVED', email, adminEmail)
+          await get().fetchUsersList()
         } catch (err) {
-          console.warn('[Auth] Could not update user in Firestore:', err.message)
+          console.error('[Auth] Failed to approve user:', err.message)
+          throw err
         }
       },
 
-      deleteUserRegistry: async (email) => {
-        set((state) => {
-          state.usersRegistry = state.usersRegistry.filter((u) => u.email.toLowerCase() !== email.toLowerCase())
-          if (state.user && state.user.email.toLowerCase() === email.toLowerCase()) {
-            state.user = null
-          }
-        })
-
+      rejectUser: async (uid, email) => {
+        const adminEmail = get().user?.email || 'admin'
         try {
           const db = getFirestore()
-          await deleteDoc(doc(db, 'users', email.toLowerCase()))
+          await setDoc(doc(db, 'users', uid), {
+            approved: false,
+            status: 'rejected',
+            active: false
+          }, { merge: true })
+          
+          await logAuditEvent('USER_REJECTED', email, adminEmail)
+          await get().fetchUsersList()
         } catch (err) {
-          console.warn('[Auth] Could not delete user from Firestore:', err.message)
+          console.error('[Auth] Failed to reject user:', err.message)
+          throw err
+        }
+      },
+
+      updateUserRole: async (uid, email, newRole) => {
+        const adminEmail = get().user?.email || 'admin'
+        try {
+          const db = getFirestore()
+          await setDoc(doc(db, 'users', uid), {
+            role: newRole
+          }, { merge: true })
+          
+          await logAuditEvent('ROLE_CHANGED', email, adminEmail, { newRole })
+          await get().fetchUsersList()
+        } catch (err) {
+          console.error('[Auth] Failed to update user role:', err.message)
+          throw err
+        }
+      },
+
+      suspendUser: async (uid, email) => {
+        const adminEmail = get().user?.email || 'admin'
+        try {
+          const db = getFirestore()
+          await setDoc(doc(db, 'users', uid), {
+            status: 'suspended',
+            active: false
+          }, { merge: true })
+          
+          await logAuditEvent('USER_SUSPENDED', email, adminEmail)
+          await get().fetchUsersList()
+        } catch (err) {
+          console.error('[Auth] Failed to suspend user:', err.message)
+          throw err
+        }
+      },
+
+      disableUser: async (uid, email) => {
+        const adminEmail = get().user?.email || 'admin'
+        try {
+          const db = getFirestore()
+          await setDoc(doc(db, 'users', uid), {
+            status: 'disabled',
+            active: false
+          }, { merge: true })
+          
+          await logAuditEvent('USER_DISABLED', email, adminEmail)
+          await get().fetchUsersList()
+        } catch (err) {
+          console.error('[Auth] Failed to disable user:', err.message)
+          throw err
+        }
+      },
+
+      enableUser: async (uid, email) => {
+        const adminEmail = get().user?.email || 'admin'
+        try {
+          const db = getFirestore()
+          await setDoc(doc(db, 'users', uid), {
+            status: 'active',
+            active: true,
+            approved: true
+          }, { merge: true })
+          
+          await logAuditEvent('USER_ENABLED', email, adminEmail)
+          await get().fetchUsersList()
+        } catch (err) {
+          console.error('[Auth] Failed to enable user:', err.message)
+          throw err
+        }
+      },
+
+      resetUserAccess: async (uid, email) => {
+        const adminEmail = get().user?.email || 'admin'
+        try {
+          await sendPasswordResetEmail(auth, email)
+          await logAuditEvent('PASSWORD_RESET_SENT', email, adminEmail)
+        } catch (err) {
+          console.error('[Auth] Failed to reset user access:', err.message)
+          throw err
         }
       },
 
@@ -402,8 +513,7 @@ export const useAuthStore = create()(
           return () => {}
         }
 
-        // Add a safety timeout: if Firebase auth hangs or fails to resolve within 3 seconds,
-        // force loading to false so that the login page becomes accessible.
+        // Add a safety timeout
         const timeoutId = setTimeout(() => {
           if (get().loading) {
             console.warn('[Auth] Firebase initialization timed out. Forcing loading state to false.');
@@ -416,6 +526,17 @@ export const useAuthStore = create()(
         const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
           clearTimeout(timeoutId)
           if (firebaseUser) {
+            // Validation 1: Email Verified?
+            if (!firebaseUser.emailVerified) {
+              try { await signOut(auth) } catch {}
+              set((state) => {
+                state.user = null
+                state.loading = false
+                state.error = 'Please verify your email before logging in.'
+              })
+              return
+            }
+
             const tempUser = mapFirebaseUser(firebaseUser)
             const { allowed, reason } = validateUserDomain(tempUser)
             if (!allowed) {
@@ -428,38 +549,51 @@ export const useAuthStore = create()(
               return
             }
 
-            const profile = await fetchUserProfile(firebaseUser.email, firebaseUser.uid)
+            const profile = await fetchUserProfile(firebaseUser.uid, firebaseUser.email)
             if (!profile) {
               try { await signOut(auth) } catch {}
               set((state) => {
                 state.user = null
                 state.loading = false
-                state.error = 'Access Denied. You are not in the approved users list.'
+                state.error = 'Access Denied. User record does not exist.'
               })
               return
             }
 
-            if (!profile.isActive) {
+            if (!profile.approved) {
               try { await signOut(auth) } catch {}
               set((state) => {
                 state.user = null
                 state.loading = false
-                state.error = DEACTIVATION_MESSAGE
+                state.error = 'Your account is pending administrator approval.'
               })
               return
             }
 
-            get().setUser(mapFirebaseUser(firebaseUser, profile.role, profile.isActive, profile.name))
-          } else {
-            // Keep simulation user active
-            const currentUser = get().user
-            if (currentUser && currentUser.isSimulation) {
+            const isActive = profile.status === 'active' || profile.active === true
+            if (!isActive) {
+              try { await signOut(auth) } catch {}
               set((state) => {
+                state.user = null
                 state.loading = false
+                state.error = profile.status === 'suspended'
+                  ? 'Your account has been suspended. Contact your administrator.'
+                  : DEACTIVATION_MESSAGE
               })
-            } else {
-              get().setUser(null)
+              return
             }
+
+            get().setUser(mapFirebaseUser(
+              firebaseUser,
+              profile.role,
+              isActive,
+              profile.displayName || profile.name,
+              profile.approved,
+              profile.status,
+              profile.organizationId || 'ikk'
+            ))
+          } else {
+            get().setUser(null)
           }
         })
 
@@ -475,10 +609,10 @@ export const useAuthStore = create()(
     })),
     {
       name: 'cp-platform-auth',
-      version: 1,
+      version: 2,
       partialize: (state) => ({
         user: state.user,
-        usersRegistry: state.usersRegistry,
+        usersList: state.usersList,
       }),
     },
   ),
