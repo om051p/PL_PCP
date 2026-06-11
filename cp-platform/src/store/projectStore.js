@@ -250,6 +250,7 @@ export const useProjectStore = create(
       projects: [makeDefaultProject()],
       activeProjectId: null,
       activeStationId: null,
+      activeWorkspace: null,
       ui: {
         sidebarCollapsed: false,
         calculatingStationId: null,
@@ -600,6 +601,11 @@ export const useProjectStore = create(
           state.ui.theme = state.ui.theme === 'light' ? 'dark' : 'light'
         }),
 
+      setActiveWorkspace: (workspace) =>
+        set((state) => {
+          state.activeWorkspace = workspace
+        }),
+
       // ── Attenuation Actions ─────────────────────────────────────────────────
 
       setAttenuationInput: (inputPatch) =>
@@ -720,6 +726,7 @@ export const useProjectStore = create(
         activeStationId: state.activeStationId,
         attenuationInput: state.attenuationInput,
         attenuationResult: state.attenuationResult,
+        activeWorkspace: state.activeWorkspace,
       }),
     },
   ),

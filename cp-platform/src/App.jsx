@@ -21,6 +21,7 @@ import {
   PageReport,
   PageImport,
   PageAttenuation,
+  PageWorkspace,
 } from './pages/index.jsx'
 import PageDashboard from './pages/PageDashboard.jsx'
 import SettingsPage from './pages/SettingsPage.jsx'
@@ -96,6 +97,7 @@ function AppShell() {
   const { pathname } = useLocation()
   const theme = useProjectStore((s) => s.ui.theme)
   const setTheme = useProjectStore((s) => s.setTheme)
+  const activeWorkspace = useProjectStore((s) => s.activeWorkspace)
   const { showWarning, timeRemaining, staySignedIn } = useSessionTimeout()
 
   // Apply theme class on mount and on change
@@ -128,6 +130,28 @@ function AppShell() {
   const setActiveStation = useProjectStore((s) => s.setActiveStation)
   if (!activeStationId && stations.length > 0) {
     setActiveStation(stations[0].id)
+  }
+
+  const isWorkspacePortal = pathname === '/workspace' || !activeWorkspace
+
+  if (isWorkspacePortal) {
+    return (
+      <div className="portal-shell">
+        <main className="portal-content">
+          <ErrorBoundary>
+            <Routes>
+              <Route path="/workspace" element={<PageWorkspace />} />
+              <Route path="*" element={<Navigate to="/workspace" replace />} />
+            </Routes>
+          </ErrorBoundary>
+        </main>
+        <SessionTimeoutDialog
+          show={showWarning}
+          timeRemaining={timeRemaining}
+          onStaySignedIn={staySignedIn}
+        />
+      </div>
+    )
   }
 
   return (

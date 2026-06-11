@@ -44,7 +44,15 @@ async function fetchUserProfile(email, uid) {
   
   try {
     const db = getFirestore()
-    const userDoc = await getDoc(doc(db, 'users', email.toLowerCase()))
+    
+    // Wrap Firestore fetch in a 2-second timeout to prevent blocking the UI
+    const fetchPromise = getDoc(doc(db, 'users', email.toLowerCase()))
+    const timeoutPromise = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('Firestore request timed out')), 2000)
+    )
+    
+    const userDoc = await Promise.race([fetchPromise, timeoutPromise])
+    
     if (userDoc.exists()) {
       const data = userDoc.data()
       return {
@@ -54,7 +62,7 @@ async function fetchUserProfile(email, uid) {
       }
     }
   } catch (err) {
-    console.warn('[Auth] Firestore fetch failed, falling back to local registry:', err.message)
+    console.warn('[Auth] Firestore fetch failed or timed out, falling back to local registry:', err.message)
   }
 
   // Fallback to local simulation registry
@@ -394,7 +402,19 @@ export const useAuthStore = create()(
           return () => {}
         }
 
+        // Add a safety timeout: if Firebase auth hangs or fails to resolve within 3 seconds,
+        // force loading to false so that the login page becomes accessible.
+        const timeoutId = setTimeout(() => {
+          if (get().loading) {
+            console.warn('[Auth] Firebase initialization timed out. Forcing loading state to false.');
+            set((state) => {
+              state.loading = false
+            })
+          }
+        }, 3000)
+
         const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+          clearTimeout(timeoutId)
           if (firebaseUser) {
             const tempUser = mapFirebaseUser(firebaseUser)
             const { allowed, reason } = validateUserDomain(tempUser)
@@ -447,7 +467,10 @@ export const useAuthStore = create()(
           state.initialized = true
         })
 
-        return unsubscribe
+        return () => {
+          clearTimeout(timeoutId)
+          unsubscribe()
+        }
       },
     })),
     {

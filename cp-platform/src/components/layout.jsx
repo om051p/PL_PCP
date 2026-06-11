@@ -96,7 +96,7 @@ const PAGE_META = {
   optimizer: { title: 'Design Optimizer', sub: 'Alternative designs with trade-off analysis' },
   bom: { title: 'Bill of Materials', sub: 'Auto-generated material quantities (requires Approved status)' },
   report: { title: 'Engineering Report', sub: 'Consolidated engineering design summary' },
-  import: { title: 'Import from Excel', sub: 'Upload PCP.xlsx or CP Designer export to populate project data' },
+  import: { title: 'Import from Excel', sub: 'Upload PCP.xlsx or RAXA Pipeline/CP Designer export to populate project data' },
   attenuation: { title: 'Attenuation Analysis', sub: 'Transmission-line cosh model · NACE SP0169 · ISO 15589-1' },
   settings: { title: 'Settings', sub: 'Application settings and configuration' },
   users: { title: 'User Management', sub: 'Manage user access and roles' },
@@ -327,14 +327,18 @@ export function Sidebar({ collapsed, onToggle }) {
   const project = useProjectStore((s) => s.getProject())
   const navigate = useNavigate()
   const user = useAuthStore((s) => s.user)
+  const setActiveWorkspace = useProjectStore((s) => s.setActiveWorkspace)
 
   return (
     <aside className={`sidebar ${collapsed ? 'sidebar--collapsed' : ''}`}>
       <div className="sidebar-header">
         {!collapsed && (
-          <div style={{ cursor: 'pointer' }} onClick={() => navigate('/dashboard')}>
-            <div className="sidebar-logo">⚡ CP Designer</div>
-            <div className="sidebar-sub">ICCP Engineering Platform</div>
+          <div style={{ cursor: 'pointer' }} onClick={() => {
+            setActiveWorkspace(null)
+            navigate('/workspace')
+          }}>
+            <div className="sidebar-logo">⚡ RAXA Pipeline</div>
+            <div className="sidebar-sub">Infrastructure Protection</div>
           </div>
         )}
         <button className="sidebar-toggle" onClick={onToggle}>

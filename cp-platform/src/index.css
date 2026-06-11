@@ -1863,3 +1863,210 @@ body {
 .dark .dashboard-project-card--active {
   border-color: #3b82f6;
 }
+
+/* ─── Workspace Portal Page ─────────────────────────────────────────────────── */
+.workspace-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 50% 50%, var(--brand-light) 0%, var(--surface) 100%);
+  padding: 80px 20px 40px 20px;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.dark .workspace-page {
+  background: radial-gradient(circle at 50% 50%, #111d2d 0%, #090d16 100%);
+}
+
+.workspace-container {
+  max-width: 1100px;
+  width: 100%;
+  text-align: center;
+}
+
+.workspace-header {
+  margin-bottom: 48px;
+}
+
+.workspace-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+  letter-spacing: -0.5px;
+}
+
+.workspace-brand .brand-icon {
+  color: var(--brand-mid);
+}
+
+.dark .workspace-brand .brand-icon {
+  color: #fbbf24;
+}
+
+.workspace-subtitle {
+  font-size: 11px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 24px;
+  font-weight: 600;
+}
+
+.workspace-title-main {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--text-primary);
+  position: relative;
+  display: inline-block;
+  padding-bottom: 8px;
+}
+
+.workspace-title-main::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 25%;
+  width: 50%;
+  height: 2px;
+  background: var(--brand-mid);
+  border-radius: 1px;
+}
+
+.workspace-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 20px;
+}
+
+.workspace-card {
+  position: relative;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 32px 24px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  height: 220px;
+  justify-content: space-between;
+  box-shadow: var(--shadow);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-decoration: none;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.workspace-card.available:hover {
+  transform: translateY(-6px);
+  border-color: var(--brand-mid);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(45, 106, 159, 0.1);
+}
+
+.dark .workspace-card.available:hover {
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4), 0 4px 12px rgba(45, 106, 159, 0.2);
+}
+
+.workspace-card.coming-soon {
+  opacity: 0.65;
+  cursor: not-allowed;
+  background: rgba(243, 244, 246, 0.4);
+}
+
+.dark .workspace-card.coming-soon {
+  background: rgba(30, 41, 59, 0.3);
+}
+
+.workspace-card.coming-soon:hover {
+  transform: none;
+  border-color: var(--border);
+}
+
+.workspace-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.workspace-card-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--brand-light);
+  color: var(--brand-mid);
+}
+
+.dark .workspace-card-icon {
+  background: rgba(45, 106, 159, 0.15);
+  color: #60a5fa;
+}
+
+.workspace-card.coming-soon .workspace-card-icon {
+  background: var(--surface-hover);
+  color: var(--text-tertiary);
+}
+
+.workspace-badge {
+  font-size: 10.5px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.workspace-badge.active {
+  background: var(--pass-bg);
+  color: var(--pass);
+}
+
+.workspace-badge.soon {
+  background: var(--surface-hover);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+}
+
+.workspace-card-body h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.workspace-card-body p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.portal-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.portal-content {
+  flex: 1;
+}
+
+@media (max-width: 900px) {
+  .workspace-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .workspace-grid {
+    grid-template-columns: 1fr;
+  }
+}

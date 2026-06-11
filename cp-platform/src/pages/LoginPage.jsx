@@ -66,8 +66,8 @@ export function LoginPage() {
             <div className="login-logo">
               <Zap size={32} className="login-icon" />
             </div>
-            <h1 className="login-title">CP Designer</h1>
-            <p className="login-subtitle">ICCP Engineering Platform</p>
+            <h1 className="login-title">RAXA</h1>
+            <p className="login-subtitle">Infrastructure Protection Engineering Platform</p>
           </div>
 
           {localError && (
@@ -170,13 +170,13 @@ export function LoginPage() {
 
         <div className="login-branding">
           <div className="brand-content">
-            <h2>Professional ICCP Design</h2>
+            <h2>Professional Infrastructure Protection</h2>
             <p>
-              Impressed Current Cathodic Protection engineering platform
-              with NACE SP0169 & Saudi Aramco standards compliance.
+              Integrated engineering workspace platform with NACE SP0169
+              & Saudi Aramco standards compliance.
             </p>
             <ul className="feature-list">
-              <li>Deepwell / Shallow Vertical / Distributed Anode modes</li>
+              <li>Pipeline, Tank, Vessel, Plant engineering workspaces</li>
               <li>Automated validation & design optimization</li>
               <li>BOM generation & PDF/Excel reports</li>
             </ul>
