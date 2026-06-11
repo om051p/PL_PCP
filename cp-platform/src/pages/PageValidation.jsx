@@ -49,7 +49,7 @@ export function PageValidation() {
                 <button className="btn btn-sm" onClick={() => calculateStation(st.id)}>
                   Recalculate
                 </button>
-                {r && allPass && (
+                {r && allPass && st.status !== 'needs_recalculation' && (
                   <button
                     className="btn btn-sm btn-primary"
                     onClick={() => {

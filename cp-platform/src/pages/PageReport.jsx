@@ -22,7 +22,8 @@ export function PageReport() {
   const [pdfLoading, setPdfLoading] = useState(false)
   const [xlsxLoading, setXlsxLoading] = useState(false)
   const [revDesc, setRevDesc] = useState('')
-  const allCalculated = stations.every((s) => s.lastCalcResult)
+  const allCalculated = stations.every((s) => s.lastCalcResult && s.status !== 'needs_recalculation')
+  const hasMismatch = project?.hasCalculationsMismatch
 
   async function handlePDF() {
     setPdfLoading(true)
@@ -56,9 +57,13 @@ export function PageReport() {
           <button
             className={'btn btn-primary ' + (pdfLoading ? 'btn--loading' : '')}
             onClick={handlePDF}
-            disabled={pdfLoading || !allCalculated}
+            disabled={pdfLoading || !allCalculated || hasMismatch}
             title={
-              !allCalculated ? 'Calculate all stations first' : 'Download PDF engineering report'
+              hasMismatch
+                ? 'Central settings out of sync. Please recalculate.'
+                : !allCalculated
+                  ? 'Calculate all stations first'
+                  : 'Download PDF engineering report'
             }
           >
             <Download size={14} />
@@ -67,13 +72,19 @@ export function PageReport() {
           <button
             className={'btn ' + (xlsxLoading ? 'btn--loading' : '')}
             onClick={handleExcel}
-            disabled={xlsxLoading}
+            disabled={xlsxLoading || hasMismatch}
+            title={hasMismatch ? 'Central settings out of sync. Please recalculate.' : 'Export to Excel'}
           >
             <FileSpreadsheet size={14} />
             {xlsxLoading ? 'Exporting…' : 'Export to Excel'}
           </button>
         </div>
-        {!allCalculated && (
+        {hasMismatch && (
+          <div style={{ fontSize: 11, color: 'var(--warn, #eab308)', marginTop: 6 }}>
+            ⚠ Central settings are out of sync. Please recalculate all stations to enable exports.
+          </div>
+        )}
+        {!hasMismatch && !allCalculated && (
           <div style={{ fontSize: 11, color: 'var(--warn)', marginTop: 6 }}>
             ⚠ PDF export requires all stations to be calculated first.
           </div>

@@ -766,6 +766,9 @@ body {
 .tab-dot--fail {
   background: var(--fail);
 }
+.tab-dot--warning {
+  background: var(--warning, #f59e0b);
+}
 /* Workflow stepper */
 .workflow-stepper {
   display: flex;

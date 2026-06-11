@@ -131,6 +131,7 @@ export function makeDefaultProject(overrides = {}) {
     revisions: [],
     currentRevision: null,
     archived: false,
+    hasCalculationsMismatch: false,
     design_life_target: 25,
     back_emf_v: 2.0,
     structure_resistance_ohm: 0.055,
@@ -393,6 +394,39 @@ export const useProjectStore = create(
           const proj = state.projects.find((p) => p.id === state.activeProjectId)
           if (!proj) return
           Object.assign(proj, fields)
+          
+          const designBasisKeys = [
+            'design_life_target',
+            'back_emf_v',
+            'structure_resistance_ohm',
+            'ac_input_voltage_v',
+            'ac_input_phase',
+            'tr_efficiency_pct',
+            'tr_power_factor',
+            'coke_contingency_pct',
+            'min_remoteness_distance_m',
+            'actual_remoteness_distance_m',
+            'soil_resistivity_ohm_cm'
+          ]
+          const hasChanged = Object.keys(fields).some((k) => designBasisKeys.includes(k))
+          if (hasChanged) {
+            proj.stations.forEach((st) => {
+              st.status = 'needs_recalculation'
+            })
+            proj.hasCalculationsMismatch = true
+          }
+          
+          proj.updatedAt = new Date().toISOString()
+        }),
+
+      setNeedsRecalculation: () =>
+        set((state) => {
+          const proj = state.projects.find((p) => p.id === state.activeProjectId)
+          if (!proj) return
+          proj.stations.forEach((st) => {
+            st.status = 'needs_recalculation'
+          })
+          proj.hasCalculationsMismatch = true
           proj.updatedAt = new Date().toISOString()
         }),
 
@@ -528,6 +562,11 @@ export const useProjectStore = create(
             st.insights = calcResult.insights
             st.alternatives = calcResult.alternatives
             st.status = 'calculated'
+            
+            const allCalc = p.stations.every((s) => s.status === 'calculated')
+            if (allCalc) {
+              p.hasCalculationsMismatch = false
+            }
             p.updatedAt = new Date().toISOString()
           })
         } finally {
@@ -540,6 +579,12 @@ export const useProjectStore = create(
         if (!proj) return
         proj.stations.forEach((s) => {
           get().calculateStation(s.id)
+        })
+        set((state) => {
+          const p = state.projects.find((pp) => pp.id === state.activeProjectId)
+          if (p) {
+            p.hasCalculationsMismatch = false
+          }
         })
       },
 

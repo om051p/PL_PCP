@@ -35,7 +35,9 @@ export default function StationTabs() {
             onClick={() => setActive(st.id)}
           >
             <span>{st.name}</span>
-            {st.lastCalcResult && (
+            {st.status === 'needs_recalculation' ? (
+              <span className="tab-dot tab-dot--warning" title="Needs Recalculation" />
+            ) : st.lastCalcResult ? (
               <span
                 className={`tab-dot ${st.lastCalcResult.allChecksPassed ? 'tab-dot--pass' : 'tab-dot--fail'}`}
               />

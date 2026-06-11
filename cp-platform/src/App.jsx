@@ -159,6 +159,24 @@ function AppShell() {
       <Sidebar collapsed={collapsed} onToggle={() => setCollapsed((v) => !v)} />
       <div className="main-area">
         <TopBar />
+        {project?.hasCalculationsMismatch && (
+          <div className="warning-banner" style={{
+            background: 'var(--bg-warning, #fdf6e2)',
+            borderBottom: '1px solid var(--border-warning, #f5e0b3)',
+            color: 'var(--text-warning, #b58900)',
+            padding: '8px 16px',
+            fontSize: '13px',
+            fontWeight: '500',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            justifyContent: 'center',
+            zIndex: 10
+          }}>
+            <span>⚠️</span>
+            <span>Design Basis Out of Sync: Please recalculate to update output reports.</span>
+          </div>
+        )}
         <main className="page-content">
           <ErrorBoundary>
             <Routes>
