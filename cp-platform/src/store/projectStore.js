@@ -125,57 +125,72 @@ export function makeDefaultProject(overrides = {}) {
     createdAt: now,
     updatedAt: now,
     status: 'draft',
-    designStandard: 'saudiAramco',
-    systemDesignLifeYears: 25,
     stations: [makeDefaultStation()],
     revisions: [],
     currentRevision: null,
     archived: false,
     hasCalculationsMismatch: false,
-    design_life_target: 25,
-    back_emf_v: 2.0,
-    structure_resistance_ohm: 0.055,
-    ac_input_voltage_v: 480,
-    ac_input_phase: 3,
-    tr_efficiency_pct: 80,
-    tr_power_factor: 0.8,
-    coke_contingency_pct: 10,
-    min_remoteness_distance_m: 20,
-    actual_remoteness_distance_m: 56,
-    soil_resistivity_ohm_cm: 361,
+    designBasis: {
+      designStandard: 'saudiAramco',
+      systemDesignLifeYears: 25,
+      backEmfV: 2.0,
+      structureResistanceOhm: 0.055,
+      acInputVoltageV: 480,
+      acInputPhase: 3,
+      trEfficiencyPct: 80,
+      trPowerFactor: 0.8,
+      cokeContingencyPct: 10,
+      minRemotenessDistanceM: 20,
+      actualRemotenessDistanceM: 56,
+      soilResistivityOhmCm: 361,
+    },
     ...overrides,
   }
 }
 
 // ─── Migration: convert legacy single-project format to multi-project ────────
 
-function migrateLegacyState(state) {
-  // If the state already has a projects array, it's already migrated
-  if (Array.isArray(state.projects)) return state
+function migrateLegacyState(state, version) {
+  let newState = { ...state }
 
-  // Legacy format: has a single `project` object
-  if (state.project && typeof state.project === 'object') {
-    const project = state.project
-    // Ensure the project has an archived field
-    if (typeof project.archived !== 'boolean') {
-      project.archived = false
-    }
-    return {
-      ...state,
-      projects: [project],
-      activeProjectId: project.id,
-      project: undefined,
+  // 1. Single-project to multi-project migration
+  if (!Array.isArray(newState.projects)) {
+    if (newState.project && typeof newState.project === 'object') {
+      const p = newState.project
+      p.archived = p.archived || false
+      newState.projects = [p]
+      newState.activeProjectId = p.id
+      newState.project = undefined
+    } else {
+      const fresh = makeDefaultProject()
+      newState.projects = [fresh]
+      newState.activeProjectId = fresh.id
+      newState.project = undefined
     }
   }
 
-  // No project at all — create a fresh one
-  const fresh = makeDefaultProject()
-  return {
-    ...state,
-    projects: [fresh],
-    activeProjectId: fresh.id,
-    project: undefined,
-  }
+  // 2. Flat fields to nested designBasis migration
+  newState.projects = newState.projects.map((p) => {
+    if (!p.designBasis) {
+      p.designBasis = {
+        designStandard: p.designStandard || 'saudiAramco',
+        systemDesignLifeYears: p.systemDesignLifeYears !== undefined ? p.systemDesignLifeYears : (p.design_life_target || 25),
+        backEmfV: p.back_emf_v !== undefined ? p.back_emf_v : 2.0,
+        structureResistanceOhm: p.structure_resistance_ohm !== undefined ? p.structure_resistance_ohm : 0.055,
+        acInputVoltageV: p.ac_input_voltage_v !== undefined ? p.ac_input_voltage_v : 480,
+        acInputPhase: p.ac_input_phase !== undefined ? p.ac_input_phase : 3,
+        trEfficiencyPct: p.tr_efficiency_pct !== undefined ? p.tr_efficiency_pct : 80,
+        trPowerFactor: p.tr_power_factor !== undefined ? p.tr_power_factor : 0.8,
+        cokeContingencyPct: p.coke_contingency_pct !== undefined ? p.coke_contingency_pct : 10,
+        minRemotenessDistanceM: p.min_remoteness_distance_m !== undefined ? p.min_remoteness_distance_m : 20,
+        actualRemotenessDistanceM: p.actual_remoteness_distance_m !== undefined ? p.actual_remoteness_distance_m : 56,
+        soilResistivityOhmCm: p.soil_resistivity_ohm_cm !== undefined ? p.soil_resistivity_ohm_cm : (p.stations?.[0]?.soilResistivityOhmCm || 361),
+      }
+    }
+    return p
+  })
+
+  return newState
 }
 
 // ─── Store ────────────────────────────────────────────────────────────────────
@@ -238,6 +253,24 @@ export function parseImportedFile(fileContent) {
     project.stations.forEach((st) => {
       st.id = uuid()
     })
+
+    // Migrate imported project designBasis if needed
+    if (!project.designBasis) {
+      project.designBasis = {
+        designStandard: project.designStandard || 'saudiAramco',
+        systemDesignLifeYears: project.systemDesignLifeYears !== undefined ? project.systemDesignLifeYears : (project.design_life_target || 25),
+        backEmfV: project.back_emf_v !== undefined ? project.back_emf_v : 2.0,
+        structureResistanceOhm: project.structure_resistance_ohm !== undefined ? project.structure_resistance_ohm : 0.055,
+        acInputVoltageV: project.ac_input_voltage_v !== undefined ? project.ac_input_voltage_v : 480,
+        acInputPhase: project.ac_input_phase !== undefined ? project.ac_input_phase : 3,
+        trEfficiencyPct: project.tr_efficiency_pct !== undefined ? project.tr_efficiency_pct : 80,
+        trPowerFactor: project.tr_power_factor !== undefined ? project.tr_power_factor : 0.8,
+        cokeContingencyPct: project.coke_contingency_pct !== undefined ? project.coke_contingency_pct : 10,
+        minRemotenessDistanceM: project.min_remoteness_distance_m !== undefined ? project.min_remoteness_distance_m : 20,
+        actualRemotenessDistanceM: project.actual_remoteness_distance_m !== undefined ? project.actual_remoteness_distance_m : 56,
+        soilResistivityOhmCm: project.soil_resistivity_ohm_cm !== undefined ? project.soil_resistivity_ohm_cm : (project.stations?.[0]?.soilResistivityOhmCm || 361),
+      }
+    }
 
     return { success: true, project }
   } catch (e) {
@@ -394,28 +427,22 @@ export const useProjectStore = create(
           const proj = state.projects.find((p) => p.id === state.activeProjectId)
           if (!proj) return
           Object.assign(proj, fields)
-          
-          const designBasisKeys = [
-            'design_life_target',
-            'back_emf_v',
-            'structure_resistance_ohm',
-            'ac_input_voltage_v',
-            'ac_input_phase',
-            'tr_efficiency_pct',
-            'tr_power_factor',
-            'coke_contingency_pct',
-            'min_remoteness_distance_m',
-            'actual_remoteness_distance_m',
-            'soil_resistivity_ohm_cm'
-          ]
-          const hasChanged = Object.keys(fields).some((k) => designBasisKeys.includes(k))
-          if (hasChanged) {
-            proj.stations.forEach((st) => {
-              st.status = 'needs_recalculation'
-            })
-            proj.hasCalculationsMismatch = true
+          proj.updatedAt = new Date().toISOString()
+        }),
+
+      updateDesignBasis: (fields) =>
+        set((state) => {
+          const proj = state.projects.find((p) => p.id === state.activeProjectId)
+          if (!proj) return
+          if (!proj.designBasis) {
+            proj.designBasis = {}
           }
+          Object.assign(proj.designBasis, fields)
           
+          proj.stations.forEach((st) => {
+            st.status = 'needs_recalculation'
+          })
+          proj.hasCalculationsMismatch = true
           proj.updatedAt = new Date().toISOString()
         }),
 
@@ -774,9 +801,9 @@ export const useProjectStore = create(
     })),
     {
       name: 'cp-platform-project',
-      version: 3,
+      version: 4,
       storage: safeStorage,
-      // Migrate legacy single-project format to multi-project
+      // Migrate legacy formats to version 4 with nested designBasis
       migrate: migrateLegacyState,
       // Only persist project data, not transient UI state
       partialize: (state) => ({

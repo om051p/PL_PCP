@@ -302,7 +302,7 @@ export default function AttenuationPage() {
 
   const diameter = firstSegment ? firstSegment.od : (attenuationInput || DEFAULT_INPUT).pipe.diameterInches
   const wallThickness = firstSegment ? firstSegment.wallThk : (attenuationInput || DEFAULT_INPUT).pipe.wallThicknessInches
-  const soilResistivity = project?.soil_resistivity_ohm_cm !== undefined ? project.soil_resistivity_ohm_cm : activeStation?.soilResistivityOhmCm || (attenuationInput || DEFAULT_INPUT).coating.soilResistivityOhmCm
+  const soilResistivity = project?.designBasis?.soilResistivityOhmCm !== undefined ? project.designBasis.soilResistivityOhmCm : activeStation?.soilResistivityOhmCm || (attenuationInput || DEFAULT_INPUT).coating.soilResistivityOhmCm
 
   // Seed default input on first mount
   useEffect(() => {

@@ -31,7 +31,8 @@ export function PagePipeline() {
   const isEngineerOrReviewer = user?.role === 'engineer' || user?.role === 'reviewer' || user?.role === 'viewer'
 
   if (!station) return null
-  const soilResistivity = project?.soil_resistivity_ohm_cm !== undefined ? project.soil_resistivity_ohm_cm : station.soilResistivityOhmCm
+  const designBasis = project?.designBasis || {}
+  const soilResistivity = designBasis.soilResistivityOhmCm !== undefined ? designBasis.soilResistivityOhmCm : station.soilResistivityOhmCm
   const soilClass = getSoilClassification(soilResistivity)
 
   return (
@@ -161,21 +162,21 @@ export function PagePipeline() {
         <SectionCard title="Groundbed Location" icon={Layers}>
           <FieldInput
             label="Actual Groundbed Distance to Pipeline"
-            value={project.actual_remoteness_distance_m}
+            value={designBasis.actualRemotenessDistanceM || 56}
             unit="m"
             readOnly={true}
             hint="Locked to Central Design Settings in Design Basis"
           />
           <FieldInput
             label="Required Minimum Distance"
-            value={project.min_remoteness_distance_m}
+            value={designBasis.minRemotenessDistanceM || 20}
             unit="m"
             readOnly={true}
             hint="Locked to Central Design Settings in Design Basis"
           />
-          {project.actual_remoteness_distance_m < project.min_remoteness_distance_m && (
+          {(designBasis.actualRemotenessDistanceM || 56) < (designBasis.minRemotenessDistanceM || 20) && (
             <InfoBox type="error">
-              Groundbed is too close to pipeline. Minimum {project.min_remoteness_distance_m}m required.
+              Groundbed is too close to pipeline. Minimum {designBasis.minRemotenessDistanceM || 20}m required.
             </InfoBox>
           )}
         </SectionCard>

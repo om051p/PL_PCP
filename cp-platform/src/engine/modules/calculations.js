@@ -451,12 +451,13 @@ export function runStationCalculations(station, systemDesignLifeYears, standardC
   } = station
 
   // Use project-level overrides if available
-  const targetLife = project?.design_life_target || designLifeYears || systemDesignLifeYears
-  const backEMF = project?.back_emf_v !== undefined ? project.back_emf_v : tr.backEMF
-  const structureResistance = project?.structure_resistance_ohm !== undefined ? project.structure_resistance_ohm : tr.structureResistance
-  const actualRemoteness = project?.actual_remoteness_distance_m !== undefined ? project.actual_remoteness_distance_m : station.actualRemotenesM
-  const minRemoteness = project?.min_remoteness_distance_m !== undefined ? project.min_remoteness_distance_m : station.requiredRemotenesM
-  const soilResistivity = project?.soil_resistivity_ohm_cm !== undefined ? project.soil_resistivity_ohm_cm : soilResistivityOhmCm
+  const db = project?.designBasis || {}
+  const targetLife = db.systemDesignLifeYears !== undefined ? db.systemDesignLifeYears : (designLifeYears || systemDesignLifeYears)
+  const backEMF = db.backEmfV !== undefined ? db.backEmfV : tr.backEMF
+  const structureResistance = db.structureResistanceOhm !== undefined ? db.structureResistanceOhm : tr.structureResistance
+  const actualRemoteness = db.actualRemotenessDistanceM !== undefined ? db.actualRemotenessDistanceM : station.actualRemotenesM
+  const minRemoteness = db.minRemotenessDistanceM !== undefined ? db.minRemotenessDistanceM : station.requiredRemotenesM
+  const soilResistivity = db.soilResistivityOhmCm !== undefined ? db.soilResistivityOhmCm : soilResistivityOhmCm
 
   // ── Extract standard-driven values ───────────────────────────────────────
   const cr = standardConfig?.currentRequirement || {}
@@ -478,10 +479,10 @@ export function runStationCalculations(station, systemDesignLifeYears, standardC
   const cableResult = calcCableResistances(cables, proposedAnodes)
 
   // Resolve TR configuration overrides
-  const trEfficiency = project?.tr_efficiency_pct !== undefined ? (project.tr_efficiency_pct / 100) : ts.efficiency
-  const trPowerFactor = project?.tr_power_factor !== undefined ? project.tr_power_factor : ts.rectifierEfficiency
-  const acInputVoltage = project?.ac_input_voltage_v || ts.inputVoltage || 480
-  const acInputPhase = project?.ac_input_phase || ts.inputPhases || 3
+  const trEfficiency = db.trEfficiencyPct !== undefined ? (db.trEfficiencyPct / 100) : ts.efficiency
+  const trPowerFactor = db.trPowerFactor !== undefined ? db.trPowerFactor : ts.rectifierEfficiency
+  const acInputVoltage = db.acInputVoltageV || ts.inputVoltage || 480
+  const acInputPhase = db.acInputPhase || ts.inputPhases || 3
 
   // 4. TR circuit (with standard-driven efficiencies and limits)
   const trResult = calcTRCircuit(
@@ -511,7 +512,7 @@ export function runStationCalculations(station, systemDesignLifeYears, standardC
   )
 
   // Resolve Coke contingency overrides
-  const cokeContingency = project?.coke_contingency_pct !== undefined ? (1 + project.coke_contingency_pct / 100) : cb.contingency
+  const cokeContingency = db.cokeContingencyPct !== undefined ? (1 + db.cokeContingencyPct / 100) : cb.contingency
 
   // 6. Coke backfill requirement (with standard-driven constants)
   const cokeActiveLength =

@@ -158,17 +158,17 @@ export function PageGroundbed() {
           <Grid2>
             <FieldInput
               label="Design Life Target"
-              value={project.systemDesignLifeYears}
+              value={project.designBasis?.systemDesignLifeYears || 25}
               unit="yrs"
               readOnly={true}
               hint="Locked to Central Design Settings"
             />
             <FieldInput
               label="Soil Resistivity"
-              value={station.soilResistivityOhmCm}
+              value={project.designBasis?.soilResistivityOhmCm || station.soilResistivityOhmCm}
               unit="Ω·cm"
               readOnly={true}
-              hint="Locked to Pipeline Page"
+              hint="Locked to Central Design Settings"
             />
           </Grid2>
           <button className="btn btn-primary btn-full" onClick={() => calculateStation(station.id)}>

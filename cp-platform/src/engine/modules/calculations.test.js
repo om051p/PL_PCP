@@ -496,14 +496,16 @@ describe('runStationCalculations', () => {
   describe('Project configuration overrides', () => {
     it('applies project level overrides for back EMF, structure resistance, and design life', () => {
       const mockProject = {
-        design_life_target: 40,
-        back_emf_v: 1.5,
-        structure_resistance_ohm: 0.12,
-        ac_input_voltage_v: 230,
-        ac_input_phase: 1,
-        tr_efficiency_pct: 90,
-        tr_power_factor: 0.9,
-        coke_contingency_pct: 5,
+        designBasis: {
+          systemDesignLifeYears: 40,
+          backEmfV: 1.5,
+          structureResistanceOhm: 0.12,
+          acInputVoltageV: 230,
+          acInputPhase: 1,
+          trEfficiencyPct: 90,
+          trPowerFactor: 0.9,
+          cokeContingencyPct: 5,
+        }
       }
       
       const result = runStationCalculations(station, 25, null, mockProject)

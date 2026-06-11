@@ -23,6 +23,7 @@ import { Building2, Cpu, Layers, Plus, Trash2, Settings } from 'lucide-react'
 export function PageProjectSetup() {
   const project = useProjectStore((s) => s.getProject())
   const updateProject = useProjectStore((s) => s.updateProject)
+  const updateDesignBasis = useProjectStore((s) => s.updateDesignBasis)
   const stations = project?.stations ?? []
   const updateStation = useProjectStore((s) => s.updateStation)
   const removeStation = useProjectStore((s) => s.removeStation)
@@ -39,6 +40,8 @@ export function PageProjectSetup() {
       setConfirmDeleteId(null)
     }
   }, [confirmDeleteId, removeStation])
+
+  const designBasis = project?.designBasis || {}
 
   return (
     <div className="page">
@@ -79,15 +82,15 @@ export function PageProjectSetup() {
         <SectionCard title="System Configuration" icon={Cpu}>
           <SelectField
             label="Design Standard"
-            value={project.designStandard}
-            onChange={(v) => updateProject({ designStandard: v })}
+            value={designBasis.designStandard || 'saudiAramco'}
+            onChange={(v) => updateDesignBasis({ designStandard: v })}
             options={STANDARD_OPTIONS}
             hint="Select engineering standard for protection criteria, formulas, and thresholds"
           />
           <SelectField
             label="System Design Life Target"
-            value={project.systemDesignLifeYears}
-            onChange={(v) => updateProject({ systemDesignLifeYears: parseInt(v) })}
+            value={designBasis.systemDesignLifeYears || 25}
+            onChange={(v) => updateDesignBasis({ systemDesignLifeYears: parseInt(v) || 25 })}
             options={[15, 20, 25, 30, 35, 40].map((y) => ({ value: y, label: `${y} years` }))}
           />
           <SelectField
@@ -114,7 +117,7 @@ export function PageProjectSetup() {
         <SectionCard title="Central Design Settings" icon={Settings}>
           <FieldInput
             label="Design Life Target"
-            value={project.systemDesignLifeYears}
+            value={designBasis.systemDesignLifeYears || 25}
             type="number"
             unit="yrs"
             readOnly={true}
@@ -122,38 +125,38 @@ export function PageProjectSetup() {
           />
           <FieldInput
             label="Design Soil Resistivity"
-            value={project.soil_resistivity_ohm_cm || 361}
+            value={designBasis.soilResistivityOhmCm || 361}
             type="number"
             unit="Ω·cm"
-            onChange={(v) => updateProject({ soil_resistivity_ohm_cm: parseInt(v) || 361 })}
+            onChange={(v) => updateDesignBasis({ soilResistivityOhmCm: parseInt(v) || 361 })}
           />
           <FieldInput
             label="Back EMF Voltage"
-            value={project.back_emf_v}
+            value={designBasis.backEmfV || 2.0}
             type="number"
             step={0.1}
             unit="V"
-            onChange={(v) => updateProject({ back_emf_v: parseFloat(v) || 2.0 })}
+            onChange={(v) => updateDesignBasis({ backEmfV: parseFloat(v) || 2.0 })}
           />
           <FieldInput
             label="Structure to Earth Resistance"
-            value={project.structure_resistance_ohm}
+            value={designBasis.structureResistanceOhm || 0.055}
             type="number"
             step={0.005}
             unit="Ω"
-            onChange={(v) => updateProject({ structure_resistance_ohm: parseFloat(v) || 0.055 })}
+            onChange={(v) => updateDesignBasis({ structureResistanceOhm: parseFloat(v) || 0.055 })}
           />
           <FieldInput
             label="AC Input Voltage"
-            value={project.ac_input_voltage_v}
+            value={designBasis.acInputVoltageV || 480}
             type="number"
             unit="V"
-            onChange={(v) => updateProject({ ac_input_voltage_v: parseInt(v) || 480 })}
+            onChange={(v) => updateDesignBasis({ acInputVoltageV: parseInt(v) || 480 })}
           />
           <SelectField
             label="AC Input Phase"
-            value={project.ac_input_phase}
-            onChange={(v) => updateProject({ ac_input_phase: parseInt(v) || 3 })}
+            value={designBasis.acInputPhase || 3}
+            onChange={(v) => updateDesignBasis({ acInputPhase: parseInt(v) || 3 })}
             options={[
               { value: 1, label: '1-Phase' },
               { value: 3, label: '3-Phase' },
@@ -161,42 +164,42 @@ export function PageProjectSetup() {
           />
           <FieldInput
             label="TR Efficiency"
-            value={project.tr_efficiency_pct}
+            value={designBasis.trEfficiencyPct || 80}
             type="number"
             unit="%"
             min={1}
             max={100}
-            onChange={(v) => updateProject({ tr_efficiency_pct: parseInt(v) || 80 })}
+            onChange={(v) => updateDesignBasis({ trEfficiencyPct: parseInt(v) || 80 })}
           />
           <FieldInput
             label="TR Power Factor"
-            value={project.tr_power_factor}
+            value={designBasis.trPowerFactor || 0.8}
             type="number"
             step={0.05}
             min={0.1}
             max={1.0}
-            onChange={(v) => updateProject({ tr_power_factor: parseFloat(v) || 0.8 })}
+            onChange={(v) => updateDesignBasis({ trPowerFactor: parseFloat(v) || 0.8 })}
           />
           <FieldInput
             label="Coke Contingency"
-            value={project.coke_contingency_pct}
+            value={designBasis.cokeContingencyPct || 10}
             type="number"
             unit="%"
-            onChange={(v) => updateProject({ coke_contingency_pct: parseInt(v) || 10 })}
+            onChange={(v) => updateDesignBasis({ cokeContingencyPct: parseInt(v) || 10 })}
           />
           <FieldInput
             label="Groundbed Remoteness Threshold"
-            value={project.min_remoteness_distance_m}
+            value={designBasis.minRemotenessDistanceM || 20}
             type="number"
             unit="m"
-            onChange={(v) => updateProject({ min_remoteness_distance_m: parseFloat(v) || 20 })}
+            onChange={(v) => updateDesignBasis({ minRemotenessDistanceM: parseFloat(v) || 20 })}
           />
           <FieldInput
             label="Actual Nearest Structure Distance"
-            value={project.actual_remoteness_distance_m}
+            value={designBasis.actualRemotenessDistanceM || 56}
             type="number"
             unit="m"
-            onChange={(v) => updateProject({ actual_remoteness_distance_m: parseFloat(v) || 56 })}
+            onChange={(v) => updateDesignBasis({ actualRemotenessDistanceM: parseFloat(v) || 56 })}
           />
         </SectionCard>
       </Grid3>
