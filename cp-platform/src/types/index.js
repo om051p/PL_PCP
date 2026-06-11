@@ -156,6 +156,18 @@
  */
 
 /**
+ * @typedef {Object} User
+ * @property {string} email
+ * @property {string} name
+ * @property {'Admin' | 'Manager' | 'Engineer' | 'Reviewer'} role
+ * @property {boolean} active
+ * @property {string} [uid]
+ * @property {string} [created_at]
+ * @property {string} [modified_at]
+ * @property {string} [modified_by]
+ */
+
+/**
  * @typedef {Object} Project
  * @property {string} id
  * @property {string} projectNumber
@@ -171,6 +183,16 @@
  * @property {Station[]} stations
  * @property {Revision[]} revisions
  * @property {string} currentRevision
+ * @property {number} design_life_target
+ * @property {number} back_emf_v
+ * @property {number} structure_resistance_ohm
+ * @property {number} ac_input_voltage_v
+ * @property {number} ac_input_phase
+ * @property {number} tr_efficiency_pct
+ * @property {number} tr_power_factor
+ * @property {number} coke_contingency_pct
+ * @property {number} min_remoteness_distance_m
+ * @property {number} actual_remoteness_distance_m
  */
 
 /**

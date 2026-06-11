@@ -5,6 +5,7 @@
  */
 
 import { useProjectStore } from '../store/projectStore.js'
+import { useAuthStore } from '../store/authStore.js'
 import StationTabs from '../components/StationTabs.jsx'
 import {
   FieldInput,
@@ -24,6 +25,10 @@ export function PagePipeline() {
   const updateSegment = useProjectStore((s) => s.updateSegment)
   const addSegment = useProjectStore((s) => s.addSegment)
   const removeSegment = useProjectStore((s) => s.removeSegment)
+  const project = useProjectStore((s) => s.getProject())
+  const user = useAuthStore((s) => s.user)
+  const isReviewer = user?.role === 'reviewer' || user?.role === 'viewer'
+  const isEngineerOrReviewer = user?.role === 'engineer' || user?.role === 'reviewer' || user?.role === 'viewer'
 
   if (!station) return null
   const soilClass = getSoilClassification(station.soilResistivityOhmCm)
@@ -41,7 +46,7 @@ export function PagePipeline() {
             <Divider
               label={`Segment ${idx + 1}: ${seg.name}`}
               action={
-                station.pipelineSegments.length > 1 && (
+                station.pipelineSegments.length > 1 && !isEngineerOrReviewer && (
                   <button
                     className="btn btn-sm btn-icon-ghost"
                     onClick={() => removeSegment(station.id, seg.id)}
@@ -124,11 +129,13 @@ export function PagePipeline() {
         )
       })}
 
-      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 32 }}>
-        <button className="btn btn-secondary" onClick={() => addSegment(station.id)}>
-          <Plus size={14} /> Add Pipeline Segment
-        </button>
-      </div>
+      {!isReviewer && (
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 32 }}>
+          <button className="btn btn-secondary" onClick={() => addSegment(station.id)}>
+            <Plus size={14} /> Add Pipeline Segment
+          </button>
+        </div>
+      )}
 
       <Grid2>
         <SectionCard title="Soil Conditions" icon={Layers}>
@@ -157,29 +164,21 @@ export function PagePipeline() {
         <SectionCard title="Groundbed Location" icon={Layers}>
           <FieldInput
             label="Actual Groundbed Distance to Pipeline"
-            value={station.actualRemotenesM}
+            value={project.actual_remoteness_distance_m}
             unit="m"
-            min={0}
-            onChange={(v) =>
-              updateStation(station.id, (s) => {
-                s.actualRemotenesM = v
-              })
-            }
+            readOnly={true}
+            hint="Locked to Central Design Settings in Design Basis"
           />
           <FieldInput
             label="Required Minimum Distance"
-            value={station.requiredRemotenesM}
+            value={project.min_remoteness_distance_m}
             unit="m"
-            min={0}
-            onChange={(v) =>
-              updateStation(station.id, (s) => {
-                s.requiredRemotenesM = v
-              })
-            }
+            readOnly={true}
+            hint="Locked to Central Design Settings in Design Basis"
           />
-          {station.actualRemotenesM < station.requiredRemotenesM && (
+          {project.actual_remoteness_distance_m < project.min_remoteness_distance_m && (
             <InfoBox type="error">
-              Groundbed is too close to pipeline. Minimum {station.requiredRemotenesM}m required.
+              Groundbed is too close to pipeline. Minimum {project.min_remoteness_distance_m}m required.
             </InfoBox>
           )}
         </SectionCard>

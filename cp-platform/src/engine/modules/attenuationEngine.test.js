@@ -25,66 +25,37 @@
 
 import * as engine from './attenuationEngine.js';
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Micro test runner (no dependencies)
-// ─────────────────────────────────────────────────────────────────────────────
-
-let passed = 0;
-let failed = 0;
-const failures = [];
+import { describe, it, expect } from 'vitest'
 
 function assertClose(actual, expected, tolerance, label) {
-  const diff = Math.abs(actual - expected);
   const tol = tolerance ?? 1e-6;
-  if (diff <= tol) {
-    passed++;
-  } else {
-    failed++;
-    failures.push(`FAIL [${label}]: expected ${expected} ± ${tol}, got ${actual} (diff=${diff})`);
-  }
+  expect(Math.abs(actual - expected)).toBeLessThanOrEqual(tol);
 }
 
 function assertEqual(actual, expected, label) {
-  if (actual === expected) {
-    passed++;
-  } else {
-    failed++;
-    failures.push(`FAIL [${label}]: expected ${JSON.stringify(expected)}, got ${JSON.stringify(actual)}`);
-  }
+  expect(actual).toEqual(expected);
 }
 
 function assertTrue(condition, label) {
-  if (condition) {
-    passed++;
-  } else {
-    failed++;
-    failures.push(`FAIL [${label}]: expected true, got false`);
-  }
+  expect(condition).toBe(true);
 }
 
 function assertFalse(condition, label) {
-  if (!condition) {
-    passed++;
-  } else {
-    failed++;
-    failures.push(`FAIL [${label}]: expected false, got true`);
-  }
+  expect(condition).toBe(false);
 }
 
 function assertNotNull(value, label) {
-  if (value !== null && value !== undefined) {
-    passed++;
-  } else {
-    failed++;
-    failures.push(`FAIL [${label}]: expected non-null, got ${value}`);
-  }
+  expect(value).not.toBeNull();
+  expect(value).not.toBeUndefined();
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Reference dataset — BB-2 Shore to Berri (DS-001)
 // ─────────────────────────────────────────────────────────────────────────────
 
-const REF = {
+describe('Attenuation Engine Tests', () => {
+  it('runs all attenuation profiling and verification check formulas', () => {
+    const REF = {
   pipe: {
     diameterInches: 30,
     wallThicknessInches: 1.27,
@@ -687,22 +658,10 @@ const REF = {
   assertFalse(r.valid, 'T606: zero total length fails validation');
 }
 
+
+  })
+})
 // ─────────────────────────────────────────────────────────────────────────────
 // RESULTS SUMMARY
 // ─────────────────────────────────────────────────────────────────────────────
-
-console.log('\n═══════════════════════════════════════════════════════════');
-console.log('  Attenuation Engine — Test Results');
-console.log('═══════════════════════════════════════════════════════════');
-console.log(`  PASSED: ${passed}`);
-console.log(`  FAILED: ${failed}`);
-console.log(`  TOTAL:  ${passed + failed}`);
-
-if (failures.length > 0) {
-  console.log('\n  FAILURES:');
-  failures.forEach(f => console.log(`    ${f}`));
-  console.log('');
-} else {
-  console.log('\n  ✅ All tests passed');
-  console.log('═══════════════════════════════════════════════════════════\n');
-}
+console.log('Attenuation Engine tests complete');

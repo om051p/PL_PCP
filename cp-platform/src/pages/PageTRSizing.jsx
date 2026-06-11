@@ -61,27 +61,17 @@ export function PageTRSizing() {
           </Grid2>
           <FieldInput
             label="Back EMF"
-            value={tr.backEMF}
+            value={project.back_emf_v}
             unit="V"
-            min={0}
-            step={0.5}
-            onChange={(v) =>
-              updateStation(station.id, (s) => {
-                s.tr.backEMF = v
-              })
-            }
+            readOnly={true}
+            hint="Locked to Central Design Settings in Design Basis"
           />
           <FieldInput
             label="Structure-to-Earth Resistance"
-            value={tr.structureResistance}
+            value={project.structure_resistance_ohm}
             unit="Ω"
-            min={0}
-            step={0.001}
-            onChange={(v) =>
-              updateStation(station.id, (s) => {
-                s.tr.structureResistance = v
-              })
-            }
+            readOnly={true}
+            hint="Locked to Central Design Settings in Design Basis"
           />
           <button className="btn btn-primary btn-full" onClick={() => calculateStation(station.id)}>
             Analyse Circuit
@@ -113,7 +103,7 @@ export function PageTRSizing() {
               <ResultRow
                 label="Structure Resistance"
                 symbol="R_s"
-                value={tr.structureResistance.toFixed(4)}
+                value={project.structure_resistance_ohm.toFixed(4)}
                 unit="Ω"
               />
               <Divider />
@@ -144,7 +134,7 @@ export function PageTRSizing() {
               <ResultRow label="DC Power" value={r.dcPowerW.toString()} unit="W" />
               <ResultRow label="AC Input Power" value={r.acInputKVA.toFixed(2)} unit="kVA" />
               <ResultRow
-                label="AC Input Current (480V/3Φ)"
+                label={`AC Input Current (${project.ac_input_voltage_v}V/${project.ac_input_phase}Φ)`}
                 value={r.acInputCurrentA.toFixed(2)}
                 unit="A"
               />

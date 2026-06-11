@@ -19,6 +19,7 @@ import {
 } from 'lucide-react'
 import { getActiveStandard } from '../constants/index.js'
 import { useProjectStore } from '../store/projectStore.js'
+import { useAuthStore } from '../store/authStore.js'
 
 // ─── FieldInput ───────────────────────────────────────────────────────────────
 
@@ -37,8 +38,11 @@ export function FieldInput({
   className = '',
   ariaLabel,
 }) {
+  const user = useAuthStore((s) => s.user)
+  const isReadOnly = readOnly || user?.role === 'reviewer' || user?.role === 'viewer'
   const generatedId = useId().replace(/[^a-z0-9]/g, '')
   const inputId = ((ariaLabel || label || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')) || `field-input-${generatedId}`
+  
   return (
     <div className={`field ${className}`}>
       {label && <label className="field-label" htmlFor={inputId}>{label}</label>}
@@ -60,9 +64,10 @@ export function FieldInput({
           step={step}
           min={min}
           max={max}
-          readOnly={readOnly}
+          readOnly={isReadOnly}
+          disabled={isReadOnly && type === 'checkbox'}
           aria-label={ariaLabel || label || ''}
-          className={`field-input ${readOnly ? 'field-input--readonly' : ''}`}
+          className={`field-input ${isReadOnly ? 'field-input--readonly' : ''}`}
         />
         {unit && (
           <span className="field-unit" title={unitTitle}>
@@ -78,7 +83,10 @@ export function FieldInput({
 // ─── SelectField ──────────────────────────────────────────────────────────────
 
 export function SelectField({ label, value, onChange, options, hint }) {
+  const user = useAuthStore((s) => s.user)
+  const isReadOnly = user?.role === 'reviewer' || user?.role === 'viewer'
   const selectId = ((label || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')) || 'select-field'
+  
   return (
     <div className="field">
       <label className="field-label" htmlFor={selectId}>{label}</label>
@@ -88,6 +96,7 @@ export function SelectField({ label, value, onChange, options, hint }) {
         onChange={(e) => onChange && onChange(e.target.value)}
         className="field-input"
         aria-label={label}
+        disabled={isReadOnly}
       >
         {options.map((opt) => (
           <option key={opt.value} value={opt.value} disabled={opt.disabled}>

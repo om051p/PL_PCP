@@ -131,6 +131,16 @@ export function makeDefaultProject(overrides = {}) {
     revisions: [],
     currentRevision: null,
     archived: false,
+    design_life_target: 25,
+    back_emf_v: 2.0,
+    structure_resistance_ohm: 0.055,
+    ac_input_voltage_v: 480,
+    ac_input_phase: 3,
+    tr_efficiency_pct: 80,
+    tr_power_factor: 0.8,
+    coke_contingency_pct: 10,
+    min_remoteness_distance_m: 20,
+    actual_remoteness_distance_m: 56,
     ...overrides,
   }
 }
@@ -245,6 +255,7 @@ export const useProjectStore = create(
         calculatingStationId: null,
         theme: getInitialTheme(),
       },
+
 
       // ── Attenuation (per-project, stored in active project context) ──
       attenuationInput: null,
@@ -493,6 +504,7 @@ export const useProjectStore = create(
         try {
           // Delegate to calculation service (pure business logic)
           const calcResult = runFullCalculation(station, proj)
+          console.log("CALC RESULT:", JSON.stringify(calcResult, null, 2))
 
           // Update state with results
           set((state) => {

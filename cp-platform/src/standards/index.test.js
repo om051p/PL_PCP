@@ -87,9 +87,9 @@ describe('getActiveStandard()', () => {
 // ─── STANDARD_OPTIONS ────────────────────────────────────────────────────────
 
 describe('STANDARD_OPTIONS', () => {
-  it('is an array with 2 entries', () => {
+  it('is an array with 5 entries', () => {
     expect(Array.isArray(STANDARD_OPTIONS)).toBe(true)
-    expect(STANDARD_OPTIONS).toHaveLength(2)
+    expect(STANDARD_OPTIONS).toHaveLength(5)
   })
 
   it('each option has value, label, and description', () => {
@@ -115,7 +115,7 @@ describe('STANDARD_OPTIONS', () => {
 
   it('values match the STANDARD_REGISTRY keys', () => {
     const ids = STANDARD_OPTIONS.map((o) => o.value)
-    expect(ids).toEqual(['saudiAramco', 'nace'])
+    expect(ids).toEqual(['saudiAramco', 'nace', 'iso15589', 'pdo', 'adnoc'])
   })
 })
 

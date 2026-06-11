@@ -6,6 +6,7 @@
 
 import { useState, useCallback } from 'react'
 import { useProjectStore } from '../store/projectStore.js'
+import { useAuthStore } from '../store/authStore.js'
 import {
   FieldInput,
   SelectField,
@@ -14,9 +15,10 @@ import {
   StatusBadge,
   ConfirmDialog,
   Grid2,
+  Grid3,
 } from '../components/ui.jsx'
 import { ANODE_SPECS, STANDARD_OPTIONS } from '../constants/index.js'
-import { Building2, Cpu, Layers, Plus, Trash2 } from 'lucide-react'
+import { Building2, Cpu, Layers, Plus, Trash2, Settings } from 'lucide-react'
 
 export function PageProjectSetup() {
   const project = useProjectStore((s) => s.getProject())
@@ -27,6 +29,10 @@ export function PageProjectSetup() {
   const addStation = useProjectStore((s) => s.addStation)
   const [confirmDeleteId, setConfirmDeleteId] = useState(null)
 
+  const user = useAuthStore((s) => s.user)
+  const isReviewer = user?.role === 'reviewer' || user?.role === 'viewer'
+  const isEngineerOrReviewer = user?.role === 'engineer' || user?.role === 'reviewer' || user?.role === 'viewer'
+
   const handleDeleteStation = useCallback(() => {
     if (confirmDeleteId) {
       removeStation(confirmDeleteId)
@@ -36,7 +42,7 @@ export function PageProjectSetup() {
 
   return (
     <div className="page">
-      <Grid2>
+      <Grid3>
         <SectionCard title="Client Information" icon={Building2}>
           <FieldInput
             label="Project Number"
@@ -104,15 +110,98 @@ export function PageProjectSetup() {
             </div>
           </div>
         </SectionCard>
-      </Grid2>
+
+        <SectionCard title="Central Design Settings" icon={Settings}>
+          <FieldInput
+            label="Design Life Target"
+            value={project.design_life_target}
+            type="number"
+            unit="yrs"
+            onChange={(v) => updateProject({ design_life_target: parseInt(v) || 25 })}
+          />
+          <FieldInput
+            label="Back EMF Voltage"
+            value={project.back_emf_v}
+            type="number"
+            step={0.1}
+            unit="V"
+            onChange={(v) => updateProject({ back_emf_v: parseFloat(v) || 2.0 })}
+          />
+          <FieldInput
+            label="Structure to Earth Resistance"
+            value={project.structure_resistance_ohm}
+            type="number"
+            step={0.005}
+            unit="Ω"
+            onChange={(v) => updateProject({ structure_resistance_ohm: parseFloat(v) || 0.055 })}
+          />
+          <FieldInput
+            label="AC Input Voltage"
+            value={project.ac_input_voltage_v}
+            type="number"
+            unit="V"
+            onChange={(v) => updateProject({ ac_input_voltage_v: parseInt(v) || 480 })}
+          />
+          <SelectField
+            label="AC Input Phase"
+            value={project.ac_input_phase}
+            onChange={(v) => updateProject({ ac_input_phase: parseInt(v) || 3 })}
+            options={[
+              { value: 1, label: '1-Phase' },
+              { value: 3, label: '3-Phase' },
+            ]}
+          />
+          <FieldInput
+            label="TR Efficiency"
+            value={project.tr_efficiency_pct}
+            type="number"
+            unit="%"
+            min={1}
+            max={100}
+            onChange={(v) => updateProject({ tr_efficiency_pct: parseInt(v) || 80 })}
+          />
+          <FieldInput
+            label="TR Power Factor"
+            value={project.tr_power_factor}
+            type="number"
+            step={0.05}
+            min={0.1}
+            max={1.0}
+            onChange={(v) => updateProject({ tr_power_factor: parseFloat(v) || 0.8 })}
+          />
+          <FieldInput
+            label="Coke Contingency"
+            value={project.coke_contingency_pct}
+            type="number"
+            unit="%"
+            onChange={(v) => updateProject({ coke_contingency_pct: parseInt(v) || 10 })}
+          />
+          <FieldInput
+            label="Groundbed Remoteness Threshold"
+            value={project.min_remoteness_distance_m}
+            type="number"
+            unit="m"
+            onChange={(v) => updateProject({ min_remoteness_distance_m: parseFloat(v) || 20 })}
+          />
+          <FieldInput
+            label="Actual Nearest Structure Distance"
+            value={project.actual_remoteness_distance_m}
+            type="number"
+            unit="m"
+            onChange={(v) => updateProject({ actual_remoteness_distance_m: parseFloat(v) || 56 })}
+          />
+        </SectionCard>
+      </Grid3>
 
       <SectionCard
         title="ICCP Stations"
         icon={Layers}
         action={
-          <button className="btn btn-sm" onClick={addStation}>
-            <Plus size={14} /> Add Station
-          </button>
+          !isReviewer && (
+            <button className="btn btn-sm" onClick={addStation}>
+              <Plus size={14} /> Add Station
+            </button>
+          )
         }
       >
         <div className="stations-list">
@@ -144,7 +233,7 @@ export function PageProjectSetup() {
                 className="station-loc-input"
               />
               <StatusBadge status={st.status} />
-              {stations.length > 1 && (
+              {stations.length > 1 && !isEngineerOrReviewer && (
                 <button
                   className="btn-icon-ghost"
                   onClick={() => setConfirmDeleteId(st.id)}

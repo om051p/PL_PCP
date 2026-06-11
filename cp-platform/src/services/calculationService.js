@@ -44,7 +44,7 @@ export function runFullCalculation(station, project) {
   const activeStandard = getActiveStandard(project)
 
   // 3. Run core calculations
-  const result = runStationCalculations(station, project.systemDesignLifeYears, activeStandard)
+  const result = runStationCalculations(station, project.systemDesignLifeYears, activeStandard, project)
 
   // 4. Run validation rules + insights
   const { checks, insights, allPassed } = runRules(station, result, activeStandard)

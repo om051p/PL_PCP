@@ -192,16 +192,17 @@ const VALIDATION_RULES = [
     id: 'BR-006',
     check: (station, result, cfg = {}) => {
       const minRemoteness = cfg.groundbed?.minRemotenessM ?? THRESHOLDS.MIN_REMOTENESS_M
-      const required = calcRequiredRemotenessM(
+      const actual = result?.actualRemotenesM !== undefined ? result.actualRemotenesM : station.actualRemotenesM
+      const required = result?.requiredRemotenesM !== undefined ? result.requiredRemotenesM : (calcRequiredRemotenessM(
         station.tr.ratedCurrent,
         station.soilResistivityOhmCm,
-      ) ?? minRemoteness
-      const pass = station.actualRemotenesM >= required
+      ) ?? minRemoteness)
+      const pass = actual >= required
       return {
         id: 'BR-006',
         label: `Groundbed Remoteness ≥ ${required}m (SAES-X-400)`,
         status: pass ? 'pass' : 'fail',
-        computed: `${station.actualRemotenesM}m actual`,
+        computed: `${actual}m actual`,
         limit: `≥ ${required}m`,
         recommendation: pass
           ? null
@@ -210,15 +211,16 @@ const VALIDATION_RULES = [
     },
     insight: (station, result, cfg = {}) => {
       const minRemoteness = cfg.groundbed?.minRemotenessM ?? THRESHOLDS.MIN_REMOTENESS_M
-      const required = calcRequiredRemotenessM(
+      const actual = result?.actualRemotenesM !== undefined ? result.actualRemotenesM : station.actualRemotenesM
+      const required = result?.requiredRemotenesM !== undefined ? result.requiredRemotenesM : (calcRequiredRemotenessM(
         station.tr.ratedCurrent,
         station.soilResistivityOhmCm,
-      ) ?? minRemoteness
-      if (station.actualRemotenesM >= required) return null
+      ) ?? minRemoteness)
+      if (actual >= required) return null
       return {
         severity: 'error',
         title: 'Groundbed Too Close to Pipeline',
-        message: `Actual distance (${station.actualRemotenesM}m) is less than the required minimum (${required}m) per SAES-X-400. This can cause current channelling and coating damage.`,
+        message: `Actual distance (${actual}m) is less than the required minimum (${required}m) per SAES-X-400. This can cause current channelling and coating damage.`,
         recommendations: [
           `Relocate groundbed to achieve ≥${required}m separation.`,
           `Verify remoteness calculation accounts for all pipeline routes in the area.`,

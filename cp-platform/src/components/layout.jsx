@@ -34,33 +34,43 @@ import {
 
 const NAV_ITEMS = [
   {
-    section: 'Workspace',
+    section: 'WORKSPACE',
     items: [{ id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard }],
   },
   {
-    section: 'Project',
+    section: 'PROJECT DEFINITION',
     items: [
-      { id: 'project', label: 'Project Setup', icon: FolderOpen },
+      { id: 'project', label: 'Design Basis', icon: FolderOpen },
       { id: 'pipeline', label: 'Pipeline Parameters', icon: Route },
     ],
   },
   {
-    section: 'Engineering',
+    section: 'ENGINEERING ANALYSIS',
     items: [
       { id: 'current', label: 'Current Requirement', icon: Zap },
       { id: 'groundbed', label: 'Groundbed Design', icon: Layers },
       { id: 'cable', label: 'Cable Resistance', icon: Cable },
       { id: 'tr', label: 'TR Sizing', icon: Cpu },
-      { id: 'attenuation', label: 'Attenuation', icon: Signal },
+      { id: 'attenuation', label: 'Attenuation Analysis', icon: Signal },
     ],
   },
   {
-    section: 'Output',
+    section: 'DESIGN REVIEW',
     items: [
       { id: 'validation', label: 'Validation', icon: ClipboardCheck, badge: true },
       { id: 'optimizer', label: 'Design Optimizer', icon: Activity },
+    ],
+  },
+  {
+    section: 'DELIVERABLES',
+    items: [
       { id: 'bom', label: 'Bill of Materials', icon: List },
-      { id: 'report', label: 'Summary Report', icon: FileText },
+      { id: 'report', label: 'Engineering Report', icon: FileText },
+    ],
+  },
+  {
+    section: 'TOOLS',
+    items: [
       { id: 'import', label: 'Import Excel', icon: Upload },
     ],
   },
@@ -76,7 +86,7 @@ const NAV_ITEMS = [
 
 const PAGE_META = {
   dashboard: { title: 'Project Dashboard', sub: 'Overview of all projects and recent activity' },
-  project: { title: 'Project Setup', sub: 'Client details, station count, system configuration' },
+  project: { title: 'Design Basis', sub: 'Client details, station count, system configuration' },
   pipeline: { title: 'Pipeline Parameters', sub: 'Geometry, operating conditions, soil resistivity' },
   current: { title: 'Current Requirement', sub: 'Protection current calculation with temperature correction' },
   groundbed: { title: 'Groundbed Design', sub: 'Anode bed configuration and resistance calculations' },
@@ -85,7 +95,7 @@ const PAGE_META = {
   validation: { title: 'Engineering Validation', sub: 'Automated PASS/FAIL checks with engineering insights' },
   optimizer: { title: 'Design Optimizer', sub: 'Alternative designs with trade-off analysis' },
   bom: { title: 'Bill of Materials', sub: 'Auto-generated material quantities (requires Approved status)' },
-  report: { title: 'Summary Report', sub: 'Consolidated engineering design summary' },
+  report: { title: 'Engineering Report', sub: 'Consolidated engineering design summary' },
   import: { title: 'Import from Excel', sub: 'Upload PCP.xlsx or CP Designer export to populate project data' },
   attenuation: { title: 'Attenuation Analysis', sub: 'Transmission-line cosh model · NACE SP0169 · ISO 15589-1' },
   settings: { title: 'Settings', sub: 'Application settings and configuration' },

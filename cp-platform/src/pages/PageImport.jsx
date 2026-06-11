@@ -6,6 +6,7 @@
 
 import { useState, useRef } from 'react'
 import { useProjectStore } from '../store/projectStore.js'
+import { useAuthStore } from '../store/authStore.js'
 import {
   ResultRow,
   SectionCard,
@@ -19,9 +20,11 @@ export function PageImport() {
   const fileRef = useRef(null)
   const [status, setStatus] = useState(null) // null | 'loading' | {errors, count}
   const [dragOver, setDragOver] = useState(false)
+  const user = useAuthStore((s) => s.user)
+  const isReviewer = user?.role === 'reviewer' || user?.role === 'viewer'
 
   async function handleFile(file) {
-    if (!file) return
+    if (!file || isReviewer) return
     setStatus('loading')
     try {
       const { importFromExcel } = await import('../reporting/excelEngine.js')
@@ -45,27 +48,42 @@ export function PageImport() {
   return (
     <div className="page">
       <SectionCard title="Import from Excel" icon={Upload}>
-        <InfoBox type="info">
-          Supported formats: CP Designer export (.xlsx) · Generic PCP workbook (.xlsx / .xls)
-        </InfoBox>
+        {isReviewer ? (
+          <InfoBox type="warning">
+            Excel Import is disabled for Reviewer and Viewer roles.
+          </InfoBox>
+        ) : (
+          <InfoBox type="info">
+            Supported formats: CP Designer export (.xlsx) · Generic PCP workbook (.xlsx / .xls)
+          </InfoBox>
+        )}
 
         <div
           className={`drop-zone ${dragOver ? 'drop-zone--over' : ''}`}
           onDragOver={(e) => {
+            if (isReviewer) return
             e.preventDefault()
             setDragOver(true)
           }}
           onDragLeave={() => setDragOver(false)}
           onDrop={(e) => {
+            if (isReviewer) return
             e.preventDefault()
             setDragOver(false)
             handleFile(e.dataTransfer.files[0])
           }}
-          onClick={() => fileRef.current?.click()}
+          onClick={() => {
+            if (isReviewer) return
+            fileRef.current?.click()
+          }}
+          style={{
+            cursor: isReviewer ? 'not-allowed' : 'pointer',
+            opacity: isReviewer ? 0.6 : 1,
+          }}
         >
           <FileSpreadsheet size={32} style={{ color: 'var(--brand-mid)', marginBottom: 8 }} />
           <div style={{ fontWeight: 500, marginBottom: 4 }}>
-            Drop Excel file here or click to browse
+            {isReviewer ? 'Excel Import Disabled' : 'Drop Excel file here or click to browse'}
           </div>
           <div style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>
             .xlsx or .xls · Max 10MB
@@ -78,6 +96,7 @@ export function PageImport() {
             style={{ display: 'none' }}
             onChange={(e) => handleFile(e.target.files[0])}
             aria-label="Choose Excel file to import"
+            disabled={isReviewer}
           />
         </div>
 

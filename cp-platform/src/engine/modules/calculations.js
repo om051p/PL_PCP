@@ -346,6 +346,8 @@ export function calcTRCircuit(
     circuitResWarning = THRESHOLDS.CIRCUIT_RESISTANCE_WARNING,
     trEfficiency = THRESHOLDS.TR_EFFICIENCY,
     rectifierEfficiency = THRESHOLDS.RECTIFIER_EFFICIENCY,
+    acInputVoltage = 480,
+    acInputPhase = 3,
   } = circuitConfig
 
   const R_emf = trRatedCurrent > 0 ? (2 * backEMFVolts) / trRatedCurrent : 0
@@ -357,7 +359,9 @@ export function calcTRCircuit(
 
   const dcPowerW = trRatedVoltage * trRatedCurrent
   const acInputKVA = dcPowerW / (trEfficiency * rectifierEfficiency * 1000)
-  const acInputCurrentA = (acInputKVA * 1000) / (480 * Math.sqrt(3))
+  const acInputCurrentA = acInputPhase === 3
+    ? (acInputKVA * 1000) / (acInputVoltage * Math.sqrt(3))
+    : (acInputKVA * 1000) / acInputVoltage
 
   return {
     backEMFResOhm: R_emf,
@@ -433,7 +437,7 @@ export function calcCokeRequirement(activeLengthM, cokeConfig = {}) {
  * @param {object|null} [standardConfig=null] - Pre-resolved standard config. If null, uses Saudi Aramco defaults.
  * @returns {import('../types').CalcResult}
  */
-export function runStationCalculations(station, systemDesignLifeYears, standardConfig = null) {
+export function runStationCalculations(station, systemDesignLifeYears, standardConfig = null, project = null) {
   const {
     id,
     pipelineSegments,
@@ -445,7 +449,13 @@ export function runStationCalculations(station, systemDesignLifeYears, standardC
     soilResistivityOhmCm,
     designLifeYears,
   } = station
-  const targetLife = designLifeYears || systemDesignLifeYears
+
+  // Use project-level overrides if available
+  const targetLife = project?.design_life_target || designLifeYears || systemDesignLifeYears
+  const backEMF = project?.back_emf_v !== undefined ? project.back_emf_v : tr.backEMF
+  const structureResistance = project?.structure_resistance_ohm !== undefined ? project.structure_resistance_ohm : tr.structureResistance
+  const actualRemoteness = project?.actual_remoteness_distance_m !== undefined ? project.actual_remoteness_distance_m : station.actualRemotenesM
+  const minRemoteness = project?.min_remoteness_distance_m !== undefined ? project.min_remoteness_distance_m : station.requiredRemotenesM
 
   // ── Extract standard-driven values ───────────────────────────────────────
   const cr = standardConfig?.currentRequirement || {}
@@ -466,19 +476,27 @@ export function runStationCalculations(station, systemDesignLifeYears, standardC
   // 3. Cable resistances (no standard-specific values — pure cable specs)
   const cableResult = calcCableResistances(cables, proposedAnodes)
 
+  // Resolve TR configuration overrides
+  const trEfficiency = project?.tr_efficiency_pct !== undefined ? (project.tr_efficiency_pct / 100) : ts.efficiency
+  const trPowerFactor = project?.tr_power_factor !== undefined ? project.tr_power_factor : ts.rectifierEfficiency
+  const acInputVoltage = project?.ac_input_voltage_v || ts.inputVoltage || 480
+  const acInputPhase = project?.ac_input_phase || ts.inputPhases || 3
+
   // 4. TR circuit (with standard-driven efficiencies and limits)
   const trResult = calcTRCircuit(
     gbResult.resistanceOhm,
     cableResult.totalCableOhm,
-    tr.backEMF,
-    tr.structureResistance,
+    backEMF,
+    structureResistance,
     tr.ratedVoltage,
     tr.ratedCurrent,
     {
       circuitResOperating: ts.circuitResistanceOperating,
       circuitResWarning: ts.circuitResistanceWarning,
-      trEfficiency: ts.efficiency,
-      rectifierEfficiency: ts.rectifierEfficiency,
+      trEfficiency: trEfficiency,
+      rectifierEfficiency: trPowerFactor,
+      acInputVoltage: acInputVoltage,
+      acInputPhase: acInputPhase,
     },
   )
 
@@ -491,6 +509,9 @@ export function runStationCalculations(station, systemDesignLifeYears, standardC
     dl.anodeUtilizationFactor,
   )
 
+  // Resolve Coke contingency overrides
+  const cokeContingency = project?.coke_contingency_pct !== undefined ? (1 + project.coke_contingency_pct / 100) : cb.contingency
+
   // 6. Coke backfill requirement (with standard-driven constants)
   const cokeActiveLength =
     groundbed.type === 'shallow_vertical'
@@ -500,7 +521,7 @@ export function runStationCalculations(station, systemDesignLifeYears, standardC
     ftPerM: cb.ftPerM,
     annulusFactor: cb.annulusFactor,
     bagLbs: cb.bagLbs,
-    contingency: cb.contingency,
+    contingency: cokeContingency,
   })
 
   return {
@@ -536,6 +557,9 @@ export function runStationCalculations(station, systemDesignLifeYears, standardC
     // Coke backfill
     cokeBagsBase: cokeResult.bagsBase,
     cokeBagsWithContingency: cokeResult.bagsWithContingency,
+    // Remoteness
+    actualRemotenesM: actualRemoteness,
+    requiredRemotenesM: minRemoteness,
     // Raw current calcs
     perSegmentCurrents: currentResult.perSegment,
   }

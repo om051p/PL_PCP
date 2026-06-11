@@ -492,4 +492,40 @@ describe('runStationCalculations', () => {
       expect(nace.standardsReferences.testStation).toBe('NACE TM0497')
     })
   })
+
+  describe('Project configuration overrides', () => {
+    it('applies project level overrides for back EMF, structure resistance, and design life', () => {
+      const mockProject = {
+        design_life_target: 40,
+        back_emf_v: 1.5,
+        structure_resistance_ohm: 0.12,
+        ac_input_voltage_v: 230,
+        ac_input_phase: 1,
+        tr_efficiency_pct: 90,
+        tr_power_factor: 0.9,
+        coke_contingency_pct: 5,
+      }
+      
+      const result = runStationCalculations(station, 25, null, mockProject)
+      
+      // Target life should match project level (40) rather than station (25)
+      expect(result.targetDesignLifeYears).toBe(40)
+      
+      // Check back EMF resistance override: R_emf = (2 * back_emf_v) / ratedCurrent = (2 * 1.5) / 25 = 3 / 25 = 0.12 Ω
+      expect(result.backEMFResistanceOhm).toBeCloseTo(0.12, 3)
+      
+      // Check AC input calculation with overrides:
+      // dcPowerW = 30 * 25 = 750W
+      // acInputKVA = 750 / (0.9 * 0.9 * 1000) = 750 / 810 = 0.9259 kVA
+      expect(result.acInputKVA).toBeCloseTo(0.9259, 4)
+      
+      // acInputCurrentA = (0.9259 * 1000) / 230 (since 1-phase) = 925.9 / 230 = 4.026 A
+      expect(result.acInputCurrentA).toBeCloseTo(4.026, 3)
+      
+      // Coke bags with contingency override (5%):
+      // base length = 31.17, cokeBagsBase = 81
+      // with 5% contingency: ceil(81 * 1.05) = 86 bags
+      expect(result.cokeBagsWithContingency).toBe(86)
+    })
+  })
 })

@@ -70,9 +70,11 @@ describe('projectStore', () => {
       }),
     }
     vi.stubGlobal('localStorage', mockStorage)
+    const defaultProj = makeDefaultProject()
     useProjectStore.setState({
-      project: makeDefaultProject(),
-      activeStationId: null,
+      projects: [defaultProj],
+      activeProjectId: defaultProj.id,
+      activeStationId: defaultProj.stations[0].id,
       ui: { sidebarCollapsed: false, calculatingStationId: null },
     })
   })
@@ -82,13 +84,13 @@ describe('projectStore', () => {
   describe('updateProject', () => {
     it('updates project fields', () => {
       useProjectStore.getState().updateProject({ clientName: 'New Client' })
-      expect(useProjectStore.getState().project.clientName).toBe('New Client')
+      expect(useProjectStore.getState().getProject().clientName).toBe('New Client')
     })
 
     it('updates updatedAt timestamp', () => {
       const store = useProjectStore.getState()
       store.updateProject({ clientName: 'X' })
-      const after = useProjectStore.getState().project.updatedAt
+      const after = useProjectStore.getState().getProject().updatedAt
       expect(typeof after).toBe('string')
     })
   })
@@ -98,14 +100,14 @@ describe('projectStore', () => {
       const store = useProjectStore.getState()
       store.updateProject({ clientName: 'Custom' })
       store.newProject()
-      const fresh = useProjectStore.getState().project
+      const fresh = useProjectStore.getState().getProject()
       expect(fresh.clientName).toBe('Client Name')
     })
 
     it('sets active station to first station', () => {
       useProjectStore.getState().newProject()
       const state = useProjectStore.getState()
-      expect(state.activeStationId).toBe(state.project.stations[0].id)
+      expect(state.activeStationId).toBe(state.getProject().stations[0].id)
     })
   })
 
@@ -122,16 +124,16 @@ describe('projectStore', () => {
   describe('addStation', () => {
     it('adds a new station with incremented name', () => {
       const store = useProjectStore.getState()
-      const originalCount = store.project.stations.length
+      const originalCount = store.getProject().stations.length
       store.addStation()
-      expect(useProjectStore.getState().project.stations).toHaveLength(originalCount + 1)
-      const last = useProjectStore.getState().project.stations.at(-1)
+      expect(useProjectStore.getState().getProject().stations).toHaveLength(originalCount + 1)
+      const last = useProjectStore.getState().getProject().stations.at(-1)
       expect(last.name).toContain('Station-2')
     })
 
     it('sets newly added station as active', () => {
       useProjectStore.getState().addStation()
-      const last = useProjectStore.getState().project.stations.at(-1)
+      const last = useProjectStore.getState().getProject().stations.at(-1)
       expect(useProjectStore.getState().activeStationId).toBe(last.id)
     })
   })
@@ -139,24 +141,24 @@ describe('projectStore', () => {
   describe('removeStation', () => {
     it('removes a station by id', () => {
       const store = useProjectStore.getState()
-      const id = store.project.stations[0].id
+      const id = store.getProject().stations[0].id
       store.addStation()
       store.removeStation(id)
-      const remaining = useProjectStore.getState().project.stations
+      const remaining = useProjectStore.getState().getProject().stations
       expect(remaining.find((s) => s.id === id)).toBeUndefined()
     })
 
     it('does nothing when only 1 station remains', () => {
       const store = useProjectStore.getState()
-      const id = store.project.stations[0].id
+      const id = store.getProject().stations[0].id
       store.removeStation(id)
-      expect(useProjectStore.getState().project.stations).toHaveLength(1)
+      expect(useProjectStore.getState().getProject().stations).toHaveLength(1)
     })
 
     it('switches active station when removed station was active', () => {
       const store = useProjectStore.getState()
       store.addStation()
-      const firstId = store.project.stations[0].id
+      const firstId = store.getProject().stations[0].id
       store.removeStation(firstId)
       expect(useProjectStore.getState().activeStationId).not.toBe(firstId)
     })
@@ -165,29 +167,29 @@ describe('projectStore', () => {
   describe('updateStation', () => {
     it('updates station with object', () => {
       const store = useProjectStore.getState()
-      const id = store.project.stations[0].id
+      const id = store.getProject().stations[0].id
       store.updateStation(id, { location: 'KM 10+000' })
-      const s = useProjectStore.getState().project.stations.find((st) => st.id === id)
+      const s = useProjectStore.getState().getProject().stations.find((st) => st.id === id)
       expect(s.location).toBe('KM 10+000')
     })
 
     it('updates station with function updater', () => {
       const store = useProjectStore.getState()
-      const id = store.project.stations[0].id
+      const id = store.getProject().stations[0].id
       store.updateStation(id, (s) => {
         s.location = 'KM 20+000'
         s.proposedAnodes = 15
       })
-      const s = useProjectStore.getState().project.stations.find((st) => st.id === id)
+      const s = useProjectStore.getState().getProject().stations.find((st) => st.id === id)
       expect(s.location).toBe('KM 20+000')
       expect(s.proposedAnodes).toBe(15)
     })
 
     it('clears lastCalcResult on update', () => {
       const store = useProjectStore.getState()
-      const id = store.project.stations[0].id
+      const id = store.getProject().stations[0].id
       store.updateStation(id, { location: 'X' })
-      const s = useProjectStore.getState().project.stations.find((st) => st.id === id)
+      const s = useProjectStore.getState().getProject().stations.find((st) => st.id === id)
       expect(s.lastCalcResult).toBeNull()
     })
 
@@ -200,25 +202,25 @@ describe('projectStore', () => {
   describe('updateSegment', () => {
     it('updates segment fields', () => {
       const store = useProjectStore.getState()
-      const station = store.project.stations[0]
+      const station = store.getProject().stations[0]
       const segId = station.pipelineSegments[0].id
       store.updateSegment(station.id, segId, { lengthM: 500 })
-      const updated = useProjectStore.getState().project.stations[0].pipelineSegments[0]
+      const updated = useProjectStore.getState().getProject().stations[0].pipelineSegments[0]
       expect(updated.lengthM).toBe(500)
     })
 
     it('clears lastCalcResult on segment update', () => {
       const store = useProjectStore.getState()
-      const station = store.project.stations[0]
+      const station = store.getProject().stations[0]
       store.updateStation(station.id, { lastCalcResult: { some: 'data' } })
       store.updateSegment(station.id, station.pipelineSegments[0].id, { lengthM: 500 })
-      const updated = useProjectStore.getState().project.stations.find((s) => s.id === station.id)
+      const updated = useProjectStore.getState().getProject().stations.find((s) => s.id === station.id)
       expect(updated.lastCalcResult).toBeNull()
     })
 
     it('is no-op for unknown segment id', () => {
       const store = useProjectStore.getState()
-      const station = store.project.stations[0]
+      const station = store.getProject().stations[0]
       expect(() =>
         store.updateSegment(station.id, 'does-not-exist', { lengthM: 500 }),
       ).not.toThrow()
@@ -230,33 +232,33 @@ describe('projectStore', () => {
   describe('calculateStation', () => {
     it('sets calculatingStationId during execution', () => {
       const store = useProjectStore.getState()
-      const id = store.project.stations[0].id
+      const id = store.getProject().stations[0].id
       store.calculateStation(id)
       expect(useProjectStore.getState().ui.calculatingStationId).toBeNull()
     })
 
     it('sets lastCalcResult on station', () => {
       const store = useProjectStore.getState()
-      const id = store.project.stations[0].id
+      const id = store.getProject().stations[0].id
       store.calculateStation(id)
-      const s = useProjectStore.getState().project.stations.find((st) => st.id === id)
+      const s = useProjectStore.getState().getProject().stations.find((st) => st.id === id)
       expect(s.lastCalcResult).toBeTruthy()
       expect(s.lastCalcResult.requiredCurrentA).toBeCloseTo(0.1979, 3)
     })
 
     it('sets station status to calculated', () => {
       const store = useProjectStore.getState()
-      const id = store.project.stations[0].id
+      const id = store.getProject().stations[0].id
       store.calculateStation(id)
-      const s = useProjectStore.getState().project.stations.find((st) => st.id === id)
+      const s = useProjectStore.getState().getProject().stations.find((st) => st.id === id)
       expect(s.status).toBe('calculated')
     })
 
     it('attaches checks and insights to result', () => {
       const store = useProjectStore.getState()
-      const id = store.project.stations[0].id
+      const id = store.getProject().stations[0].id
       store.calculateStation(id)
-      const s = useProjectStore.getState().project.stations.find((st) => st.id === id)
+      const s = useProjectStore.getState().getProject().stations.find((st) => st.id === id)
       expect(s.lastCalcResult).toHaveProperty('allChecksPassed')
       expect(s.lastCalcResult.allChecksPassed).toBe(true)
     })
@@ -264,9 +266,9 @@ describe('projectStore', () => {
     it('generates BOM for non-draft projects', () => {
       const store = useProjectStore.getState()
       store.updateProject({ status: 'approved' })
-      const id = store.project.stations[0].id
+      const id = store.getProject().stations[0].id
       store.calculateStation(id)
-      const s = useProjectStore.getState().project.stations.find((st) => st.id === id)
+      const s = useProjectStore.getState().getProject().stations.find((st) => st.id === id)
       expect(s.lastCalcResult.bom).toHaveLength(2)
     })
 
@@ -280,7 +282,7 @@ describe('projectStore', () => {
     it('calculates all stations', () => {
       useProjectStore.getState().addStation()
       useProjectStore.getState().calculateAllStations()
-      const all = useProjectStore.getState().project.stations
+      const all = useProjectStore.getState().getProject().stations
       all.forEach((s) => expect(s.lastCalcResult).toBeTruthy())
     })
   })
@@ -288,7 +290,7 @@ describe('projectStore', () => {
   describe('getBOMForStation', () => {
     it('returns empty array when station has no calc result', () => {
       const store = useProjectStore.getState()
-      const id = store.project.stations[0].id
+      const id = store.getProject().stations[0].id
       const bom = store.getBOMForStation(id)
       expect(bom).toEqual([])
     })
@@ -296,7 +298,7 @@ describe('projectStore', () => {
     it('returns BOM items when status is allowed', () => {
       const store = useProjectStore.getState()
       store.updateProject({ status: 'approved' })
-      const id = store.project.stations[0].id
+      const id = store.getProject().stations[0].id
       store.calculateStation(id)
       const bom = store.getBOMForStation(id)
       expect(Array.isArray(bom)).toBe(true)
@@ -305,7 +307,7 @@ describe('projectStore', () => {
 
     it('returns locked object when status not allowed', () => {
       const store = useProjectStore.getState()
-      const id = store.project.stations[0].id
+      const id = store.getProject().stations[0].id
       store.calculateStation(id)
       // project is default 'draft' and station is 'calculated' — both not in BOM_ALLOWED_STATUSES
       // This test depends on BOM_ALLOWED_STATUSES value — assumed strict
@@ -320,9 +322,9 @@ describe('projectStore', () => {
   describe('advanceWorkflow', () => {
     it('updates station status', () => {
       const store = useProjectStore.getState()
-      const id = store.project.stations[0].id
+      const id = store.getProject().stations[0].id
       store.advanceWorkflow(id, 'approved', 'Design approved')
-      const s = useProjectStore.getState().project.stations.find((st) => st.id === id)
+      const s = useProjectStore.getState().getProject().stations.find((st) => st.id === id)
       expect(s.status).toBe('approved')
       expect(s.statusNotes).toBe('Design approved')
     })
@@ -339,19 +341,19 @@ describe('projectStore', () => {
     it('creates a revision with snapshot', () => {
       useProjectStore.getState().createRevision('Initial design')
       const st = useProjectStore.getState()
-      expect(st.project.revisions).toHaveLength(1)
-      expect(st.project.revisions[0].description).toBe('Initial design')
+      expect(st.getProject().revisions).toHaveLength(1)
+      expect(st.getProject().revisions[0].description).toBe('Initial design')
     })
 
     it('sets currentRevision to REV-0 for first revision', () => {
       useProjectStore.getState().createRevision('Initial design')
-      expect(useProjectStore.getState().project.currentRevision).toBe('REV-0')
+      expect(useProjectStore.getState().getProject().currentRevision).toBe('REV-0')
     })
 
     it('snapshot preserves project state at time of creation', () => {
       useProjectStore.getState().createRevision('Before changes')
       const st = useProjectStore.getState()
-      expect(st.project.revisions[0].snapshot.clientName).toBe('Client Name')
+      expect(st.getProject().revisions[0].snapshot.clientName).toBe('Client Name')
     })
   })
 
@@ -375,9 +377,9 @@ describe('projectStore', () => {
 
     it('returns station matching activeStationId', () => {
       const store = useProjectStore.getState()
-      store.setActiveStation(store.project.stations[0].id)
+      store.setActiveStation(store.getProject().stations[0].id)
       const station = store.getActiveStation()
-      expect(station.id).toBe(store.project.stations[0].id)
+      expect(station.id).toBe(store.getProject().stations[0].id)
     })
   })
 
@@ -389,7 +391,7 @@ describe('projectStore', () => {
     it('counts fail checks across all stations', () => {
       const store = useProjectStore.getState()
       store.addStation()
-      store.project.stations.forEach((s) => {
+      store.getProject().stations.forEach((s) => {
         store.calculateStation(s.id)
       })
       const count = useProjectStore.getState().getTotalValidationFailCount()
@@ -404,7 +406,7 @@ describe('projectStore', () => {
 
     it('returns true when all stations calculated', () => {
       const store = useProjectStore.getState()
-      store.project.stations.forEach((s) => {
+      store.getProject().stations.forEach((s) => {
         store.calculateStation(s.id)
       })
       expect(useProjectStore.getState().getAllStationsCalculated()).toBe(true)
