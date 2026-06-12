@@ -4,22 +4,22 @@ import { mapFirebaseError, mapAuthError } from '../errorMessages.js'
 describe('mapFirebaseError()', () => {
   it('maps auth/invalid-credential to friendly message', () => {
     const result = mapFirebaseError(new Error('Firebase: Error (auth/invalid-credential).'))
-    expect(result).toBe('Invalid email or password. Please try again.')
+    expect(result).toBe('Invalid Email or Password\n\nThe email address or password entered is incorrect.\n\nPlease verify your credentials and try again.')
   })
 
   it('maps auth/user-not-found to friendly message', () => {
     const result = mapFirebaseError(new Error('Firebase: Error (auth/user-not-found).'))
-    expect(result).toBe('No account found with this email address.')
+    expect(result).toBe('Invalid Email or Password\n\nThe email address or password entered is incorrect.\n\nPlease verify your credentials and try again.')
   })
 
   it('maps auth/wrong-password to friendly message', () => {
     const result = mapFirebaseError(new Error('Firebase: Error (auth/wrong-password).'))
-    expect(result).toBe('Incorrect password. Please try again.')
+    expect(result).toBe('Invalid Email or Password\n\nThe email address or password entered is incorrect.\n\nPlease verify your credentials and try again.')
   })
 
   it('maps auth/too-many-requests to friendly message', () => {
     const result = mapFirebaseError(new Error('Firebase: Error (auth/too-many-requests).'))
-    expect(result).toBe('Too many failed attempts. Please try again later.')
+    expect(result).toBe('Account Temporarily Locked\n\nToo many unsuccessful login attempts were detected.\n\nPlease wait and try again later or reset your password.')
   })
 
   it('maps permission-denied to friendly message', () => {
@@ -29,7 +29,7 @@ describe('mapFirebaseError()', () => {
 
   it('maps auth/network-request-failed', () => {
     const result = mapFirebaseError(new Error('Firebase: Error (auth/network-request-failed).'))
-    expect(result).toBe('Network error. Please check your connection.')
+    expect(result).toBe('Connection Error\n\nUnable to contact the authentication service.\n\nCheck your internet connection and try again.')
   })
 
   it('returns generic message for unknown errors', () => {
@@ -68,7 +68,7 @@ describe('mapAuthError()', () => {
 
   it('maps regular auth errors', () => {
     const result = mapAuthError(new Error('Firebase: Error (auth/invalid-credential).'))
-    expect(result.message).toBe('Invalid email or password. Please try again.')
+    expect(result.message).toBe('Invalid Email or Password\n\nThe email address or password entered is incorrect.\n\nPlease verify your credentials and try again.')
     expect(result.isDomainError).toBe(false)
   })
 

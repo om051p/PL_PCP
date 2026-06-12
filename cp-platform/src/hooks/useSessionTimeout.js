@@ -10,7 +10,7 @@
  * - ACTIVITY_EVENTS: Events that reset the idle timer
  */
 
-import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { useAuthStore } from '../store/authStore.js'
 
 /** Idle timeout: 30 minutes */
@@ -37,11 +37,12 @@ const ACTIVITY_EVENTS = [
 export function useSessionTimeout() {
   const user = useAuthStore((s) => s.user)
   const logout = useAuthStore((s) => s.logout)
+  const sessionStart = useAuthStore((s) => s.sessionStart)
 
   const [showWarning, setShowWarning] = useState(false)
   const [timeRemaining, setTimeRemaining] = useState(TIMEOUT_MS)
 
-  const lastActivityRef = useRef(Date.now())
+  const lastActivityRef = useRef(null)
   const warningTimerRef = useRef(null)
   const logoutTimerRef = useRef(null)
   const intervalRef = useRef(null)
@@ -89,7 +90,9 @@ export function useSessionTimeout() {
 
   // Use ref for showWarning to avoid re-attaching listeners on state change
   const showWarningRef = useRef(showWarning)
-  showWarningRef.current = showWarning
+  useEffect(() => {
+    showWarningRef.current = showWarning
+  }, [showWarning])
 
   // Handle activity events
   useEffect(() => {
@@ -129,6 +132,24 @@ export function useSessionTimeout() {
       resetTimer()
     }
   }, [user, resetTimer])
+
+  // Max Session Lifespan Check (12 hours limit)
+  useEffect(() => {
+    if (!user || !sessionStart) return
+
+    const checkMaxSession = () => {
+      const elapsed = Date.now() - sessionStart
+      if (elapsed >= 12 * 60 * 60 * 1000) {
+        logout({ expired: true }).catch(() => {})
+      }
+    }
+
+    // Check every 60 seconds
+    const interval = setInterval(checkMaxSession, 60000)
+    checkMaxSession() // check immediately
+
+    return () => clearInterval(interval)
+  }, [user, sessionStart, logout])
 
   return { showWarning, timeRemaining, staySignedIn }
 }

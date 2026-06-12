@@ -1,17 +1,8 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { immer } from 'zustand/middleware/immer'
-import {
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged,
-  sendPasswordResetEmail,
-  sendEmailVerification,
-} from 'firebase/auth'
-import { getFirestore, doc, getDoc, setDoc, collection, getDocs } from 'firebase/firestore'
-import { auth } from '../firebase/config.js'
-import { mapFirebaseError } from '../config/errorMessages.js'
+import { authRepository } from '../repositories/authRepository.js'
+import { userRepository } from '../repositories/userRepository.js'
 import { validateUserDomain, DOMAIN_RESTRICTION_MESSAGE, DEFAULT_ROLE, DEACTIVATION_MESSAGE } from '../config/authPolicy.js'
 
 /**
@@ -28,20 +19,11 @@ import { validateUserDomain, DOMAIN_RESTRICTION_MESSAGE, DEFAULT_ROLE, DEACTIVAT
  */
 
 /**
- * Helper to log immutable audit events to Firestore.
+ * Helper to log immutable audit events via UserRepository.
  */
 export async function logAuditEvent(action, targetUser, performedBy, details = {}) {
   try {
-    const db = getFirestore()
-    const logId = `log-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
-    await setDoc(doc(db, 'audit_logs', logId), {
-      action,
-      targetUser,
-      performedBy: performedBy || 'system',
-      timestamp: new Date().toISOString(),
-      details,
-      organizationId: 'ikk'
-    })
+    await userRepository.logAuditEvent(action, targetUser, performedBy, details)
   } catch (err) {
     console.warn('[AuditLog] Failed to write audit log:', err.message)
   }
@@ -62,58 +44,6 @@ function mapFirebaseUser(firebaseUser, role = DEFAULT_ROLE, isActive = true, nam
   }
 }
 
-/**
- * Fetch user profile from Firestore or bootstrap rahul.panchal@ikkgroup.com
- */
-async function fetchUserProfile(uid, email = null) {
-  if (!uid) return null
-  
-  try {
-    const db = getFirestore()
-    
-    // Wrap Firestore fetch in a 2-second timeout to prevent blocking the UI
-    const fetchPromise = getDoc(doc(db, 'users', uid))
-    const timeoutPromise = new Promise((_, reject) =>
-      setTimeout(() => reject(new Error('Firestore request timed out')), 2000)
-    )
-    
-    const userDoc = await Promise.race([fetchPromise, timeoutPromise])
-    
-    if (userDoc.exists()) {
-      return userDoc.data()
-    }
-  } catch (err) {
-    console.warn('[Auth] Firestore fetch failed or timed out:', err.message)
-  }
-
-  // Admin Bootstrap Account for rahul.panchal@ikkgroup.com
-  if (email && email.toLowerCase() === 'rahul.panchal@ikkgroup.com') {
-    try {
-      const db = getFirestore()
-      const data = {
-        uid,
-        email: 'rahul.panchal@ikkgroup.com',
-        displayName: 'Rahul Panchal',
-        organizationId: 'ikk',
-        role: 'admin',
-        approved: true,
-        status: 'active',
-        active: true,
-        createdAt: new Date().toISOString(),
-        approvedBy: 'system_bootstrap',
-        approvedAt: new Date().toISOString()
-      }
-      await setDoc(doc(db, 'users', uid), data)
-      await logAuditEvent('USER_APPROVED', 'rahul.panchal@ikkgroup.com', 'system_bootstrap', { reason: 'bootstrap' })
-      return data
-    } catch (bootstrapErr) {
-      console.warn('[Auth] Failed to bootstrap admin user:', bootstrapErr.message)
-    }
-  }
-
-  return null
-}
-
 export const useAuthStore = create()(
   persist(
     immer((set, get) => ({
@@ -123,89 +53,98 @@ export const useAuthStore = create()(
       /** @type {string | null} */
       error: null,
       initialized: false,
-      usersList: [], // Dynamically loaded from Firestore
+      usersList: [], // Dynamically loaded via UserRepository
+      auditLogs: [], // Loaded via UserRepository
+      failedAttempts: [],
+      lockoutUntil: 0,
+      sessionStart: 0,
 
       login: async (email, password) => {
-        if (!auth) throw new Error('Firebase is not configured. Check your .env file.')
         set((state) => {
           state.loading = true
           state.error = null
         })
         try {
-          const userCredential = await signInWithEmailAndPassword(auth, email, password).catch((err) => {
-            throw new Error(mapFirebaseError(err))
-          })
+          const now = Date.now()
+          if (get().lockoutUntil && now < get().lockoutUntil) {
+            const errMessage = 'Account Temporarily Locked\n\nToo many unsuccessful login attempts were detected. Please wait and try again later or reset your password.'
+            set((state) => {
+              state.error = errMessage
+              state.loading = false
+            })
+            throw new Error(errMessage)
+          }
 
+          const userCredential = await authRepository.signIn(email, password)
           const firebaseUser = userCredential.user
 
           // Validation 1: Email Verified?
           if (!firebaseUser.emailVerified) {
-            try { await signOut(auth) } catch {}
-            const errMessage = 'Please verify your email before logging in.'
+            try { await authRepository.signOut() } catch { /* ignore */ }
+            const errMessage = 'Email Verification Required\n\nPlease verify your email address before accessing RAXA.\n\nCheck your inbox and spam folder.'
             set((state) => {
               state.user = null
               state.loading = false
               state.error = errMessage
             })
-            await logAuditEvent('LOGIN_FAILED_UNVERIFIED', email, 'system')
+            await logAuditEvent('LOGIN_FAILURE', email, 'system', { status: 'unverified' })
             throw new Error(errMessage)
           }
 
           // Verify email domain is allowed
           const tempUser = mapFirebaseUser(firebaseUser)
-          const { allowed, reason } = validateUserDomain(tempUser)
+          const { allowed } = validateUserDomain(tempUser)
           if (!allowed) {
-            try { await signOut(auth) } catch {}
-            set((state) => {
-              state.user = null
-              state.loading = false
-              state.error = reason || DOMAIN_RESTRICTION_MESSAGE
-            })
-            throw new Error(reason || DOMAIN_RESTRICTION_MESSAGE)
-          }
-
-          // Fetch user profile from Firestore users/{uid}
-          const profile = await fetchUserProfile(firebaseUser.uid, firebaseUser.email)
-
-          // Validation 2: User Record Exists?
-          if (!profile) {
-            try { await signOut(auth) } catch {}
-            const errMessage = 'Access Denied. User record does not exist.'
+            try { await authRepository.signOut() } catch { /* ignore */ }
+            const errMessage = 'Organization Access Restricted\n\nOnly authorized organization email addresses may access RAXA.\n\nIf you believe this is an error, contact your administrator.'
             set((state) => {
               state.user = null
               state.loading = false
               state.error = errMessage
             })
-            await logAuditEvent('LOGIN_FAILED_RECORD_MISSING', email, 'system')
+            await logAuditEvent('LOGIN_FAILURE', email, 'system', { status: 'domain_restricted' })
+            throw new Error(errMessage)
+          }
+
+          // Fetch user profile from UserRepository
+          const profile = await userRepository.fetchUserProfile(firebaseUser.uid, firebaseUser.email)
+
+          // Validation 2: User Record Exists?
+          if (!profile) {
+            try { await authRepository.signOut() } catch { /* ignore */ }
+            const errMessage = 'Invalid Email or Password\n\nThe email address or password entered is incorrect.\n\nPlease verify your credentials and try again.'
+            set((state) => {
+              state.user = null
+              state.loading = false
+              state.error = errMessage
+            })
+            await logAuditEvent('LOGIN_FAILURE', email, 'system', { status: 'record_missing' })
             throw new Error(errMessage)
           }
 
           // Validation 3: Approved?
           if (!profile.approved) {
-            try { await signOut(auth) } catch {}
-            const errMessage = 'Your account is pending administrator approval.'
+            const errMessage = 'Access Pending Approval\n\nYour account has been created successfully but has not yet been approved by an administrator.\n\nPlease contact your RAXA administrator for access.'
             set((state) => {
               state.user = null
               state.loading = false
               state.error = errMessage
             })
-            await logAuditEvent('LOGIN_FAILED_PENDING', email, 'system')
+            await logAuditEvent('APPROVAL_DENIED', email, 'system', { status: 'pending_approval' })
             throw new Error(errMessage)
           }
 
           // Validation 4: Status Active?
           const isActive = profile.status === 'active' || profile.active === true
           if (!isActive) {
-            try { await signOut(auth) } catch {}
-            const errMessage = profile.status === 'suspended'
-              ? 'Your account has been suspended. Contact your administrator.'
-              : DEACTIVATION_MESSAGE
+            try { await authRepository.signOut() } catch { /* ignore */ }
+            const errMessage = 'Account Suspended\n\nYour account has been temporarily disabled.\n\nPlease contact your RAXA administrator.'
             set((state) => {
               state.user = null
               state.loading = false
               state.error = errMessage
             })
-            await logAuditEvent('LOGIN_FAILED_DISABLED', email, 'system', { status: profile.status })
+            await logAuditEvent('ACCOUNT_SUSPENDED', email, 'system', { status: 'suspended' })
             throw new Error(errMessage)
           }
 
@@ -220,15 +159,91 @@ export const useAuthStore = create()(
           )
 
           set((state) => {
+            state.failedAttempts = []
+            state.lockoutUntil = 0
+            state.sessionStart = Date.now()
             state.user = user
             state.loading = false
             state.error = null
           })
 
-          await logAuditEvent('USER_LOGIN', email, email)
+          const ua = typeof navigator !== 'undefined' ? navigator.userAgent : ''
+          let browser = 'Unknown Browser'
+          let device = 'Unknown Device'
+          if (ua.includes('Firefox')) browser = 'Firefox'
+          else if (ua.includes('Chrome') && !ua.includes('Edg')) browser = 'Chrome'
+          else if (ua.includes('Safari') && !ua.includes('Chrome')) browser = 'Safari'
+          else if (ua.includes('Edg')) browser = 'Edge'
+
+          if (ua.includes('Windows')) device = 'Windows PC'
+          else if (ua.includes('Macintosh')) device = 'macOS Device'
+          else if (ua.includes('Linux')) device = 'Linux PC'
+          else if (ua.includes('Android')) device = 'Android Device'
+          else if (ua.includes('iPhone')) device = 'iOS Device'
+
+          await logAuditEvent('LOGIN_SUCCESS', email, email, {
+            browser,
+            device,
+            location: 'unknown',
+            status: 'active'
+          })
+
+          console.info(`✉️ [New Login Notification] Send to ${email}:\nNew Login Detected\n\nA new login to your RAXA account was detected.\n\nIf this was not you, contact your administrator immediately.`)
+
+          try {
+            await userRepository.updateUserLastLogin(firebaseUser.uid)
+          } catch (lastLoginErr) {
+            console.warn('[Auth] Failed to update last login timestamp:', lastLoginErr.message)
+          }
+
           return user
         } catch (err) {
           const message = err instanceof Error ? err.message : 'Login failed'
+          
+          if (!message.includes('Account Temporarily Locked')) {
+            const failTime = Date.now()
+            const attempts = [...(get().failedAttempts || [])]
+            attempts.push(failTime)
+            const fifteenMinsAgo = failTime - 15 * 60 * 1000
+            const activeAttempts = attempts.filter(t => t > fifteenMinsAgo)
+
+            set((state) => {
+              state.failedAttempts = activeAttempts
+            })
+
+            if (activeAttempts.length >= 5) {
+              const lockTime = failTime + 30 * 60 * 1000
+              set((state) => {
+                state.lockoutUntil = lockTime
+                state.failedAttempts = []
+              })
+              await logAuditEvent('LOGIN_LOCKED', email, 'system', { status: 'locked' })
+              const errMessage = 'Account Temporarily Locked\n\nToo many unsuccessful login attempts were detected. Please wait and try again later or reset your password.'
+              set((state) => {
+                state.error = errMessage
+                state.loading = false
+              })
+              throw new Error(errMessage, { cause: err })
+            }
+          }
+
+          const isCustomErr = message.includes('Email Verification Required') ||
+                              message.includes('Access Pending Approval') ||
+                              message.includes('Account Suspended') ||
+                              message.includes('Organization Access Restricted') ||
+                              message.includes('Invalid Email or Password') ||
+                              message.includes('Account Temporarily Locked')
+
+          if (!isCustomErr) {
+            let status = 'credential_failure'
+            if (message.includes('Locked')) {
+              status = 'locked'
+            } else if (message.includes('Connection Error')) {
+              status = 'network_error'
+            }
+            await logAuditEvent('LOGIN_FAILURE', email, 'system', { status, reason: message })
+          }
+
           set((state) => {
             state.loading = false
             state.error = message
@@ -238,7 +253,6 @@ export const useAuthStore = create()(
       },
 
       register: async (email, password) => {
-        if (!auth) throw new Error('Firebase is not configured. Check your .env file.')
         set((state) => {
           state.loading = true
           state.error = null
@@ -249,37 +263,21 @@ export const useAuthStore = create()(
           // Validate email domain BEFORE creating the Firebase account
           const domainCheck = validateUserDomain({ email: emailTrimmed })
           if (!domainCheck.allowed) {
+            const errMessage = 'Organization Access Restricted\n\nOnly authorized organization email addresses may access RAXA.\n\nIf you believe this is an error, contact your administrator.'
             set((state) => {
               state.loading = false
-              state.error = domainCheck.reason || DOMAIN_RESTRICTION_MESSAGE
+              state.error = errMessage
             })
-            throw new Error(domainCheck.reason || DOMAIN_RESTRICTION_MESSAGE)
+            throw new Error(errMessage)
           }
 
-          // Create Firebase account
-          const userCredential = await createUserWithEmailAndPassword(auth, emailTrimmed, password).catch((err) => {
-            throw new Error(mapFirebaseError(err))
-          })
-
+          // Create Firebase account via AuthRepository (sends verification automatically)
+          const userCredential = await authRepository.signUp(emailTrimmed, password)
           const firebaseUser = userCredential.user
 
-          // Send verification email immediately
-          await sendEmailVerification(firebaseUser)
-
-          // Save pending profile in Firestore users/{uid}
+          // Save pending profile in UserRepository
           try {
-            const db = getFirestore()
-            await setDoc(doc(db, 'users', firebaseUser.uid), {
-              uid: firebaseUser.uid,
-              email: emailTrimmed,
-              displayName: emailTrimmed.split('@')[0],
-              organizationId: 'ikk',
-              role: 'engineer',
-              approved: false,
-              status: 'pending',
-              active: false,
-              createdAt: new Date().toISOString(),
-            })
+            await userRepository.createUserProfile(firebaseUser.uid, emailTrimmed)
           } catch (firestoreErr) {
             console.warn('[Auth] Could not create user profile in Firestore:', firestoreErr.message)
           }
@@ -288,7 +286,7 @@ export const useAuthStore = create()(
           await logAuditEvent('USER_REGISTERED', emailTrimmed, 'system')
 
           // Sign out immediately (since user needs to verify email and await approval)
-          await signOut(auth)
+          await authRepository.signOut()
 
           set((state) => {
             state.user = null
@@ -305,22 +303,23 @@ export const useAuthStore = create()(
         }
       },
 
-      logout: async () => {
+      logout: async (options = {}) => {
         const currentUser = get().user
         set((state) => {
           state.loading = true
         })
         try {
-          if (auth) {
-            await signOut(auth)
-          }
+          await authRepository.signOut()
           if (currentUser) {
             await logAuditEvent('USER_LOGOUT', currentUser.email, currentUser.email)
           }
           set((state) => {
             state.user = null
             state.loading = false
-            state.error = null
+            state.sessionStart = 0
+            state.error = options?.expired
+              ? 'Session Expired\n\nPlease sign in again.'
+              : null
           })
         } catch (err) {
           const message = err instanceof Error ? err.message : 'Logout failed'
@@ -333,16 +332,13 @@ export const useAuthStore = create()(
       },
 
       resetPassword: async (email) => {
-        if (!auth) throw new Error('Firebase is not configured. Check your .env file.')
         set((state) => {
           state.loading = true
           state.error = null
         })
         try {
-          await sendPasswordResetEmail(auth, email).catch((err) => {
-            throw new Error(mapFirebaseError(err))
-          })
-          await logAuditEvent('PASSWORD_RESET_SENT', email, get().user?.email || 'system')
+          await authRepository.sendPasswordReset(email)
+          await logAuditEvent('PASSWORD_RESET_REQUEST', email, get().user?.email || 'system', { status: 'sent' })
           set((state) => {
             state.loading = false
             state.error = null
@@ -357,6 +353,79 @@ export const useAuthStore = create()(
         }
       },
 
+      resendVerificationEmail: async (email, password) => {
+        set((state) => {
+          state.loading = true
+          state.error = null
+        })
+        try {
+          const emailTrimmed = email.trim().toLowerCase()
+          const userCredential = await authRepository.signIn(emailTrimmed, password)
+          const firebaseUser = userCredential.user
+          await authRepository.sendVerification(firebaseUser)
+          await authRepository.signOut()
+          
+          set((state) => {
+            state.loading = false
+            state.error = 'SUCCESS_VERIFICATION_SENT'
+          })
+          await logAuditEvent('VERIFICATION_EMAIL_RESENT', emailTrimmed, 'system', { status: 'sent' })
+        } catch (err) {
+          const message = err instanceof Error ? err.message : 'Failed to send verification email'
+          set((state) => {
+            state.loading = false
+            state.error = message
+          })
+          throw err
+        }
+      },
+
+      requestApproval: async (email) => {
+        set((state) => {
+          state.loading = true
+          state.error = null
+        })
+        try {
+          const emailTrimmed = email.trim().toLowerCase()
+          const now = Date.now()
+          if (get().lastApprovalRequest && now - get().lastApprovalRequest < 60 * 1000) {
+            throw new Error('Please wait at least 1 minute before submitting another approval request.')
+          }
+
+          const refId = 'REQ-' + Array.from({length: 6}, () => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'[Math.floor(Math.random() * 36)]).join('')
+
+          await logAuditEvent('APPROVAL_REQUEST', emailTrimmed, 'system', { referenceId: refId, status: 'pending' })
+          
+          try {
+            await authRepository.signOut()
+          } catch { /* ignore */ }
+
+          set((state) => {
+            state.loading = false
+            state.lastApprovalRequest = now
+            state.error = 'SUCCESS_APPROVAL_REQUESTED:' + refId
+          })
+        } catch (err) {
+          const message = err instanceof Error ? err.message : 'Failed to request approval'
+          set((state) => {
+            state.loading = false
+            state.error = message
+          })
+          throw err
+        }
+      },
+
+      fetchAuditLogs: async () => {
+        try {
+          const logs = await userRepository.fetchAuditLogs()
+          set((state) => {
+            state.auditLogs = logs
+          })
+        } catch (err) {
+          console.warn('[Auth] Failed to fetch audit logs:', err.message)
+        }
+      },
+
       clearError: () =>
         set((state) => {
           state.error = null
@@ -368,15 +437,11 @@ export const useAuthStore = create()(
           state.loading = false
         }),
 
-      // Admin console operations
+      // Admin console operations delegating to UserRepository
       fetchUsersList: async () => {
         try {
-          const db = getFirestore()
-          const querySnapshot = await getDocs(collection(db, 'users'))
-          const list = []
-          querySnapshot.forEach((doc) => {
-            list.push(doc.data())
-          })
+          const orgId = get().user?.organizationId || 'ikk'
+          const list = await userRepository.fetchUsersList(orgId)
           set((state) => {
             state.usersList = list
           })
@@ -388,16 +453,7 @@ export const useAuthStore = create()(
       approveUser: async (uid, email) => {
         const adminEmail = get().user?.email || 'admin'
         try {
-          const db = getFirestore()
-          await setDoc(doc(db, 'users', uid), {
-            approved: true,
-            status: 'active',
-            active: true,
-            approvedBy: adminEmail,
-            approvedAt: new Date().toISOString()
-          }, { merge: true })
-          
-          await logAuditEvent('USER_APPROVED', email, adminEmail)
+          await userRepository.approveUser(uid, email, adminEmail)
           await get().fetchUsersList()
         } catch (err) {
           console.error('[Auth] Failed to approve user:', err.message)
@@ -408,14 +464,7 @@ export const useAuthStore = create()(
       rejectUser: async (uid, email) => {
         const adminEmail = get().user?.email || 'admin'
         try {
-          const db = getFirestore()
-          await setDoc(doc(db, 'users', uid), {
-            approved: false,
-            status: 'rejected',
-            active: false
-          }, { merge: true })
-          
-          await logAuditEvent('USER_REJECTED', email, adminEmail)
+          await userRepository.rejectUser(uid, email, adminEmail)
           await get().fetchUsersList()
         } catch (err) {
           console.error('[Auth] Failed to reject user:', err.message)
@@ -426,12 +475,7 @@ export const useAuthStore = create()(
       updateUserRole: async (uid, email, newRole) => {
         const adminEmail = get().user?.email || 'admin'
         try {
-          const db = getFirestore()
-          await setDoc(doc(db, 'users', uid), {
-            role: newRole
-          }, { merge: true })
-          
-          await logAuditEvent('ROLE_CHANGED', email, adminEmail, { newRole })
+          await userRepository.updateUserRole(uid, email, newRole, adminEmail)
           await get().fetchUsersList()
         } catch (err) {
           console.error('[Auth] Failed to update user role:', err.message)
@@ -442,13 +486,7 @@ export const useAuthStore = create()(
       suspendUser: async (uid, email) => {
         const adminEmail = get().user?.email || 'admin'
         try {
-          const db = getFirestore()
-          await setDoc(doc(db, 'users', uid), {
-            status: 'suspended',
-            active: false
-          }, { merge: true })
-          
-          await logAuditEvent('USER_SUSPENDED', email, adminEmail)
+          await userRepository.suspendUser(uid, email, adminEmail)
           await get().fetchUsersList()
         } catch (err) {
           console.error('[Auth] Failed to suspend user:', err.message)
@@ -459,13 +497,7 @@ export const useAuthStore = create()(
       disableUser: async (uid, email) => {
         const adminEmail = get().user?.email || 'admin'
         try {
-          const db = getFirestore()
-          await setDoc(doc(db, 'users', uid), {
-            status: 'disabled',
-            active: false
-          }, { merge: true })
-          
-          await logAuditEvent('USER_DISABLED', email, adminEmail)
+          await userRepository.disableUser(uid, email, adminEmail)
           await get().fetchUsersList()
         } catch (err) {
           console.error('[Auth] Failed to disable user:', err.message)
@@ -476,14 +508,7 @@ export const useAuthStore = create()(
       enableUser: async (uid, email) => {
         const adminEmail = get().user?.email || 'admin'
         try {
-          const db = getFirestore()
-          await setDoc(doc(db, 'users', uid), {
-            status: 'active',
-            active: true,
-            approved: true
-          }, { merge: true })
-          
-          await logAuditEvent('USER_ENABLED', email, adminEmail)
+          await userRepository.enableUser(uid, email, adminEmail)
           await get().fetchUsersList()
         } catch (err) {
           console.error('[Auth] Failed to enable user:', err.message)
@@ -494,7 +519,7 @@ export const useAuthStore = create()(
       resetUserAccess: async (uid, email) => {
         const adminEmail = get().user?.email || 'admin'
         try {
-          await sendPasswordResetEmail(auth, email)
+          await authRepository.sendPasswordReset(email)
           await logAuditEvent('PASSWORD_RESET_SENT', email, adminEmail)
         } catch (err) {
           console.error('[Auth] Failed to reset user access:', err.message)
@@ -505,8 +530,19 @@ export const useAuthStore = create()(
       initialize: () => {
         if (get().initialized) return () => {}
 
-        if (!auth) {
+        // Add support for E2E testing mock auth
+        if (localStorage.getItem('e2e-mock-auth') === 'true') {
           set((state) => {
+            state.user = {
+              uid: 'mock-e2e-engineer',
+              email: 'engineer@cpdesigner.com',
+              displayName: 'E2E Test Engineer',
+              role: 'engineer',
+              approved: true,
+              isActive: true,
+              status: 'active',
+              organizationId: 'ikk'
+            }
             state.initialized = true
             state.loading = false
           })
@@ -516,69 +552,80 @@ export const useAuthStore = create()(
         // Add a safety timeout
         const timeoutId = setTimeout(() => {
           if (get().loading) {
-            console.warn('[Auth] Firebase initialization timed out. Forcing loading state to false.');
+            console.warn('[Auth] Firebase initialization timed out. Forcing loading state to false.')
             set((state) => {
               state.loading = false
             })
           }
         }, 3000)
 
-        const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+        const unsubscribe = authRepository.onAuthStateChanged(async (firebaseUser) => {
           clearTimeout(timeoutId)
           if (firebaseUser) {
+            // Max session check: 12 hours
+            const sessionStart = get().sessionStart
+            if (sessionStart && Date.now() - sessionStart >= 12 * 60 * 60 * 1000) {
+              try { await authRepository.signOut() } catch { /* ignore */ }
+              set((state) => {
+                state.user = null
+                state.sessionStart = 0
+                state.loading = false
+                state.error = 'Session Expired\n\nPlease sign in again.'
+              })
+              return
+            }
+
             // Validation 1: Email Verified?
             if (!firebaseUser.emailVerified) {
-              try { await signOut(auth) } catch {}
+              try { await authRepository.signOut() } catch { /* ignore */ }
               set((state) => {
                 state.user = null
                 state.loading = false
-                state.error = 'Please verify your email before logging in.'
+                state.error = 'Email Verification Required\n\nPlease verify your email address before accessing RAXA.\n\nCheck your inbox and spam folder.'
               })
               return
             }
 
             const tempUser = mapFirebaseUser(firebaseUser)
-            const { allowed, reason } = validateUserDomain(tempUser)
+            const { allowed } = validateUserDomain(tempUser)
             if (!allowed) {
-              try { await signOut(auth) } catch {}
+              try { await authRepository.signOut() } catch { /* ignore */ }
               set((state) => {
                 state.user = null
                 state.loading = false
-                state.error = reason || DOMAIN_RESTRICTION_MESSAGE
+                state.error = 'Organization Access Restricted\n\nOnly authorized organization email addresses may access RAXA.\n\nIf you believe this is an error, contact your administrator.'
               })
               return
             }
 
-            const profile = await fetchUserProfile(firebaseUser.uid, firebaseUser.email)
+            const profile = await userRepository.fetchUserProfile(firebaseUser.uid, firebaseUser.email)
             if (!profile) {
-              try { await signOut(auth) } catch {}
+              try { await authRepository.signOut() } catch { /* ignore */ }
               set((state) => {
                 state.user = null
                 state.loading = false
-                state.error = 'Access Denied. User record does not exist.'
+                state.error = 'Invalid Email or Password\n\nThe email address or password entered is incorrect.\n\nPlease verify your credentials and try again.'
               })
               return
             }
 
             if (!profile.approved) {
-              try { await signOut(auth) } catch {}
+              try { await authRepository.signOut() } catch { /* ignore */ }
               set((state) => {
                 state.user = null
                 state.loading = false
-                state.error = 'Your account is pending administrator approval.'
+                state.error = 'Access Pending Approval\n\nYour account has been created successfully but has not yet been approved by an administrator.\n\nPlease contact your RAXA administrator for access.'
               })
               return
             }
 
             const isActive = profile.status === 'active' || profile.active === true
             if (!isActive) {
-              try { await signOut(auth) } catch {}
+              try { await authRepository.signOut() } catch { /* ignore */ }
               set((state) => {
                 state.user = null
                 state.loading = false
-                state.error = profile.status === 'suspended'
-                  ? 'Your account has been suspended. Contact your administrator.'
-                  : DEACTIVATION_MESSAGE
+                state.error = 'Account Suspended\n\nYour account has been temporarily disabled.\n\nPlease contact your RAXA administrator.'
               })
               return
             }
@@ -602,8 +649,8 @@ export const useAuthStore = create()(
         })
 
         return () => {
-          clearTimeout(timeoutId)
-          unsubscribe()
+          // Do not clear timeout or unsubscribe here to allow the global auth listener 
+          // and safety timeout to survive React StrictMode remounts.
         }
       },
     })),
@@ -613,6 +660,9 @@ export const useAuthStore = create()(
       partialize: (state) => ({
         user: state.user,
         usersList: state.usersList,
+        failedAttempts: state.failedAttempts,
+        lockoutUntil: state.lockoutUntil,
+        sessionStart: state.sessionStart,
       }),
     },
   ),

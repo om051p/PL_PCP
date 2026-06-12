@@ -7,13 +7,13 @@
 
 const ERROR_MAP = {
   // Auth errors
-  'auth/user-not-found': 'No account found with this email address.',
-  'auth/wrong-password': 'Incorrect password. Please try again.',
+  'auth/user-not-found': 'Invalid Email or Password\n\nThe email address or password entered is incorrect.\n\nPlease verify your credentials and try again.',
+  'auth/wrong-password': 'Invalid Email or Password\n\nThe email address or password entered is incorrect.\n\nPlease verify your credentials and try again.',
   'auth/invalid-email': 'Please enter a valid email address.',
-  'auth/user-disabled': 'This account has been disabled. Contact your administrator.',
-  'auth/too-many-requests': 'Too many failed attempts. Please try again later.',
-  'auth/network-request-failed': 'Network error. Please check your connection.',
-  'auth/invalid-credential': 'Invalid email or password. Please try again.',
+  'auth/user-disabled': 'Account Suspended\n\nYour account has been temporarily disabled.\n\nPlease contact your RAXA administrator.',
+  'auth/too-many-requests': 'Account Temporarily Locked\n\nToo many unsuccessful login attempts were detected.\n\nPlease wait and try again later or reset your password.',
+  'auth/network-request-failed': 'Connection Error\n\nUnable to contact the authentication service.\n\nCheck your internet connection and try again.',
+  'auth/invalid-credential': 'Invalid Email or Password\n\nThe email address or password entered is incorrect.\n\nPlease verify your credentials and try again.',
   'auth/credential-already-in-use': 'This credential is already associated with another account.',
   'auth/email-already-in-use': 'An account with this email already exists.',
   'auth/operation-not-allowed': 'This sign-in method is not enabled.',
@@ -43,6 +43,11 @@ const ERROR_MAP = {
  */
 export function mapFirebaseError(error) {
   const raw = error instanceof Error ? error.message : String(error)
+
+  const lowerRaw = raw.toLowerCase()
+  if (lowerRaw.includes('timeout') || lowerRaw.includes('unavailable') || lowerRaw.includes('network') || lowerRaw.includes('connect')) {
+    return 'Connection Error\n\nUnable to contact the authentication service.\n\nCheck your internet connection and try again.'
+  }
 
   // Try to extract error code from message (e.g., "Firebase: Error (auth/invalid-credential).")
   const codeMatch = raw.match(/\(([^)]+)\)/) || raw.match(/auth\/[\w-]+|[\w-]+\/[\w-]+/)

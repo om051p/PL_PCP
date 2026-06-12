@@ -15,15 +15,14 @@ export function ForgotPasswordPage() {
   const { isRateLimited, recordAttempt, cooldownRemaining } = useRateLimit({ maxAttempts: 3, windowMs: 10 * 60 * 1000, cooldownMs: 120 * 1000 })
 
   useEffect(() => {
-    if (error) {
-      setLocalError(error)
-      clearError()
-    }
-  }, [error, clearError])
+    clearError()
+    return () => clearError()
+  }, [clearError])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLocalError('')
+    clearError()
     setSuccess(false)
 
     if (!email) {
@@ -44,6 +43,8 @@ export function ForgotPasswordPage() {
     }
   }
 
+  const displayError = localError || error
+
   return (
     <div className="login-page">
       <div className="login-container">
@@ -56,25 +57,57 @@ export function ForgotPasswordPage() {
             <p className="login-subtitle">ICCP Engineering Platform</p>
           </div>
 
-          {localError && (
-            <div className="login-error" role="alert">
-              <AlertCircle size={16} />
-              <span>{localError}</span>
+          {displayError && (
+            <div className="auth-banner auth-banner--error" role="alert" style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '4px',
+              padding: '12px 14px',
+              borderRadius: 'var(--radius)',
+              fontSize: '12.5px',
+              lineHeight: '1.5',
+              marginBottom: '16px',
+              border: '1px solid',
+              background: 'var(--fail-bg)',
+              color: 'var(--fail)',
+              borderColor: '#fca5a5'
+            }}>
+              <div className="auth-banner-title" style={{ fontWeight: '600', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <AlertCircle size={16} />
+                <span>Error</span>
+              </div>
+              <div className="auth-banner-body" style={{ marginTop: '2px' }}>
+                {displayError}
+              </div>
             </div>
           )}
 
           {success ? (
-            <div className="login-success">
-              <CheckCircle size={32} color="var(--pass)" />
-              <h3>Check Your Email</h3>
-              <p>
-                We've sent a password reset link to <strong>{email}</strong>.
-                Check your inbox and follow the instructions.
-              </p>
-              <p className="login-success-note">
-                Didn't receive the email? Check your spam folder or try again.
-              </p>
-              <Link to="/login" className="btn btn-primary" style={{ marginTop: '1rem', display: 'inline-flex', textDecoration: 'none' }}>
+            <div className="login-success" style={{ textAlign: 'center', padding: '10px 0' }}>
+              <div className="auth-banner auth-banner--success" role="alert" style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '4px',
+                padding: '16px',
+                borderRadius: 'var(--radius)',
+                fontSize: '13px',
+                lineHeight: '1.5',
+                marginBottom: '24px',
+                border: '1px solid',
+                background: 'var(--pass-bg)',
+                color: 'var(--pass)',
+                borderColor: '#bbf7d0',
+                textAlign: 'left'
+              }}>
+                <div className="auth-banner-title" style={{ fontWeight: '600', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '15px' }}>
+                  <CheckCircle size={18} />
+                  <span>Password Reset Email Sent</span>
+                </div>
+                <div className="auth-banner-body" style={{ marginTop: '6px' }}>
+                  If an account exists for this email address, a password reset link has been sent.
+                </div>
+              </div>
+              <Link to="/login" className="btn btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', textDecoration: 'none', justifyContent: 'center', width: '100%', padding: '10px 16px' }}>
                 <ArrowLeft size={16} />
                 Back to Sign In
               </Link>

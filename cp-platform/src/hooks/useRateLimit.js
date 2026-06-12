@@ -15,6 +15,7 @@ export function useRateLimit({
   cooldownMs = 60 * 1000,     // 1 minute
 } = {}) {
   const attempts = useRef([])
+  const [attemptsCount, setAttemptsCount] = useState(0)
   const [isLocked, setIsLocked] = useState(false)
   const [cooldownRemaining, setCooldownRemaining] = useState(0)
   const cooldownTimer = useRef(null)
@@ -24,6 +25,7 @@ export function useRateLimit({
 
     // Clean up old attempts outside the window
     attempts.current = attempts.current.filter((t) => now - t < windowMs)
+    setAttemptsCount(attempts.current.length)
 
     // Check if locked out
     if (attempts.current.length >= maxAttempts) {
@@ -45,6 +47,7 @@ export function useRateLimit({
               setIsLocked(false)
               setCooldownRemaining(0)
               attempts.current = []
+              setAttemptsCount(0)
             } else {
               setCooldownRemaining(left)
             }
@@ -55,6 +58,7 @@ export function useRateLimit({
 
       // Lockout expired
       attempts.current = []
+      setAttemptsCount(0)
       setIsLocked(false)
       setCooldownRemaining(0)
     }
@@ -64,10 +68,12 @@ export function useRateLimit({
 
   const recordAttempt = useCallback(() => {
     attempts.current.push(Date.now())
+    setAttemptsCount(attempts.current.length)
   }, [])
 
   const resetAttempts = useCallback(() => {
     attempts.current = []
+    setAttemptsCount(0)
     setIsLocked(false)
     setCooldownRemaining(0)
     if (cooldownTimer.current) clearInterval(cooldownTimer.current)
@@ -86,6 +92,6 @@ export function useRateLimit({
     resetAttempts,
     isLocked,
     cooldownRemaining,
-    attemptsRemaining: Math.max(0, maxAttempts - attempts.current.length),
+    attemptsRemaining: Math.max(0, maxAttempts - attemptsCount),
   }
 }

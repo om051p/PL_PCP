@@ -25,15 +25,14 @@ export function RegisterPage() {
   })
 
   useEffect(() => {
-    if (error) {
-      setLocalError(error)
-      clearError()
-    }
-  }, [error, clearError])
+    clearError()
+    return () => clearError()
+  }, [clearError])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLocalError('')
+    clearError()
 
     if (!email || !password || !confirmPassword) {
       setLocalError('Please fill in all fields')
@@ -63,6 +62,29 @@ export function RegisterPage() {
     }
   }
 
+  const displayError = localError || error
+
+  const parseAuthMessage = (msg) => {
+    if (!msg) return null
+
+    if (msg.includes('Organization Access Restricted')) {
+      return {
+        type: 'error',
+        title: 'Organization Access Restricted',
+        body: 'Only authorized organization email addresses may access RAXA. If you believe this is an error, contact your administrator.'
+      }
+    }
+
+    // Default error representation
+    return {
+      type: 'error',
+      title: 'Error',
+      body: msg
+    }
+  }
+
+  const banner = parseAuthMessage(displayError)
+
   return (
     <div className="login-page">
       <div className="login-container">
@@ -75,10 +97,28 @@ export function RegisterPage() {
             <p className="login-subtitle">Join the ICCP Engineering Platform</p>
           </div>
 
-          {localError && (
-            <div className="login-error" role="alert">
-              <AlertCircle size={16} />
-              <span>{localError}</span>
+          {banner && (
+            <div className={`auth-banner auth-banner--${banner.type}`} role="alert" style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '4px',
+              padding: '12px 14px',
+              borderRadius: 'var(--radius)',
+              fontSize: '12.5px',
+              lineHeight: '1.5',
+              marginBottom: '16px',
+              border: '1px solid',
+              background: `var(--${banner.type === 'error' ? 'fail' : banner.type === 'warning' ? 'warn' : 'pass'}-bg)`,
+              color: `var(--${banner.type === 'error' ? 'fail' : banner.type === 'warning' ? 'warn' : 'pass'})`,
+              borderColor: banner.type === 'error' ? '#fca5a5' : banner.type === 'warning' ? '#fef08a' : '#bbf7d0'
+            }}>
+              <div className="auth-banner-title" style={{ fontWeight: '600', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <AlertCircle size={16} />
+                <span>{banner.title}</span>
+              </div>
+              <div className="auth-banner-body" style={{ marginTop: '2px' }}>
+                {banner.body}
+              </div>
             </div>
           )}
 

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useAuthStore } from '../store/authStore.js'
 import { USER_ROLES } from '../config/authPolicy.js'
-import { Users, Shield, AlertCircle, Trash2, Check, X, ShieldAlert, Key, UserCheck, UserMinus } from 'lucide-react'
+import { Users, Shield, AlertCircle, Trash2, Check, X, ShieldAlert, Key, UserCheck, UserMinus, Lock, AlertTriangle, ShieldCheck, List } from 'lucide-react'
 
 function RoleBadge({ role }) {
   const colors = {
@@ -53,6 +53,263 @@ function StatusBadge({ status }) {
     >
       {current.text}
     </span>
+  )
+}
+
+function SecurityDashboard({ pendingUsers, activeUsers }) {
+  const auditLogs = useAuthStore((s) => s.auditLogs)
+  const fetchAuditLogs = useAuthStore((s) => s.fetchAuditLogs)
+  const usersList = useAuthStore((s) => s.usersList)
+  const [currentTime] = useState(() => Date.now())
+
+  useEffect(() => {
+    fetchAuditLogs()
+    // Poll every 15 seconds for real-time security alerts
+    const interval = setInterval(fetchAuditLogs, 15000)
+    return () => clearInterval(interval)
+  }, [fetchAuditLogs])
+
+  const todayStr = new Date(currentTime).toDateString()
+
+  // 1. Failed Logins Today
+  const failedLoginsToday = auditLogs.filter((log) => {
+    if (log.action !== 'LOGIN_FAILURE') return false
+    return new Date(log.timestamp).toDateString() === todayStr
+  }).length
+
+  // 2. Pending Approvals
+  const pendingApprovals = pendingUsers.length
+
+  // 3. Suspended Accounts
+  const suspendedAccounts = usersList.filter((u) => u.status === 'suspended').length
+
+  // 4. Locked Accounts (active lockouts in last 30 minutes)
+  const lockedAccounts = auditLogs.filter((log) => {
+    if (log.action !== 'LOGIN_LOCKED') return false
+    if (!currentTime) return false
+    const elapsed = currentTime - new Date(log.timestamp).getTime()
+    return elapsed < 30 * 60 * 1000
+  }).length
+
+  // 5. Password Resets Today
+  const passwordResetsToday = auditLogs.filter((log) => {
+    if (log.action !== 'PASSWORD_RESET_REQUEST') return false
+    return new Date(log.timestamp).toDateString() === todayStr
+  }).length
+
+  // 6. Login Success Rate
+  const successCount = auditLogs.filter((log) => log.action === 'LOGIN_SUCCESS').length
+  const failureCount = auditLogs.filter((log) => log.action === 'LOGIN_FAILURE').length
+  const totalAttempts = successCount + failureCount
+  const successRate = totalAttempts > 0 ? ((successCount / totalAttempts) * 100).toFixed(1) : '100.0'
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+      <h3 className="card-title" style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', fontWeight: '600', marginBottom: '8px' }}>
+        <ShieldAlert size={16} /> Security Monitoring Dashboard
+      </h3>
+
+      {/* Grid of aggregate cards */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+        gap: '16px'
+      }}>
+        {/* Card 1: Failed Logins */}
+        <div className="stat-card" style={{
+          padding: '16px',
+          background: 'var(--card)',
+          borderRadius: 'var(--radius)',
+          border: '1px solid var(--border)',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '8px',
+          boxShadow: 'var(--shadow-sm)'
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: failedLoginsToday > 0 ? 'var(--fail)' : 'var(--text-secondary)' }}>
+            <span style={{ fontSize: '12px', fontWeight: '500' }}>Failed Logins Today</span>
+            <AlertCircle size={16} />
+          </div>
+          <div style={{ fontSize: '24px', fontWeight: '700', color: failedLoginsToday > 0 ? 'var(--fail)' : 'var(--text-primary)' }}>
+            {failedLoginsToday}
+          </div>
+          <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>From audit_logs collection</div>
+        </div>
+
+        {/* Card 2: Login Success Rate */}
+        <div className="stat-card" style={{
+          padding: '16px',
+          background: 'var(--card)',
+          borderRadius: 'var(--radius)',
+          border: '1px solid var(--border)',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '8px',
+          boxShadow: 'var(--shadow-sm)'
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: 'var(--brand)' }}>
+            <span style={{ fontSize: '12px', fontWeight: '500' }}>Login Success Rate</span>
+            <ShieldCheck size={16} />
+          </div>
+          <div style={{ fontSize: '24px', fontWeight: '700', color: parseFloat(successRate) < 80 ? 'var(--warn)' : 'var(--pass)' }}>
+            {successRate}%
+          </div>
+          <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{successCount} of {totalAttempts} attempts</div>
+        </div>
+
+        {/* Card 3: Pending Approvals */}
+        <div className="stat-card" style={{
+          padding: '16px',
+          background: 'var(--card)',
+          borderRadius: 'var(--radius)',
+          border: '1px solid var(--border)',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '8px',
+          boxShadow: 'var(--shadow-sm)'
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: pendingApprovals > 0 ? 'var(--warn)' : 'var(--text-secondary)' }}>
+            <span style={{ fontSize: '12px', fontWeight: '500' }}>Pending Approvals</span>
+            <Users size={16} />
+          </div>
+          <div style={{ fontSize: '24px', fontWeight: '700', color: pendingApprovals > 0 ? 'var(--warn)' : 'var(--text-primary)' }}>
+            {pendingApprovals}
+          </div>
+          <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Awaiting action</div>
+        </div>
+
+        {/* Card 4: Suspended Accounts */}
+        <div className="stat-card" style={{
+          padding: '16px',
+          background: 'var(--card)',
+          borderRadius: 'var(--radius)',
+          border: '1px solid var(--border)',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '8px',
+          boxShadow: 'var(--shadow-sm)'
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: suspendedAccounts > 0 ? '#b91c1c' : 'var(--text-secondary)' }}>
+            <span style={{ fontSize: '12px', fontWeight: '500' }}>Suspended Accounts</span>
+            <AlertTriangle size={16} />
+          </div>
+          <div style={{ fontSize: '24px', fontWeight: '700', color: suspendedAccounts > 0 ? '#b91c1c' : 'var(--text-primary)' }}>
+            {suspendedAccounts}
+          </div>
+          <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Disabled logins</div>
+        </div>
+
+        {/* Card 5: Locked Accounts */}
+        <div className="stat-card" style={{
+          padding: '16px',
+          background: 'var(--card)',
+          borderRadius: 'var(--radius)',
+          border: '1px solid var(--border)',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '8px',
+          boxShadow: 'var(--shadow-sm)'
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: lockedAccounts > 0 ? '#b91c1c' : 'var(--text-secondary)' }}>
+            <span style={{ fontSize: '12px', fontWeight: '500' }}>Locked Accounts</span>
+            <Lock size={16} />
+          </div>
+          <div style={{ fontSize: '24px', fontWeight: '700', color: lockedAccounts > 0 ? '#b91c1c' : 'var(--text-primary)' }}>
+            {lockedAccounts}
+          </div>
+          <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Active cooldown (30 min)</div>
+        </div>
+
+        {/* Card 6: Password Resets */}
+        <div className="stat-card" style={{
+          padding: '16px',
+          background: 'var(--card)',
+          borderRadius: 'var(--radius)',
+          border: '1px solid var(--border)',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '8px',
+          boxShadow: 'var(--shadow-sm)'
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: 'var(--text-secondary)' }}>
+            <span style={{ fontSize: '12px', fontWeight: '500' }}>Password Resets Today</span>
+            <Key size={16} />
+          </div>
+          <div style={{ fontSize: '24px', fontWeight: '700', color: 'var(--text-primary)' }}>
+            {passwordResetsToday}
+          </div>
+          <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Email requests sent</div>
+        </div>
+      </div>
+
+      {/* Audit Log Table */}
+      <div style={{ marginTop: '16px' }}>
+        <h4 style={{ fontSize: '13.5px', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '12px', color: 'var(--text-primary)' }}>
+          <List size={15} /> Real-Time Security Audit Log (Last 15 Events)
+        </h4>
+        <div style={{ overflowX: 'auto', border: '1px solid var(--border)', borderRadius: 'var(--radius)' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '12px' }}>
+            <thead>
+              <tr style={{ background: 'var(--bg-light, #f8fafc)', borderBottom: '1px solid var(--border)' }}>
+                <th style={{ padding: '8px 12px', color: 'var(--text-secondary)', fontWeight: '600' }}>Timestamp</th>
+                <th style={{ padding: '8px 12px', color: 'var(--text-secondary)', fontWeight: '600' }}>Event Action</th>
+                <th style={{ padding: '8px 12px', color: 'var(--text-secondary)', fontWeight: '600' }}>Target User</th>
+                <th style={{ padding: '8px 12px', color: 'var(--text-secondary)', fontWeight: '600' }}>Triggered By</th>
+                <th style={{ padding: '8px 12px', color: 'var(--text-secondary)', fontWeight: '600' }}>Outcome</th>
+                <th style={{ padding: '8px 12px', color: 'var(--text-secondary)', fontWeight: '600' }}>System Context</th>
+              </tr>
+            </thead>
+            <tbody>
+              {auditLogs.slice(0, 15).map((log, index) => {
+                const isFail = log.action.includes('FAILURE') || log.action.includes('LOCKED') || log.action.includes('DENIED') || log.status === 'suspended'
+                return (
+                  <tr key={index} style={{ borderBottom: '1px solid var(--border)', background: isFail ? '#fee2e220' : 'transparent' }}>
+                    <td style={{ padding: '10px 12px', color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>
+                      {new Date(log.timestamp).toLocaleString()}
+                    </td>
+                    <td style={{ padding: '10px 12px', fontWeight: '600', color: isFail ? '#b91c1c' : 'var(--text-primary)' }}>
+                      {log.action}
+                    </td>
+                    <td style={{ padding: '10px 12px' }}>{log.email || 'N/A'}</td>
+                    <td style={{ padding: '10px 12px', color: 'var(--text-secondary)' }}>{log.performedBy || 'system'}</td>
+                    <td style={{ padding: '10px 12px' }}>
+                      <span style={{
+                        padding: '1px 6px',
+                        borderRadius: '3px',
+                        fontSize: '10.5px',
+                        fontWeight: '500',
+                        background: log.status === 'success' || log.status === 'active' ? 'var(--pass-bg)' : '#fef2f2',
+                        color: log.status === 'success' || log.status === 'active' ? 'var(--pass)' : '#b91c1c',
+                      }}>
+                        {log.status}
+                      </span>
+                    </td>
+                    <td style={{ padding: '10px 12px', color: 'var(--text-tertiary)', fontSize: '11px' }}>
+                      {log.details ? (
+                        <span>
+                          {log.details.browser && `${log.details.browser}`}
+                          {log.details.device && ` (${log.details.device})`}
+                          {log.details.referenceId && `Ref: ${log.details.referenceId}`}
+                          {log.details.reason && `Reason: ${log.details.reason}`}
+                          {!log.details.browser && !log.details.referenceId && !log.details.reason && JSON.stringify(log.details)}
+                        </span>
+                      ) : 'N/A'}
+                    </td>
+                  </tr>
+                )
+              })}
+              {auditLogs.length === 0 && (
+                <tr>
+                  <td colSpan={6} style={{ textAlign: 'center', padding: '24px', color: 'var(--text-muted)' }}>
+                    No audit logs recorded yet.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   )
 }
 
@@ -211,10 +468,30 @@ export default function UserManagementPage() {
         >
           Pending Approvals ({pendingUsers.length})
         </button>
+        <button
+          onClick={() => {
+            setActiveTab('security')
+            useAuthStore.getState().fetchAuditLogs()
+          }}
+          style={{
+            background: 'transparent',
+            border: 'none',
+            borderBottom: activeTab === 'security' ? '2px solid var(--brand)' : 'none',
+            padding: '8px 16px 12px',
+            cursor: 'pointer',
+            fontSize: '14px',
+            fontWeight: activeTab === 'security' ? '600' : '400',
+            color: activeTab === 'security' ? 'var(--text-primary)' : 'var(--text-secondary)',
+          }}
+        >
+          Security Monitoring
+        </button>
       </div>
 
       <div className="card" style={{ padding: '20px' }}>
-        {activeTab === 'pending' ? (
+        {activeTab === 'security' ? (
+          <SecurityDashboard pendingUsers={pendingUsers} activeUsers={activeUsers} />
+        ) : activeTab === 'pending' ? (
           <div>
             <h3 className="card-title" style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', fontWeight: '600', marginBottom: '16px' }}>
               <ShieldAlert size={16} /> Pending Approvals Queue
@@ -290,6 +567,7 @@ export default function UserManagementPage() {
                     <tr style={{ borderBottom: '2px solid var(--border)', paddingBottom: '8px' }}>
                       <th style={{ padding: '10px 8px', color: 'var(--text-secondary)', fontWeight: '600' }}>Name / Email</th>
                       <th style={{ padding: '10px 8px', color: 'var(--text-secondary)', fontWeight: '600', width: '140px' }}>Role</th>
+                      <th style={{ padding: '10px 8px', color: 'var(--text-secondary)', fontWeight: '600', width: '150px' }}>Last Login</th>
                       <th style={{ padding: '10px 8px', color: 'var(--text-secondary)', fontWeight: '600', width: '130px' }}>Status</th>
                       <th style={{ padding: '10px 8px', color: 'var(--text-secondary)', fontWeight: '600', width: '380px', textAlign: 'right' }}>Actions</th>
                     </tr>
@@ -322,6 +600,9 @@ export default function UserManagementPage() {
                                 <option value={USER_ROLES.VIEWER}>Viewer</option>
                               </select>
                             )}
+                          </td>
+                          <td style={{ padding: '12px 8px', color: 'var(--text-secondary)' }}>
+                            {u.lastLogin ? new Date(u.lastLogin).toLocaleString() : 'Never'}
                           </td>
                           <td style={{ padding: '12px 8px' }}>
                             <StatusBadge status={u.status || 'active'} />
