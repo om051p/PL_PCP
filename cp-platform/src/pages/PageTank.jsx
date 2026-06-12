@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useEffect } from 'react'
+import { useProjectStore } from '../store/projectStore.js'
 import {
   FieldInput,
   SelectField,
@@ -7,17 +8,45 @@ import {
   Divider,
   Grid2,
 } from '../components/ui.jsx'
-import { Shield, Zap, Layers, BarChart3, HelpCircle } from 'lucide-react'
+import { Shield, Zap, Layers, BarChart3 } from 'lucide-react'
 
 export function PageTank() {
-  // Inputs
-  const [diameter, setDiameter] = useState(30) // m
-  const [currentDensity, setCurrentDensity] = useState(15) // mA/m2
-  const [designLife, setDesignLife] = useState(30) // years
-  const [soilResistivity, setSoilResistivity] = useState(5000) // ohm-cm
-  const [anodeSpacing, setAnodeSpacing] = useState(1.5) // m
-  const [layoutType, setLayoutType] = useState('concentric') // 'concentric' | 'grid'
-  const [anodeRating, setAnodeRating] = useState(17) // mA/m
+  const project = useProjectStore((s) => s.getProject())
+  const tank = project.tank || {}
+  const updateTankParameters = useProjectStore((s) => s.updateTankParameters)
+  const runTankCalculations = useProjectStore((s) => s.runTankCalculations)
+  const updateDesignBasis = useProjectStore((s) => s.updateDesignBasis)
+
+  // Bind values from store
+  const diameter = tank.diameter ?? 30
+  const radius = diameter / 2
+  const currentDensity = tank.currentDensity ?? 15
+  const designLife = project.designBasis.systemDesignLifeYears ?? 25
+  const soilResistivity = project.designBasis.soilResistivityOhmCm ?? 361
+  const anodeSpacing = tank.anodeSpacing ?? 1.5
+  const layoutType = tank.layoutType ?? 'concentric'
+  const anodeRating = tank.anodeRating ?? 17
+
+  // Run calculations in useEffect when inputs change
+  useEffect(() => {
+    runTankCalculations()
+  }, [diameter, currentDensity, designLife, soilResistivity, anodeSpacing, layoutType, anodeRating, runTankCalculations])
+
+  // Get outputs from store or use fallback if not run yet
+  const lastCalcResult = tank.lastCalcResult || {}
+  const bottomArea = lastCalcResult.bottomArea ?? (Math.PI * Math.pow(diameter / 2, 2))
+  const reqCurrent = lastCalcResult.reqCurrent ?? ((bottomArea * currentDensity) / 1000)
+  const designCurrent = lastCalcResult.designCurrent ?? (reqCurrent * 1.3)
+  const geomLength = lastCalcResult.geomLength ?? 0
+  const rings = lastCalcResult.rings ?? []
+  const gridLines = lastCalcResult.gridLines ?? []
+  const minLengthForCurrent = lastCalcResult.minLengthForCurrent ?? 0
+  const finalLength = lastCalcResult.finalLength ?? 0
+  const totalAnodeWeight = lastCalcResult.totalAnodeWeight ?? 0
+  const operatingCurrentDensity = lastCalcResult.operatingCurrentDensity ?? 0
+  const resistance = lastCalcResult.resistance ?? 0
+  const dcVoltage = lastCalcResult.dcVoltage ?? 0
+  const powerW = lastCalcResult.powerW ?? 0
 
   // MMO Anode properties
   const MMO_SPECS = {
@@ -26,58 +55,6 @@ export function PageTank() {
   }
 
   const spec = MMO_SPECS[anodeRating] || MMO_SPECS[17]
-
-  // Calculations
-  const radius = diameter / 2
-  const bottomArea = Math.PI * Math.pow(radius, 2)
-  const reqCurrent = (bottomArea * currentDensity) / 1000 // A
-  const designCurrent = reqCurrent * 1.3 // 30% spare capacity
-
-  // Calculate ribbon anode length based on geometry
-  let geomLength = 0
-  const rings = []
-  const gridLines = []
-
-  if (layoutType === 'concentric') {
-    const numRings = Math.floor(radius / anodeSpacing)
-    for (let i = 1; i <= numRings; i++) {
-      const ringRadius = i * anodeSpacing
-      const circ = 2 * Math.PI * ringRadius
-      geomLength += circ
-      rings.push(ringRadius)
-    }
-  } else {
-    // Parallel Grid layout
-    const numLines = Math.floor(radius / anodeSpacing)
-    // Center line
-    geomLength += diameter
-    gridLines.push(0)
-    // Symmetric parallel chords
-    for (let i = 1; i <= numLines; i++) {
-      const dist = i * anodeSpacing
-      const chordLength = 2 * Math.sqrt(Math.pow(radius, 2) - Math.pow(dist, 2))
-      geomLength += chordLength * 2 // two sides
-      gridLines.push(dist)
-      gridLines.push(-dist)
-    }
-  }
-
-  // Length based on electrical rating requirements
-  const minLengthForCurrent = designCurrent / (spec.value / 1000)
-  const finalLength = Math.max(geomLength, minLengthForCurrent)
-  const totalAnodeWeight = finalLength * spec.weightKgPerM
-  const operatingCurrentDensity = finalLength > 0 ? (designCurrent / finalLength) * 1000 : 0 // mA/m
-
-  // System Resistance (Sunde's Formula / Dwight's Grid resistance approximation)
-  // R = (rho / (2 * pi * L)) * (ln(8 * L / d) - 1) for ribbon anode in sand
-  const ribbonDiaApprox = 0.008 // m equivalent
-  const soilResistivityOhmM = soilResistivity / 100
-  const resistance = finalLength > 0
-    ? (soilResistivityOhmM / (2 * Math.PI * finalLength)) * (Math.log((8 * finalLength) / ribbonDiaApprox) - 1)
-    : 0
-
-  const dcVoltage = designCurrent * resistance + 2.0 // operating current * resistance + back EMF
-  const powerW = designCurrent * dcVoltage
 
   // SVG dimensions & scaling
   const svgSize = 280
@@ -102,7 +79,7 @@ export function PageTank() {
             unit="m"
             min={5}
             max={120}
-            onChange={(v) => setDiameter(Math.max(5, parseFloat(v) || 30))}
+            onChange={(v) => updateTankParameters({ diameter: Math.max(5, parseFloat(v) || 30) })}
           />
           <FieldInput
             label="Design Current Density"
@@ -111,7 +88,7 @@ export function PageTank() {
             unit="mA/m²"
             min={5}
             max={50}
-            onChange={(v) => setCurrentDensity(Math.max(1, parseFloat(v) || 15))}
+            onChange={(v) => updateTankParameters({ currentDensity: Math.max(1, parseFloat(v) || 15) })}
           />
           <FieldInput
             label="Design Life"
@@ -120,7 +97,7 @@ export function PageTank() {
             unit="yrs"
             min={10}
             max={50}
-            onChange={(v) => setDesignLife(Math.max(1, parseInt(v) || 30))}
+            onChange={(v) => updateDesignBasis({ systemDesignLifeYears: Math.max(1, parseInt(v) || 25) })}
           />
           <FieldInput
             label="Soil/Sand Resistivity"
@@ -128,7 +105,7 @@ export function PageTank() {
             type="number"
             unit="Ω·cm"
             min={100}
-            onChange={(v) => setSoilResistivity(Math.max(1, parseInt(v) || 5000))}
+            onChange={(v) => updateDesignBasis({ soilResistivityOhmCm: Math.max(1, parseInt(v) || 361) })}
           />
         </SectionCard>
 
@@ -136,7 +113,7 @@ export function PageTank() {
           <SelectField
             label="Anode Layout Type"
             value={layoutType}
-            onChange={(v) => setLayoutType(v)}
+            onChange={(v) => updateTankParameters({ layoutType: v })}
             options={[
               { value: 'concentric', label: 'Concentric Rings' },
               { value: 'grid', label: 'Parallel Ribbon Grid' },
@@ -145,7 +122,7 @@ export function PageTank() {
           <SelectField
             label="MMO Ribbon Specification"
             value={anodeRating}
-            onChange={(v) => setAnodeRating(parseInt(v))}
+            onChange={(v) => updateTankParameters({ anodeRating: parseInt(v) })}
             options={Object.values(MMO_SPECS).map((opt) => ({
               value: opt.value,
               label: opt.label,
@@ -159,7 +136,7 @@ export function PageTank() {
             step={0.1}
             min={0.5}
             max={5.0}
-            onChange={(v) => setAnodeSpacing(Math.max(0.2, parseFloat(v) || 1.5))}
+            onChange={(v) => updateTankParameters({ anodeSpacing: Math.max(0.2, parseFloat(v) || 1.5) })}
           />
         </SectionCard>
       </Grid2>

@@ -23,3 +23,5 @@ export { PageImport } from './PageImport.jsx'
 export { PageWorkspace } from './PageWorkspace.jsx'
 export { PageTank } from './PageTank.jsx'
 export { PageVessel } from './PageVessel.jsx'
+export { PageHistory } from './PageHistory.jsx'
+

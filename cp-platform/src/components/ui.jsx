@@ -39,7 +39,12 @@ export function FieldInput({
   ariaLabel,
 }) {
   const user = useAuthStore((s) => s.user)
-  const isReadOnly = readOnly || user?.role === 'reviewer' || user?.role === 'viewer'
+  const project = useProjectStore((s) => s.getProject())
+  const activeStationId = useProjectStore((s) => s.activeStationId)
+  const activeStation = project?.stations?.find((st) => st.id === activeStationId)
+  const isLocked = project?.status === 'approved' || project?.status === 'issued_for_construction' || 
+                   activeStation?.status === 'approved' || activeStation?.status === 'issued_for_construction'
+  const isReadOnly = readOnly || user?.role === 'reviewer' || user?.role === 'viewer' || isLocked
   const generatedId = useId().replace(/[^a-z0-9]/g, '')
   const inputId = ((ariaLabel || label || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')) || `field-input-${generatedId}`
   
@@ -84,7 +89,12 @@ export function FieldInput({
 
 export function SelectField({ label, value, onChange, options, hint }) {
   const user = useAuthStore((s) => s.user)
-  const isReadOnly = user?.role === 'reviewer' || user?.role === 'viewer'
+  const project = useProjectStore((s) => s.getProject())
+  const activeStationId = useProjectStore((s) => s.activeStationId)
+  const activeStation = project?.stations?.find((st) => st.id === activeStationId)
+  const isLocked = project?.status === 'approved' || project?.status === 'issued_for_construction' || 
+                   activeStation?.status === 'approved' || activeStation?.status === 'issued_for_construction'
+  const isReadOnly = user?.role === 'reviewer' || user?.role === 'viewer' || isLocked
   const selectId = ((label || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')) || 'select-field'
   
   return (
@@ -214,6 +224,64 @@ export function StatCard({ label, value, unit, sub, color }) {
       <div className="stat-val">{value}</div>
       {unit && <div className="stat-unit">{unit}</div>}
       {sub && <div className="stat-sub">{sub}</div>}
+    </div>
+  )
+}
+
+// ─── ResultKPICard ─────────────────────────────────────────────────────────────
+
+export function ResultKPICard({
+  title,
+  value,
+  unit,
+  status, // 'pass', 'fail', 'stale'
+  limitText,
+  safetyMargin,
+  stale,
+}) {
+  const icons = {
+    pass: <CheckCircle2 size={13} style={{ verticalAlign: 'middle', marginRight: 2 }} />,
+    fail: <XCircle size={13} style={{ verticalAlign: 'middle', marginRight: 2 }} />,
+    stale: <AlertTriangle size={13} style={{ verticalAlign: 'middle', marginRight: 2 }} />,
+  }
+
+  const borderClass = stale
+    ? 'result-kpi-card--stale'
+    : status === 'fail'
+    ? 'result-kpi-card--fail'
+    : 'result-kpi-card--pass'
+
+  return (
+    <div className={`result-kpi-card ${borderClass}`}>
+      <div className="result-kpi-title">{title}</div>
+      <div className="result-kpi-value-wrap">
+        <span className="result-kpi-value">{value}</span>
+        {unit && <span className="result-kpi-unit">{unit}</span>}
+      </div>
+      {(limitText || safetyMargin || stale) && (
+        <div className="result-kpi-footer">
+          <div className="result-kpi-limit">{limitText || ''}</div>
+          <div>
+            {stale ? (
+              <span className="result-kpi-badge result-kpi-badge--stale">
+                {icons.stale} Recalc
+              </span>
+            ) : safetyMargin ? (
+              <span className={`result-kpi-margin result-kpi-margin--${status === 'fail' ? 'fail' : 'pass'}`}>
+                {safetyMargin}
+              </span>
+            ) : status === 'fail' ? (
+              <span className="result-kpi-badge result-kpi-badge--fail">
+                {icons.fail} Fail
+              </span>
+            ) : (
+              <span className="result-kpi-badge result-kpi-badge--pass">
+                {icons.pass} Pass
+              </span>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   )
 }

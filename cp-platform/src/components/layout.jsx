@@ -30,12 +30,17 @@ import {
   LogOut,
   Settings,
   Users,
+  Database,
+  History,
 } from 'lucide-react'
 
 const PIPELINE_NAV_ITEMS = [
   {
     section: 'WORKSPACE',
-    items: [{ id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard }],
+    items: [
+      { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+      { id: 'history', label: 'Audit Trail', icon: History },
+    ],
   },
   {
     section: 'PROJECT DEFINITION',
@@ -87,7 +92,10 @@ const PIPELINE_NAV_ITEMS = [
 const TANK_NAV_ITEMS = [
   {
     section: 'WORKSPACE',
-    items: [{ id: 'tank', label: 'Tank Bottom CP', icon: Layers }],
+    items: [
+      { id: 'tank', label: 'Tank Bottom CP', icon: Layers },
+      { id: 'history', label: 'Audit Trail', icon: History },
+    ],
   },
   {
     section: 'Administration',
@@ -102,7 +110,10 @@ const TANK_NAV_ITEMS = [
 const VESSEL_NAV_ITEMS = [
   {
     section: 'WORKSPACE',
-    items: [{ id: 'vessel', label: 'Vessel CP', icon: Database }],
+    items: [
+      { id: 'vessel', label: 'Vessel CP', icon: Database },
+      { id: 'history', label: 'Audit Trail', icon: History },
+    ],
   },
   {
     section: 'Administration',
@@ -116,6 +127,7 @@ const VESSEL_NAV_ITEMS = [
 
 const PAGE_META = {
   dashboard: { title: 'Project Dashboard', sub: 'Overview of all projects and recent activity' },
+  history: { title: 'Audit Trail & History', sub: 'Traceability of all project revisions, design changes, and approvals' },
   project: { title: 'Design Basis', sub: 'Client details, station count, system configuration' },
   pipeline: { title: 'Pipeline Parameters', sub: 'Geometry, operating conditions, soil resistivity' },
   current: { title: 'Current Requirement', sub: 'Protection current calculation with temperature correction' },
@@ -333,7 +345,7 @@ function ProjectSelector() {
 // ─── Project Context Header ──────────────────────────────────────────────────
 
 function ProjectContextHeader() {
-  const project = useProjectStore((s) => s.getProject())
+  const project = useProjectStore((s) => s.projects.find((p) => p.id === s.activeProjectId) || s.projects[0])
   if (!project) return null
 
   return (
@@ -356,7 +368,9 @@ function ProjectContextHeader() {
 
 export function Sidebar({ collapsed, onToggle }) {
   const failCount = useProjectStore((s) => s.getTotalValidationFailCount())
-  const project = useProjectStore((s) => s.getProject())
+  const project = useProjectStore((s) => s.projects.find((p) => p.id === s.activeProjectId) || s.projects[0])
+  const activeStationId = useProjectStore((s) => s.activeStationId)
+  const station = project?.stations.find((st) => st.id === activeStationId) || project?.stations[0]
   const navigate = useNavigate()
   const user = useAuthStore((s) => s.user)
   const setActiveWorkspace = useProjectStore((s) => s.setActiveWorkspace)
@@ -373,6 +387,95 @@ export function Sidebar({ collapsed, onToggle }) {
     : activeWorkspace === 'vessel'
     ? '⚡ RAXA Vessel'
     : '⚡ RAXA Pipeline'
+
+  // Helper for Sidebar Progress Tracking
+  function getNavItemStatus(itemId) {
+    if (collapsed || !station || !project) return null
+    if (itemId === 'dashboard') return null
+
+    if (itemId === 'project') {
+      const isDone = !!(project.projectName && project.clientName)
+      return (
+        <span
+          className="tab-dot"
+          title={isDone ? 'Design basis complete' : 'Design basis incomplete'}
+          style={{
+            width: 6,
+            height: 6,
+            borderRadius: '50%',
+            backgroundColor: isDone ? 'var(--pass)' : 'var(--text-tertiary)',
+            marginLeft: 'auto',
+          }}
+        />
+      )
+    }
+
+    if (['pipeline', 'current', 'groundbed', 'cable', 'tr', 'attenuation'].includes(itemId)) {
+      const isCalculated = !!station.lastCalcResult
+      const isStale = station.status === 'needs_recalculation' || (!station.lastCalcResult && station.pipelineSegments.length > 0)
+
+      let color = 'var(--text-tertiary)'
+      let title = 'Not calculated'
+
+      if (isCalculated && !isStale) {
+        color = 'var(--pass)'
+        title = 'Calculated and fresh'
+      } else if (isStale) {
+        color = 'var(--warn)'
+        title = 'Recalculation required (inputs changed)'
+      }
+
+      return (
+        <span
+          className="tab-dot"
+          title={title}
+          style={{
+            width: 6,
+            height: 6,
+            borderRadius: '50%',
+            backgroundColor: color,
+            marginLeft: 'auto',
+          }}
+        />
+      )
+    }
+
+    if (itemId === 'bom') {
+      const isBOMReady = station.status === 'approved' || project.status === 'approved' || station.status === 'issued_for_construction'
+      return (
+        <span
+          className="tab-dot"
+          title={isBOMReady ? 'BOM compiled' : 'Review & approval required'}
+          style={{
+            width: 6,
+            height: 6,
+            borderRadius: '50%',
+            backgroundColor: isBOMReady ? 'var(--pass)' : 'var(--text-tertiary)',
+            marginLeft: 'auto',
+          }}
+        />
+      )
+    }
+
+    if (itemId === 'report') {
+      const allDone = project.stations.every((s) => s.lastCalcResult)
+      return (
+        <span
+          className="tab-dot"
+          title={allDone ? 'Report available' : 'Incomplete calculations'}
+          style={{
+            width: 6,
+            height: 6,
+            borderRadius: '50%',
+            backgroundColor: allDone ? 'var(--pass)' : 'var(--text-tertiary)',
+            marginLeft: 'auto',
+          }}
+        />
+      )
+    }
+
+    return null
+  }
 
   return (
     <aside className={`sidebar ${collapsed ? 'sidebar--collapsed' : ''}`}>
@@ -417,11 +520,12 @@ export function Sidebar({ collapsed, onToggle }) {
                   >
                     <Icon size={16} className="nav-icon" />
                     {!collapsed && <span className="nav-label">{item.label}</span>}
+                    {!collapsed && getNavItemStatus(item.id)}
                     {!collapsed && item.badge && failCount > 0 && (
-                      <span className="nav-badge nav-badge--fail">{failCount}</span>
+                      <span className="nav-badge nav-badge--fail" style={{ marginLeft: 6 }}>{failCount}</span>
                     )}
                     {!collapsed && item.badge && failCount === 0 && (
-                      <span className="nav-badge nav-badge--pass">✓</span>
+                      <span className="nav-badge nav-badge--pass" style={{ marginLeft: 6 }}>✓</span>
                     )}
                   </NavLink>
                 )
@@ -442,7 +546,7 @@ export function TopBar() {
   const navigate = useNavigate()
   const calculating = useProjectStore((s) => s.ui.calculatingStationId)
   const calculateAllStations = useProjectStore((s) => s.calculateAllStations)
-  const project = useProjectStore((s) => s.getProject())
+  const project = useProjectStore((s) => s.projects.find((p) => p.id === s.activeProjectId) || s.projects[0])
   const meta = PAGE_META[activePage] || { title: activePage, sub: '' }
   const user = useAuthStore((s) => s.user)
   const logout = useAuthStore((s) => s.logout)

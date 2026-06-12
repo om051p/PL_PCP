@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useEffect } from 'react'
+import { useProjectStore } from '../store/projectStore.js'
 import {
   FieldInput,
   SelectField,
@@ -10,13 +11,35 @@ import {
 import { Shield, Zap, Layers, BarChart3 } from 'lucide-react'
 
 export function PageVessel() {
-  // Inputs
-  const [length, setLength] = useState(8.0) // m
-  const [diameter, setDiameter] = useState(2.4) // m
-  const [currentDensity, setCurrentDensity] = useState(30) // mA/m2
-  const [electrolyteResistivity, setElectrolyteResistivity] = useState(80) // ohm-cm (produced water)
-  const [anodeType, setAnodeType] = useState('al_zn_in') // anode type
-  const [anodeQty, setAnodeQty] = useState(6)
+  const project = useProjectStore((s) => s.getProject())
+  const vessel = project.vessel || {}
+  const updateVesselParameters = useProjectStore((s) => s.updateVesselParameters)
+  const runVesselCalculations = useProjectStore((s) => s.runVesselCalculations)
+
+  // Bind values from store
+  const length = vessel.length ?? 8.0
+  const diameter = vessel.diameter ?? 2.4
+  const currentDensity = vessel.currentDensity ?? 30
+  const electrolyteResistivity = vessel.electrolyteResistivity ?? 80
+  const anodeType = vessel.anodeType ?? 'al_zn_in'
+  const anodeQty = vessel.anodeQty ?? 6
+  const drivingVoltageMode = vessel.drivingVoltageMode ?? 'polarized'
+  const systemDesignLife = project.designBasis.systemDesignLifeYears ?? 25
+
+  // Run calculations in useEffect when inputs change
+  useEffect(() => {
+    runVesselCalculations()
+  }, [length, diameter, currentDensity, electrolyteResistivity, anodeType, anodeQty, drivingVoltageMode, runVesselCalculations])
+
+  // Get outputs from store or use fallback if not run yet
+  const lastCalcResult = vessel.lastCalcResult || {}
+  const totalArea = lastCalcResult.totalArea ?? (Math.PI * diameter * length + 2 * Math.PI * Math.pow(diameter / 2, 2))
+  const reqCurrent = lastCalcResult.reqCurrent ?? ((totalArea * currentDensity) / 1000)
+  const designCurrent = lastCalcResult.designCurrent ?? (reqCurrent * 1.3)
+  const anodeResistance = lastCalcResult.anodeResistance ?? 0
+  const outputCurrentPerAnode = lastCalcResult.outputCurrentPerAnode ?? 0
+  const totalOutputCapacity = lastCalcResult.totalOutputCapacity ?? 0
+  const expectedLife = lastCalcResult.expectedLife ?? 0
 
   // Anode specs database
   const ANODE_SPECS = {
@@ -26,7 +49,7 @@ export function PageVessel() {
       lengthMm: 300,
       radiusMm: 45,
       consumptionRate: 3.4, // kg/A-yr
-      drivingVoltageV: 0.25, // vs protected steel (-1.05V vs -0.80V)
+      drivingVoltageV: drivingVoltageMode === 'bare' ? 0.45 : 0.25, // vs protected steel (-1.05V vs -0.80V/bare -0.60V)
       utilizationFactor: 0.85,
     },
     zinc_high_pure: {
@@ -35,7 +58,7 @@ export function PageVessel() {
       lengthMm: 400,
       radiusMm: 35,
       consumptionRate: 11.8, // kg/A-yr
-      drivingVoltageV: 0.25, // vs protected steel
+      drivingVoltageV: drivingVoltageMode === 'bare' ? 0.45 : 0.25, // vs protected steel
       utilizationFactor: 0.85,
     },
     magnesium_h1: {
@@ -44,38 +67,12 @@ export function PageVessel() {
       lengthMm: 350,
       radiusMm: 50,
       consumptionRate: 17.7, // kg/A-yr
-      drivingVoltageV: 0.70, // vs protected steel (-1.50V vs -0.80V)
+      drivingVoltageV: drivingVoltageMode === 'bare' ? 0.90 : 0.70, // vs protected steel (-1.50V vs -0.80V/bare -0.60V)
       utilizationFactor: 0.50,
     },
   }
 
   const spec = ANODE_SPECS[anodeType] || ANODE_SPECS.al_zn_in
-
-  // Calculations
-  // Area of horizontal vessel: Cylinder shell + 2 semi-elliptical/dish heads (approximated as 2 flat circles for simplicity)
-  const cylinderArea = Math.PI * diameter * length
-  const headsArea = 2 * Math.PI * Math.pow(diameter / 2, 2)
-  const totalArea = cylinderArea + headsArea
-
-  const reqCurrent = (totalArea * currentDensity) / 1000 // A
-  const designCurrent = reqCurrent * 1.3 // 1.3 spare factor
-
-  // McCoy's Formula for Anode Resistance in Vessel
-  const anodeLenM = spec.lengthMm / 1000
-  const anodeRadM = spec.radiusMm / 1000
-  const resistivityOhmM = electrolyteResistivity / 100
-  const anodeResistance = anodeLenM > 0
-    ? (resistivityOhmM / (2 * Math.PI * anodeLenM)) * (Math.log((4 * anodeLenM) / anodeRadM) - 1)
-    : 0
-
-  // Output current per anode
-  const outputCurrentPerAnode = spec.drivingVoltageV / anodeResistance // A
-  const totalOutputCapacity = outputCurrentPerAnode * anodeQty // A
-
-  // Design Life based on consumption: Y = (N * W * U) / (I_design * Consumption)
-  const expectedLife = designCurrent > 0
-    ? (anodeQty * spec.weightKg * spec.utilizationFactor) / (designCurrent * spec.consumptionRate)
-    : 0
 
   // SVG parameters
   const svgW = 340
@@ -120,7 +117,7 @@ export function PageVessel() {
             min={1}
             max={30}
             step={0.5}
-            onChange={(v) => setLength(Math.max(1, parseFloat(v) || 8.0))}
+            onChange={(v) => updateVesselParameters({ length: Math.max(1, parseFloat(v) || 8.0) })}
           />
           <FieldInput
             label="Vessel Diameter"
@@ -130,7 +127,7 @@ export function PageVessel() {
             min={0.5}
             max={10}
             step={0.1}
-            onChange={(v) => setDiameter(Math.max(0.5, parseFloat(v) || 2.4))}
+            onChange={(v) => updateVesselParameters({ diameter: Math.max(0.5, parseFloat(v) || 2.4) })}
           />
           <FieldInput
             label="Design Current Density"
@@ -139,7 +136,7 @@ export function PageVessel() {
             unit="mA/m²"
             min={1}
             max={100}
-            onChange={(v) => setCurrentDensity(Math.max(1, parseFloat(v) || 30))}
+            onChange={(v) => updateVesselParameters({ currentDensity: Math.max(1, parseFloat(v) || 30) })}
           />
           <FieldInput
             label="Electrolyte Resistivity"
@@ -147,7 +144,7 @@ export function PageVessel() {
             type="number"
             unit="Ω·cm"
             min={10}
-            onChange={(v) => setElectrolyteResistivity(Math.max(1, parseInt(v) || 80))}
+            onChange={(v) => updateVesselParameters({ electrolyteResistivity: Math.max(1, parseInt(v) || 80) })}
           />
         </SectionCard>
 
@@ -155,7 +152,7 @@ export function PageVessel() {
           <SelectField
             label="Anode Type (Sacrificial)"
             value={anodeType}
-            onChange={(v) => setAnodeType(v)}
+            onChange={(v) => updateVesselParameters({ anodeType: v })}
             options={Object.keys(ANODE_SPECS).map((k) => ({
               value: k,
               label: ANODE_SPECS[k].label,
@@ -167,7 +164,16 @@ export function PageVessel() {
             type="number"
             min={1}
             max={50}
-            onChange={(v) => setAnodeQty(Math.max(1, parseInt(v) || 6))}
+            onChange={(v) => updateVesselParameters({ anodeQty: Math.max(1, parseInt(v) || 6) })}
+          />
+          <SelectField
+            label="Steel Condition (Driving Voltage)"
+            value={drivingVoltageMode}
+            onChange={(v) => updateVesselParameters({ drivingVoltageMode: v })}
+            options={[
+              { value: 'polarized', label: `Polarized Steel (ΔE = ${anodeType === 'magnesium_h1' ? '0.70V' : '0.25V'})` },
+              { value: 'bare', label: `Bare Steel (ΔE = ${anodeType === 'magnesium_h1' ? '0.90V' : '0.45V'})` },
+            ]}
           />
         </SectionCard>
       </Grid2>
@@ -231,7 +237,7 @@ export function PageVessel() {
             value={expectedLife.toFixed(1)}
             unit="years"
             formula="Y = (N × W × U) / (I_des × Consumption)"
-            color={expectedLife < 20 ? 'var(--fail, #E24B4A)' : 'var(--pass, #1D9E75)'}
+            color={expectedLife < systemDesignLife ? 'var(--fail, #E24B4A)' : 'var(--pass, #1D9E75)'}
             highlight
           />
         </SectionCard>

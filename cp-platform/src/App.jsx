@@ -24,6 +24,7 @@ import {
   PageWorkspace,
   PageTank,
   PageVessel,
+  PageHistory,
 } from './pages/index.jsx'
 import PageDashboard from './pages/PageDashboard.jsx'
 import SettingsPage from './pages/SettingsPage.jsx'
@@ -188,20 +189,21 @@ function AppShell() {
                 <Navigate to="/dashboard" replace />
               } />
               <Route path="/dashboard" element={<PageDashboard />} />
-              <Route path="/project" element={<PageProjectSetup />} />
-              <Route path="/pipeline" element={<PagePipeline />} />
-              <Route path="/current" element={<PageCurrentRequirement />} />
-              <Route path="/groundbed" element={<PageGroundbed />} />
-              <Route path="/cable" element={<PageCableResistance />} />
-              <Route path="/tr" element={<PageTRSizing />} />
+              <Route path="/project" element={<RoleRoute requiredRole="engineer"><PageProjectSetup /></RoleRoute>} />
+              <Route path="/pipeline" element={<RoleRoute requiredRole="engineer"><PagePipeline /></RoleRoute>} />
+              <Route path="/current" element={<RoleRoute requiredRole="engineer"><PageCurrentRequirement /></RoleRoute>} />
+              <Route path="/groundbed" element={<RoleRoute requiredRole="engineer"><PageGroundbed /></RoleRoute>} />
+              <Route path="/cable" element={<RoleRoute requiredRole="engineer"><PageCableResistance /></RoleRoute>} />
+              <Route path="/tr" element={<RoleRoute requiredRole="engineer"><PageTRSizing /></RoleRoute>} />
               <Route path="/validation" element={<PageValidation />} />
-              <Route path="/optimizer" element={<PageOptimizer />} />
-              <Route path="/bom" element={<PageBOM />} />
+              <Route path="/optimizer" element={<RoleRoute requiredRole="engineer"><PageOptimizer /></RoleRoute>} />
+              <Route path="/bom" element={<RoleRoute requiredRole="engineer"><PageBOM /></RoleRoute>} />
               <Route path="/report" element={<PageReport />} />
-              <Route path="/import" element={<PageImport />} />
-              <Route path="/attenuation" element={<PageAttenuation />} />
-              <Route path="/tank" element={<PageTank />} />
-              <Route path="/vessel" element={<PageVessel />} />
+              <Route path="/history" element={<PageHistory />} />
+              <Route path="/import" element={<RoleRoute requiredRole="engineer"><PageImport /></RoleRoute>} />
+              <Route path="/attenuation" element={<RoleRoute requiredRole="engineer"><PageAttenuation /></RoleRoute>} />
+              <Route path="/tank" element={<RoleRoute requiredRole="engineer"><PageTank /></RoleRoute>} />
+              <Route path="/vessel" element={<RoleRoute requiredRole="engineer"><PageVessel /></RoleRoute>} />
               <Route path="/settings" element={<RoleRoute requiredRole="admin"><SettingsPage /></RoleRoute>} />
               <Route path="/users" element={<RoleRoute requiredRole="admin"><UserManagementPage /></RoleRoute>} />
               <Route path="*" element={
