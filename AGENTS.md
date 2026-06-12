@@ -1,7 +1,7 @@
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence
 
-This project is indexed by GitNexus as **PL PCP** (2419 symbols, 2793 relationships, 30 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
+This project is indexed by GitNexus as **PL_PCP** (4066 symbols, 4835 relationships, 60 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
 
 > If any GitNexus tool warns the index is stale, run `npx gitnexus analyze` in terminal first.
 
@@ -24,10 +24,10 @@ This project is indexed by GitNexus as **PL PCP** (2419 symbols, 2793 relationsh
 
 | Resource | Use for |
 |----------|---------|
-| `gitnexus://repo/PL PCP/context` | Codebase overview, check index freshness |
-| `gitnexus://repo/PL PCP/clusters` | All functional areas |
-| `gitnexus://repo/PL PCP/processes` | All execution flows |
-| `gitnexus://repo/PL PCP/process/{name}` | Step-by-step execution trace |
+| `gitnexus://repo/PL_PCP/context` | Codebase overview, check index freshness |
+| `gitnexus://repo/PL_PCP/clusters` | All functional areas |
+| `gitnexus://repo/PL_PCP/processes` | All execution flows |
+| `gitnexus://repo/PL_PCP/process/{name}` | Step-by-step execution trace |
 
 ## CLI
 

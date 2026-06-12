@@ -1,455 +1,967 @@
 {
-  "files": {
-    "/mnt/devssd/projects/PL PCP/.vscode/mcp.json": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude-flow/agents.json": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude-flow/agents/store.json": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude-flow/daemon-state.json": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude-flow/data/autopilot-log.json": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude-flow/data/autopilot-state.json": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude-flow/hive-mind/state.json": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude-flow/metrics/codebase-map.json": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude-flow/metrics/consolidation.json": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude-flow/metrics/learning.json": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude-flow/metrics/performance.json": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude-flow/metrics/security-audit.json": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude-flow/metrics/swarm-activity.json": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude-flow/metrics/test-gaps.json": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude-flow/metrics/v3-progress.json": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude-flow/security/audit-status.json": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude-flow/swarm/swarm-state.json": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude-flow/tasks/store.json": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/helpers/adr-compliance.sh": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/helpers/auto-commit.sh": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/helpers/auto-memory-hook.mjs": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/helpers/checkpoint-manager.sh": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/helpers/daemon-manager.sh": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/helpers/ddd-tracker.sh": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/helpers/github-safe.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/helpers/github-setup.sh": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/helpers/guidance-hook.sh": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/helpers/guidance-hooks.sh": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/helpers/health-monitor.sh": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/helpers/learning-hooks.sh": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/helpers/learning-optimizer.sh": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/helpers/learning-service.mjs": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/helpers/memory.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/helpers/metrics-db.mjs": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/helpers/pattern-consolidator.sh": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/helpers/perf-worker.sh": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/helpers/post-commit": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/helpers/pre-commit": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/helpers/quick-start.sh": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/helpers/router.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/helpers/security-scanner.sh": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/helpers/session.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/helpers/setup-mcp.sh": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/helpers/standard-checkpoint-hooks.sh": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/helpers/statusline-hook.sh": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/helpers/statusline.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/helpers/swarm-comms.sh": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/helpers/swarm-hooks.sh": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/helpers/swarm-monitor.sh": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/helpers/sync-v3-metrics.sh": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/helpers/update-v3-progress.sh": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/helpers/v3-quick-status.sh": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/helpers/v3.sh": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/helpers/validate-v3-config.sh": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/helpers/worker-manager.sh": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/settings.json": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.devcontainer/devcontainer.json": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.mcp.json": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.swarm/model-router-state.json": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.swarm/state.json": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.vscode/mcp.json": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/eslint.config.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/package.json": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/playwright.config.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/scripts/doctor.mjs": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/scripts/setup.sh": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/scripts/verify_datasets.mjs": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/site/assets/javascripts/bundle.79ae519e.min.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/site/assets/javascripts/lunr/min/lunr.ar.min.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/site/assets/javascripts/lunr/min/lunr.da.min.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/site/assets/javascripts/lunr/min/lunr.de.min.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/site/assets/javascripts/lunr/min/lunr.du.min.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/site/assets/javascripts/lunr/min/lunr.el.min.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/site/assets/javascripts/lunr/min/lunr.es.min.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/site/assets/javascripts/lunr/min/lunr.fi.min.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/site/assets/javascripts/lunr/min/lunr.fr.min.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/site/assets/javascripts/lunr/min/lunr.he.min.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/site/assets/javascripts/lunr/min/lunr.hi.min.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/site/assets/javascripts/lunr/min/lunr.hu.min.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/site/assets/javascripts/lunr/min/lunr.hy.min.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/site/assets/javascripts/lunr/min/lunr.it.min.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/site/assets/javascripts/lunr/min/lunr.ja.min.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/site/assets/javascripts/lunr/min/lunr.jp.min.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/site/assets/javascripts/lunr/min/lunr.kn.min.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/site/assets/javascripts/lunr/min/lunr.ko.min.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/site/assets/javascripts/lunr/min/lunr.multi.min.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/site/assets/javascripts/lunr/min/lunr.nl.min.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/site/assets/javascripts/lunr/min/lunr.no.min.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/site/assets/javascripts/lunr/min/lunr.pt.min.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/site/assets/javascripts/lunr/min/lunr.ro.min.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/site/assets/javascripts/lunr/min/lunr.ru.min.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/site/assets/javascripts/lunr/min/lunr.sa.min.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/site/assets/javascripts/lunr/min/lunr.stemmer.support.min.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/site/assets/javascripts/lunr/min/lunr.sv.min.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/site/assets/javascripts/lunr/min/lunr.ta.min.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/site/assets/javascripts/lunr/min/lunr.te.min.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/site/assets/javascripts/lunr/min/lunr.th.min.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/site/assets/javascripts/lunr/min/lunr.tr.min.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/site/assets/javascripts/lunr/min/lunr.vi.min.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/site/assets/javascripts/lunr/min/lunr.zh.min.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/site/assets/javascripts/lunr/tinyseg.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/site/assets/javascripts/lunr/wordcut.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/site/assets/javascripts/workers/search.2c215733.min.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/site/search/search_index.json": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/src/App.jsx": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/src/components/ErrorBoundary.jsx": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/src/components/layout.jsx": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/src/components/ui.jsx": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/src/constants/index.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/src/e2e/app.spec.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/src/e2e/fullWorkflow.spec.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/src/engine/__tests__/decimalPrecision.test.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/src/engine/__tests__/engineeringAcceptance.test.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/src/engine/__tests__/goldenDatasets.test.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/src/engine/__tests__/verificationFramework.test.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/src/engine/modules/calculations.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/src/engine/modules/calculations.test.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/src/engine/modules/distributed.test.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/src/engine/modules/validation.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/src/engine/modules/validation.test.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/src/engine/optimizer/optimizer.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/src/engine/optimizer/optimizer.test.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/src/engine/rules/bomEngine.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/src/engine/rules/bomEngine.test.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/src/engine/rules/rulesEngine.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/src/engine/rules/rulesEngine.test.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/src/main.jsx": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/src/pages/index.jsx": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/src/reporting/bomExporter.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/src/reporting/excelEngine.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/src/reporting/excelEngine.test.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/src/reporting/pdfGenerator.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/src/reporting/pdfGenerator.test.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/src/standards/index.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/src/standards/index.test.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/src/standards/naceSP0169.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/src/standards/saudiAramco.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/src/store/projectStore.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/src/store/projectStore.test.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/src/test-utils/__tests__/decimalHelpers.test.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/src/test-utils/__tests__/verificationFramework.test.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/src/test-utils/decimalHelpers.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/src/test-utils/verificationFramework.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/src/types/index.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/tsconfig.json": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/vercel.json": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/vite.config.js": "code",
-    "/mnt/devssd/projects/PL PCP/cp-platform/vitest.config.js": "code",
-    "/mnt/devssd/projects/PL PCP/.claude/skills/gitnexus/gitnexus-cli/SKILL.md": "document",
-    "/mnt/devssd/projects/PL PCP/.claude/skills/gitnexus/gitnexus-debugging/SKILL.md": "document",
-    "/mnt/devssd/projects/PL PCP/.claude/skills/gitnexus/gitnexus-exploring/SKILL.md": "document",
-    "/mnt/devssd/projects/PL PCP/.claude/skills/gitnexus/gitnexus-guide/SKILL.md": "document",
-    "/mnt/devssd/projects/PL PCP/.claude/skills/gitnexus/gitnexus-impact-analysis/SKILL.md": "document",
-    "/mnt/devssd/projects/PL PCP/.claude/skills/gitnexus/gitnexus-refactoring/SKILL.md": "document",
-    "/mnt/devssd/projects/PL PCP/AGENTS.md": "document",
-    "/mnt/devssd/projects/PL PCP/CLAUDE.md": "document",
-    "/mnt/devssd/projects/PL PCP/Reference/KnowledgeBase/AI_ENGINEERING_GUIDE.md": "document",
-    "/mnt/devssd/projects/PL PCP/Reference/KnowledgeBase/ATTENUATION_GUIDE.md": "document",
-    "/mnt/devssd/projects/PL PCP/Reference/KnowledgeBase/DESIGN_METHODOLOGY.md": "document",
-    "/mnt/devssd/projects/PL PCP/Reference/KnowledgeBase/DOCUMENT_INDEX.md": "document",
-    "/mnt/devssd/projects/PL PCP/Reference/KnowledgeBase/ENGINEERING_ASSUMPTIONS.md": "document",
-    "/mnt/devssd/projects/PL PCP/Reference/KnowledgeBase/ENGINEERING_CONCEPTS.md": "document",
-    "/mnt/devssd/projects/PL PCP/Reference/KnowledgeBase/EXCEL_TO_APPLICATION_MAPPING.md": "document",
-    "/mnt/devssd/projects/PL PCP/Reference/KnowledgeBase/FORMULA_LIBRARY.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude-flow/CAPABILITIES.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude-flow/config.yaml": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/agents/browser/browser-agent.yaml": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/agents/consensus/byzantine-coordinator.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/agents/consensus/crdt-synchronizer.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/agents/consensus/gossip-coordinator.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/agents/consensus/performance-benchmarker.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/agents/consensus/quorum-manager.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/agents/consensus/raft-manager.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/agents/consensus/security-manager.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/agents/core/planner.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/agents/sparc/architecture.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/agents/sparc/pseudocode.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/agents/sparc/refinement.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/agents/sparc/specification.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/agents/swarm/adaptive-coordinator.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/agents/swarm/hierarchical-coordinator.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/agents/swarm/mesh-coordinator.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/agents/testing/production-validator.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/agents/testing/tdd-london-swarm.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/agents/README.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/agents/agent-capabilities.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/agents/agent-coordination.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/agents/agent-spawning.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/agents/agent-types.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/agents/health.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/agents/list.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/agents/logs.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/agents/metrics.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/agents/pool.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/agents/spawn.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/agents/status.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/agents/stop.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/analysis/COMMAND_COMPLIANCE_REPORT.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/analysis/README.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/analysis/bottleneck-detect.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/analysis/performance-bottlenecks.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/analysis/performance-report.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/automation/README.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/automation/auto-agent.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/automation/self-healing.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/automation/session-memory.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/automation/smart-agents.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/automation/smart-spawn.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/automation/workflow-select.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/claude-flow-help.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/claude-flow-memory.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/claude-flow-swarm.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/coordination/README.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/coordination/agent-spawn.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/coordination/init.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/coordination/orchestrate.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/coordination/spawn.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/coordination/swarm-init.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/coordination/task-orchestrate.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/github/README.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/github/code-review-swarm.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/github/code-review.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/github/github-modes.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/github/github-swarm.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/github/issue-tracker.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/github/issue-triage.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/github/multi-repo-swarm.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/github/pr-enhance.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/github/pr-manager.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/github/project-board-sync.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/github/release-manager.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/github/release-swarm.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/github/repo-analyze.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/github/repo-architect.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/github/swarm-issue.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/github/swarm-pr.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/github/sync-coordinator.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/github/workflow-automation.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/hive-mind/README.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/hive-mind/hive-mind-consensus.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/hive-mind/hive-mind-init.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/hive-mind/hive-mind-memory.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/hive-mind/hive-mind-metrics.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/hive-mind/hive-mind-resume.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/hive-mind/hive-mind-sessions.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/hive-mind/hive-mind-spawn.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/hive-mind/hive-mind-status.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/hive-mind/hive-mind-stop.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/hive-mind/hive-mind-wizard.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/hive-mind/hive-mind.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/hooks/README.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/hooks/overview.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/hooks/post-edit.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/hooks/post-task.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/hooks/pre-edit.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/hooks/pre-task.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/hooks/session-end.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/hooks/setup.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/memory/README.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/memory/memory-persist.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/memory/memory-search.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/memory/memory-usage.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/memory/neural.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/monitoring/README.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/monitoring/agent-metrics.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/monitoring/agents.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/monitoring/real-time-view.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/monitoring/status.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/monitoring/swarm-monitor.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/optimization/README.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/optimization/auto-topology.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/optimization/cache-manage.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/optimization/parallel-execute.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/optimization/parallel-execution.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/optimization/topology-optimize.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/sparc/analyzer.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/sparc/architect.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/sparc/ask.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/sparc/batch-executor.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/sparc/code.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/sparc/coder.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/sparc/debug.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/sparc/debugger.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/sparc/designer.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/sparc/devops.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/sparc/docs-writer.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/sparc/documenter.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/sparc/innovator.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/sparc/integration.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/sparc/mcp.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/sparc/memory-manager.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/sparc/optimizer.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/sparc/orchestrator.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/sparc/post-deployment-monitoring-mode.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/sparc/refinement-optimization-mode.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/sparc/researcher.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/sparc/reviewer.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/sparc/security-review.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/sparc/sparc-modes.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/sparc/sparc.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/sparc/spec-pseudocode.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/sparc/supabase-admin.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/sparc/swarm-coordinator.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/sparc/tdd.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/sparc/tester.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/sparc/tutorial.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/sparc/workflow-manager.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/swarm/README.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/swarm/analysis.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/swarm/development.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/swarm/examples.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/swarm/maintenance.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/swarm/optimization.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/swarm/research.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/swarm/swarm-analysis.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/swarm/swarm-background.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/swarm/swarm-init.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/swarm/swarm-modes.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/swarm/swarm-monitor.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/swarm/swarm-spawn.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/swarm/swarm-status.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/swarm/swarm-strategies.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/swarm/swarm.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/swarm/testing.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/workflows/README.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/workflows/development.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/workflows/research.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/workflows/workflow-create.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/workflows/workflow-execute.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/commands/workflows/workflow-export.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/helpers/README.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/skills/agentdb-advanced/SKILL.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/skills/agentdb-learning/SKILL.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/skills/agentdb-memory-patterns/SKILL.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/skills/agentdb-optimization/SKILL.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/skills/agentdb-vector-search/SKILL.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/skills/browser/SKILL.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/skills/github-code-review/SKILL.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/skills/github-multi-repo/SKILL.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/skills/github-project-management/SKILL.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/skills/github-release-management/SKILL.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/skills/github-workflow-automation/SKILL.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/skills/gitnexus/gitnexus-cli/SKILL.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/skills/gitnexus/gitnexus-debugging/SKILL.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/skills/gitnexus/gitnexus-exploring/SKILL.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/skills/gitnexus/gitnexus-guide/SKILL.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/skills/gitnexus/gitnexus-impact-analysis/SKILL.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/skills/gitnexus/gitnexus-refactoring/SKILL.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/skills/hooks-automation/SKILL.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/skills/pair-programming/SKILL.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/skills/reasoningbank-agentdb/SKILL.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/skills/reasoningbank-intelligence/SKILL.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/skills/skill-builder/SKILL.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/skills/sparc-methodology/SKILL.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/skills/stream-chain/SKILL.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/skills/swarm-advanced/SKILL.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/skills/swarm-orchestration/SKILL.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/skills/v3-cli-modernization/SKILL.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/skills/v3-core-implementation/SKILL.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/skills/v3-ddd-architecture/SKILL.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/skills/v3-integration-deep/SKILL.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/skills/v3-mcp-optimization/SKILL.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/skills/v3-memory-unification/SKILL.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/skills/v3-performance-optimization/SKILL.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/skills/v3-security-overhaul/SKILL.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/skills/v3-swarm-coordination/SKILL.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.claude/skills/verification-quality/SKILL.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.github/workflows/ci.yml": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/.hive-mind/sessions/hive-mind-prompt-hive-1781031976671.txt": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/ACCEPTANCE_TEST_REPORT.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/AGENTS.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/AI_AGENT_RULES.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/ARCHITECTURE.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/BETA_RELEASE_REPORT.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/CHANGELOG.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/CLAUDE.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/DATABASE_SCHEMA.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/DEFECT_REPORT.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/DEVELOPMENT.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/DOCUMENTATION_AUDIT.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/ENGINEERING_VERIFICATION.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/FEATURE_TICKETS.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/GOLDEN_DATASETS.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/KNOWN_ISSUES.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/MASTER.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/MEMORY.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/MIGRATION_PLAN_MULTI_SEGMENT.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/PRODUCT_REQUIREMENTS.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/README.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/RELEASE_CANDIDATE_CHECKLIST.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/RELEASE_READINESS.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/SECURITY.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/SETUP.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/SYNC_ARCHITECTURE.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/TESTING_STRATEGY.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/TEST_CASES.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/TEST_COVERAGE_REPORT.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/UI_UX_GUIDELINES.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/VARIANCE_ANALYSIS_REPORT.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/docs/ARCHITECTURE_REVIEW.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/docs/PERFORMANCE_REPORT.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/docs/UI_UX_AUDIT.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/docs/architecture/overview.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/docs/development/ci-cd.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/docs/development/security.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/docs/development/testing.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/docs/engineering/CALCULATION_FLOW.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/docs/engineering/DEPENDENCY_MAP.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/docs/engineering/ENGINEERING_ASSUMPTIONS.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/docs/engineering/ENGINEERING_VALIDATION_REPORT.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/docs/engineering/EXCEL_INVENTORY.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/docs/engineering/EXCEL_VS_APPLICATION.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/docs/engineering/FORMULA_CATALOG.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/docs/engineering/FORMULA_DEPENDENCY_MAP.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/docs/engineering/FORMULA_INVENTORY.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/docs/engineering/FORMULA_OPTIMIZATION_REPORT.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/docs/engineering/MISSING_LOGIC_REPORT.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/docs/engineering/PHASE8_RECOMMENDATIONS.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/docs/engineering/calculations.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/docs/engineering/formulas.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/docs/engineering/golden-datasets.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/docs/engineering/verification.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/docs/index.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/docs/reference/changelog.md": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/index.html": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/mkdocs.yml": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/requirements.txt": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/site/404.html": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/site/architecture/overview/index.html": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/site/development/ci-cd/index.html": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/site/development/security/index.html": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/site/development/testing/index.html": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/site/engineering/calculations/index.html": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/site/engineering/formulas/index.html": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/site/engineering/golden-datasets/index.html": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/site/engineering/verification/index.html": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/site/index.html": "document",
-    "/mnt/devssd/projects/PL PCP/cp-platform/site/reference/changelog/index.html": "document",
-    "/mnt/devssd/projects/PL PCP/docker-compose.yml": "document",
-    "/mnt/devssd/projects/PL PCP/graphify-out/converted/PCP Calculation sheet_b3459730.md": "document",
-    "/mnt/devssd/projects/PL PCP/Reference/CP2.pdf": "paper",
-    "/mnt/devssd/projects/PL PCP/Reference/CP3.pdf": "paper",
-    "/mnt/devssd/projects/PL PCP/Reference/CP4.pdf": "paper",
-    "/mnt/devssd/projects/PL PCP/cp-platform/public/favicon.svg": "image",
-    "/mnt/devssd/projects/PL PCP/cp-platform/public/icons.svg": "image",
-    "/mnt/devssd/projects/PL PCP/cp-platform/site/assets/images/favicon.png": "image",
-    "/mnt/devssd/projects/PL PCP/cp-platform/src/assets/hero.png": "image",
-    "/mnt/devssd/projects/PL PCP/cp-platform/src/assets/react.svg": "image",
-    "/mnt/devssd/projects/PL PCP/cp-platform/src/assets/vite.svg": "image"
+  "cp-platform/.devcontainer/devcontainer.json": {
+    "mtime": 1780980436.0,
+    "ast_hash": "c8b9badccefb7297ced83f8ab8b6f756",
+    "semantic_hash": ""
   },
-  "manifest_version": "1.0",
-  "generated_at": "now"
+  "cp-platform/.mcp.json": {
+    "mtime": 1780980436.0,
+    "ast_hash": "1f8a8bf51c57438f3ba5a29d86c88753",
+    "semantic_hash": ""
+  },
+  "cp-platform/.swarm/model-router-state.json": {
+    "mtime": 1781031719.871616,
+    "ast_hash": "a6273e969dfff322cb69953d94bbaa2d",
+    "semantic_hash": ""
+  },
+  "cp-platform/.swarm/state.json": {
+    "mtime": 1781031823.4853528,
+    "ast_hash": "980cdad183d8326bdca145f3a7eaf99f",
+    "semantic_hash": ""
+  },
+  "cp-platform/.vscode/mcp.json": {
+    "mtime": 1781030958.3110437,
+    "ast_hash": "4eec4bcbea9003a6efd2d11f0cad8a17",
+    "semantic_hash": ""
+  },
+  "cp-platform/eslint.config.js": {
+    "mtime": 1781039347.5736065,
+    "ast_hash": "31fd844f989a04e630647b5df3cc2957",
+    "semantic_hash": ""
+  },
+  "cp-platform/firebase.json": {
+    "mtime": 1781122991.1880803,
+    "ast_hash": "be9e599379f238f6257a919562af3d15",
+    "semantic_hash": ""
+  },
+  "cp-platform/firestore.indexes.json": {
+    "mtime": 1781123006.718824,
+    "ast_hash": "d875e7a05a244b1464715576979ba251",
+    "semantic_hash": ""
+  },
+  "cp-platform/package.json": {
+    "mtime": 1781126226.9420993,
+    "ast_hash": "bd32f019c87bfbc4aa4cfdf77d10ee25",
+    "semantic_hash": ""
+  },
+  "cp-platform/playwright.config.js": {
+    "mtime": 1780980436.0,
+    "ast_hash": "d0c188ecd31e2765369f10af30e6a50d",
+    "semantic_hash": ""
+  },
+  "cp-platform/scripts/doctor.mjs": {
+    "mtime": 1780980436.0,
+    "ast_hash": "53f5a562de6624908c54136ead902ecb",
+    "semantic_hash": ""
+  },
+  "cp-platform/scripts/seed-firebase-users.mjs": {
+    "mtime": 1781119348.3461032,
+    "ast_hash": "31c91484e710c87978a31e4b6de75c39",
+    "semantic_hash": ""
+  },
+  "cp-platform/scripts/setup.sh": {
+    "mtime": 1780980436.0,
+    "ast_hash": "ea4614e50a352a4fab46647fe26075e5",
+    "semantic_hash": ""
+  },
+  "cp-platform/scripts/verify_datasets.mjs": {
+    "mtime": 1780980436.0,
+    "ast_hash": "4c1096ca9f3485b474b8ec88eefc910b",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/App.jsx": {
+    "mtime": 1781206159.4233122,
+    "ast_hash": "fb7b2e12aca1eb82860a01b7524dbd23",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/api/firebaseAuthApi.js": {
+    "mtime": 1781207206.5356483,
+    "ast_hash": "e271023dff9ff869afaf5b3b7c68c634",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/api/firestoreUserApi.js": {
+    "mtime": 1781207213.7455332,
+    "ast_hash": "81a63b9b954bf7b1949e62547289ae94",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/api/localStorageApi.js": {
+    "mtime": 1781207189.0549276,
+    "ast_hash": "bcc6a71a0d58eae28e029f53c75f74c4",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/components/ErrorBoundary.jsx": {
+    "mtime": 1781034089.5011568,
+    "ast_hash": "f201e8074b02a46a024d58e73a224664",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/components/ProtectedRoute.jsx": {
+    "mtime": 1781123437.403715,
+    "ast_hash": "95f4e335ca3bdc90363814b5dd024525",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/components/SessionTimeoutDialog.jsx": {
+    "mtime": 1781123791.8629994,
+    "ast_hash": "e3477881774216117846f9c04f499796",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/components/StationTabs.jsx": {
+    "mtime": 1781204371.8584604,
+    "ast_hash": "1d034430b3a033d048149448c8115749",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/components/analytics/ProfileChart.jsx": {
+    "mtime": 1781206708.6906018,
+    "ast_hash": "68f317de7e92f6866f3e076c0f905f0f",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/components/layout.jsx": {
+    "mtime": 1781207231.219254,
+    "ast_hash": "86d6c44cc175ddf885457a0794894b7b",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/components/ui.jsx": {
+    "mtime": 1781196307.6684148,
+    "ast_hash": "7f11c7d908fecd80042dc3c375e1e0f5",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/config/__tests__/authPolicy.test.js": {
+    "mtime": 1781125146.0763018,
+    "ast_hash": "e6cfc2fb9a3c7de017361ae6c75931d6",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/config/__tests__/errorMessages.test.js": {
+    "mtime": 1781125146.070302,
+    "ast_hash": "2e1438c92c3a943029b6035cc00a1f7c",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/config/authPolicy.js": {
+    "mtime": 1781124960.9512513,
+    "ast_hash": "9532f66c32de0fcd2b7b62be7d4f19d3",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/config/errorMessages.js": {
+    "mtime": 1781125297.7468855,
+    "ast_hash": "a5b3dc9fe45095c9dffaa09407cf9f21",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/config/workspaceRegistry.js": {
+    "mtime": 1781204350.3157995,
+    "ast_hash": "d0fb8fe1a724455c1d3215d815ffb46a",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/constants/index.js": {
+    "mtime": 1781039347.5736065,
+    "ast_hash": "de2eec1d02ebc3e2d5e9c372d2acf293",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/e2e/app.spec.js": {
+    "mtime": 1780980436.0,
+    "ast_hash": "b5f484a24c5b7c988ed78f332c4dc6b3",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/e2e/fullWorkflow.spec.js": {
+    "mtime": 1780980436.0,
+    "ast_hash": "bb2327ad7a811a8defaeb5a8c3a8bfb1",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/e2e/naceWorkflow.spec.js": {
+    "mtime": 1781037596.1174154,
+    "ast_hash": "484298419b6edaa66b7835d86601a34c",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/engine/__tests__/attenuationDatasets.json": {
+    "mtime": 1781117268.0560546,
+    "ast_hash": "7ea3ae374ae3092f8d5aee4be9e6a90f",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/engine/__tests__/attenuationTests.standalone.js": {
+    "mtime": 1781117437.3455174,
+    "ast_hash": "2823276a8d2b6c3546965c694a649a83",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/engine/__tests__/decimalPrecision.test.js": {
+    "mtime": 1780980436.0,
+    "ast_hash": "b5fdcb46c0fbc149d2df0a14d60c675d",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/engine/__tests__/engineeringAcceptance.test.js": {
+    "mtime": 1781039347.5736065,
+    "ast_hash": "12c63f5fb7c47e02caf79dbb005a7a5b",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/engine/__tests__/goldenDatasets.test.js": {
+    "mtime": 1780980436.0,
+    "ast_hash": "713cc1729d3231f4e69043c172fbe76c",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/engine/__tests__/verificationFramework.test.js": {
+    "mtime": 1781039347.5736065,
+    "ast_hash": "dabaa29676cd7f403f12a51b4a15ea4f",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/engine/modules/attenuationEngine.js": {
+    "mtime": 1781087304.1428738,
+    "ast_hash": "d5f213261f2c006a8c44fd40a52c591e",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/engine/modules/attenuationEngine.test.js": {
+    "mtime": 1781195635.1705873,
+    "ast_hash": "390fbf13a530bc87cdb105811c3c7255",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/engine/modules/calculations.js": {
+    "mtime": 1781203988.398496,
+    "ast_hash": "11444c6d9509c01ce7f1ded7fbde6721",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/engine/modules/calculations.test.js": {
+    "mtime": 1781204087.9439292,
+    "ast_hash": "eac9b619fa8e6823c19b6a7969e29a7e",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/engine/modules/distributed.test.js": {
+    "mtime": 1781034061.4768496,
+    "ast_hash": "f75ec2568037cf8453c8b879502ee393",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/engine/modules/resistivityEngine.js": {
+    "mtime": 1781195286.6260564,
+    "ast_hash": "0771ac2f4151ef246477f108c1caac83",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/engine/modules/resistivityEngine.test.js": {
+    "mtime": 1781195556.177128,
+    "ast_hash": "f636c597bf9421fe491e171e0b824766",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/engine/modules/validation.js": {
+    "mtime": 1780980436.0,
+    "ast_hash": "00aa902fd71bef5f8ccd576e95766b57",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/engine/modules/validation.test.js": {
+    "mtime": 1780980436.0,
+    "ast_hash": "d85c3465d6f9217077a738ef9d38f982",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/engine/optimizer/optimizer.js": {
+    "mtime": 1781039347.5736065,
+    "ast_hash": "b455a09c6c5c88071eee1f4077a1272f",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/engine/optimizer/optimizer.test.js": {
+    "mtime": 1781039347.5736065,
+    "ast_hash": "f223f38d95dc04598cae48e1922bda9f",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/engine/rules/bomEngine.js": {
+    "mtime": 1781039347.5746064,
+    "ast_hash": "eb0cdb15b873e054c41bcae4f3f19124",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/engine/rules/bomEngine.test.js": {
+    "mtime": 1781039347.5746064,
+    "ast_hash": "5c19081f4fe2fdcbd684f8be19cbba2d",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/engine/rules/rulesEngine.js": {
+    "mtime": 1781196244.2803748,
+    "ast_hash": "2d8fe933527b06aa76562a662de62ce9",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/engine/rules/rulesEngine.test.js": {
+    "mtime": 1781039347.5746064,
+    "ast_hash": "19f562c6d5f57fa1533e85b609a75adb",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/firebase/config.js": {
+    "mtime": 1781124519.3462868,
+    "ast_hash": "248e608a46f7af93feacbcda3dc07033",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/hooks/useRateLimit.js": {
+    "mtime": 1781125221.3531027,
+    "ast_hash": "31cbc7634276f86bbbbf36bd0efa4370",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/hooks/useSessionTimeout.js": {
+    "mtime": 1781206731.6112356,
+    "ast_hash": "c0715d13a2a5798cde0e011b00a91c7a",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/main.jsx": {
+    "mtime": 1781039347.5746064,
+    "ast_hash": "294c972051e832cd4622796abc3a3c9e",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/pages/AttenuationPage.jsx": {
+    "mtime": 1781206723.387367,
+    "ast_hash": "96ee772ca856c86ec3f5d2d82cd1611b",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/pages/ForgotPasswordPage.jsx": {
+    "mtime": 1781206757.3328247,
+    "ast_hash": "6504fda69c590f278003841e50f0982b",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/pages/LoginPage.jsx": {
+    "mtime": 1781206752.6588995,
+    "ast_hash": "a650a8b5f3ac3ed2ea2e8b34fb23f61c",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/pages/PageAttenuation.jsx": {
+    "mtime": 1781115935.7382777,
+    "ast_hash": "a1bb3ecc3e1e8614790fcb6d342740ab",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/pages/PageBOM.jsx": {
+    "mtime": 1781115935.7332778,
+    "ast_hash": "ef0f15e5f1069f4ccd237fdbee6f9e87",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/pages/PageCableResistance.jsx": {
+    "mtime": 1781115935.724278,
+    "ast_hash": "bdd6da185357000001082adca4398c40",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/pages/PageCurrentRequirement.jsx": {
+    "mtime": 1781125645.530348,
+    "ast_hash": "ecf229637c76b27e1d013c0031663b4a",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/pages/PageDashboard.jsx": {
+    "mtime": 1781196120.5712485,
+    "ast_hash": "a9e7d5474d2c77d88df148fddcf371c2",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/pages/PageGroundbed.jsx": {
+    "mtime": 1781204121.5863996,
+    "ast_hash": "d2f0f0137c9ec1b9c5cb1980447b2611",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/pages/PageImport.jsx": {
+    "mtime": 1781196384.2762537,
+    "ast_hash": "ed015449a34c04588eb69a55c3f52a9a",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/pages/PageOptimizer.jsx": {
+    "mtime": 1781115935.7312777,
+    "ast_hash": "7e8e312582b2f3872adb3068a1e8652e",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/pages/PagePipeline.jsx": {
+    "mtime": 1781204114.313514,
+    "ast_hash": "f7c1b97ccd16ffc397d9816a262a518a",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/pages/PageProjectSetup.jsx": {
+    "mtime": 1781204105.6046512,
+    "ast_hash": "921062a6820606dbcf50701979198f0d",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/pages/PageReport.jsx": {
+    "mtime": 1781207281.3374534,
+    "ast_hash": "42459cc083cb835e772ab14617925210",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/pages/PageTRSizing.jsx": {
+    "mtime": 1781196198.0350752,
+    "ast_hash": "65512eea546c97155905e3bd09888298",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/pages/PageTank.jsx": {
+    "mtime": 1781206643.3526456,
+    "ast_hash": "8a6d42eb305e062530f9eddc8ebd737b",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/pages/PageValidation.jsx": {
+    "mtime": 1781203948.8581183,
+    "ast_hash": "947eb86611e4bf3a3b7668b3fe798835",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/pages/PageVessel.jsx": {
+    "mtime": 1781207222.8413877,
+    "ast_hash": "2f54bd353f02ff7eaf437714fb46de3c",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/pages/PageWorkspace.jsx": {
+    "mtime": 1781204219.3368611,
+    "ast_hash": "287ca961d257a7ce7b45620588e3fa7a",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/pages/RegisterPage.jsx": {
+    "mtime": 1781206763.0847328,
+    "ast_hash": "793323de7ffbd61f75831fb7e66444ed",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/pages/SettingsPage.jsx": {
+    "mtime": 1781124795.33089,
+    "ast_hash": "2656dc2e1f9b6d774953ff66088f92fe",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/pages/UserManagementPage.jsx": {
+    "mtime": 1781202817.3069832,
+    "ast_hash": "d3909120bed9441188c122129bc0d0b8",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/pages/index.jsx": {
+    "mtime": 1781204288.1317782,
+    "ast_hash": "b9f23d83720c217644def7809d42a483",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/reporting/bomExporter.js": {
+    "mtime": 1781034072.7867072,
+    "ast_hash": "2bbe9ba8793676cbd440de0d1f2bcbd5",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/reporting/excelEngine.js": {
+    "mtime": 1781039347.5746064,
+    "ast_hash": "91e6c6a51e44b9ed61786ca7c9cfbbdc",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/reporting/excelEngine.test.js": {
+    "mtime": 1781039347.5756063,
+    "ast_hash": "5488d70880a06739f3c0a32d420ee6d6",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/reporting/pdfGenerator.js": {
+    "mtime": 1781039347.5756063,
+    "ast_hash": "4d910db01c23fd5a8d9c37688509f437",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/reporting/pdfGenerator.test.js": {
+    "mtime": 1781039347.5756063,
+    "ast_hash": "a5d3727915c0681e09f09df0c1ed2d1e",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/repositories/authRepository.js": {
+    "mtime": 1781207526.6735198,
+    "ast_hash": "1968a9a42df5c38e56052bde3b2cda8d",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/repositories/projectRepository.js": {
+    "mtime": 1781207335.693585,
+    "ast_hash": "7d5de1919a55752ff809fd5d860194ac",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/repositories/userRepository.js": {
+    "mtime": 1781207667.4882221,
+    "ast_hash": "4ca1734b01ff1fbc74e8890feaf3bfcf",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/services/attenuationService.js": {
+    "mtime": 1781119587.3172975,
+    "ast_hash": "c5ef6d9187f41a68e33b5e2c0ca9a680",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/services/bomService.js": {
+    "mtime": 1781119587.3152976,
+    "ast_hash": "d9e8be757983df12677234f130272252",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/services/calculationService.js": {
+    "mtime": 1781195724.3552492,
+    "ast_hash": "09bffd107e9fc46deaa4669ecea210e0",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/standards/adnoc.js": {
+    "mtime": 1781121437.390833,
+    "ast_hash": "6ce46aca32662dd6397544640e2a9e0c",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/standards/index.js": {
+    "mtime": 1781121451.116605,
+    "ast_hash": "1bcdaf913d35bde8e3e3ad7865b7bf07",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/standards/index.test.js": {
+    "mtime": 1781194975.9806147,
+    "ast_hash": "b16d31a646c07a61ecce3b55aaea2945",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/standards/iso15589.js": {
+    "mtime": 1781121437.3788333,
+    "ast_hash": "aa448d33307bef006138683cedd63305",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/standards/naceSP0169.js": {
+    "mtime": 1781033244.8360229,
+    "ast_hash": "583cca744e6a5707e27cffbdc692d91f",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/standards/pdo.js": {
+    "mtime": 1781121437.388833,
+    "ast_hash": "d4f87c93e5dedec29beb1f23c871054d",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/standards/saudiAramco.js": {
+    "mtime": 1781033244.8310227,
+    "ast_hash": "d1012a8127cc39eacca83fbc0132ff0a",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/store/authStore.js": {
+    "mtime": 1781207682.0629842,
+    "ast_hash": "08de281abb791349bbf8d6d60462f52b",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/store/authStore.test.js": {
+    "mtime": 1781206257.9417605,
+    "ast_hash": "f96f87ae503764f9dbc5b937d5677770",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/store/projectStore.js": {
+    "mtime": 1781207733.2351494,
+    "ast_hash": "182c4fa978dd3b1e9ccf17b8eee59dab",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/store/projectStore.test.js": {
+    "mtime": 1781195401.6921897,
+    "ast_hash": "1d868f854d78df8347ca7a9895f459b7",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/test-utils/__tests__/decimalHelpers.test.js": {
+    "mtime": 1780980436.0,
+    "ast_hash": "642efc8638a27c6736ea46aecb0e2ae8",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/test-utils/__tests__/verificationFramework.test.js": {
+    "mtime": 1780980436.0,
+    "ast_hash": "b4920c40b658f3e70f0c5ae5ccdd52fe",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/test-utils/decimalHelpers.js": {
+    "mtime": 1780980436.0,
+    "ast_hash": "ad29b4345330d769bf3a802bf6472425",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/test-utils/verificationFramework.js": {
+    "mtime": 1781039347.5756063,
+    "ast_hash": "2d7180fb90678bfcc2c64275f6e24819",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/types/index.js": {
+    "mtime": 1781195662.761182,
+    "ast_hash": "951bf3b8d598b089a99dafffedf805d6",
+    "semantic_hash": ""
+  },
+  "cp-platform/test-results/.last-run.json": {
+    "mtime": 1781038132.9064941,
+    "ast_hash": "3e8a95a3a1d18985427f37965a79494d",
+    "semantic_hash": ""
+  },
+  "cp-platform/tsconfig.json": {
+    "mtime": 1780980436.0,
+    "ast_hash": "92842616c3240d1cfb083cc091c87426",
+    "semantic_hash": ""
+  },
+  "cp-platform/vercel.json": {
+    "mtime": 1781125894.3613899,
+    "ast_hash": "32b5563ec612e9efaef88eb648be1e8d",
+    "semantic_hash": ""
+  },
+  "cp-platform/vite.config.js": {
+    "mtime": 1781122887.5567908,
+    "ast_hash": "7132b47b82164b7bd9371c9ad2fb2740",
+    "semantic_hash": ""
+  },
+  "cp-platform/vitest.config.js": {
+    "mtime": 1780980436.0,
+    "ast_hash": "aae29e13cccc3fdfee2b1e8d72212c55",
+    "semantic_hash": ""
+  },
+  "cp-platform/.github/workflows/ci.yml": {
+    "mtime": 1781039347.5726066,
+    "ast_hash": "831af7c0835fb7199355d39f9a227911",
+    "semantic_hash": ""
+  },
+  "cp-platform/.hive-mind/sessions/hive-mind-prompt-hive-1781031976671.txt": {
+    "mtime": 1781031983.6014004,
+    "ast_hash": "604a82be2d9c7f7f88fd2a647a26c761",
+    "semantic_hash": ""
+  },
+  "cp-platform/ACCEPTANCE_TEST_REPORT.md": {
+    "mtime": 1780980436.0,
+    "ast_hash": "28ed77a6e5ad15e40f19cb03596f93d4",
+    "semantic_hash": ""
+  },
+  "cp-platform/AGENTS.md": {
+    "mtime": 1780980436.0,
+    "ast_hash": "06900dc3c2ccf19609ea7c0327516b7c",
+    "semantic_hash": ""
+  },
+  "cp-platform/AI_AGENT_RULES.md": {
+    "mtime": 1780980436.0,
+    "ast_hash": "e784eef4b5e52c2826c15586716d8dda",
+    "semantic_hash": ""
+  },
+  "cp-platform/ARCHITECTURE.md": {
+    "mtime": 1781039347.5726066,
+    "ast_hash": "749c8229973c5cf598c5a2496a0a5f95",
+    "semantic_hash": ""
+  },
+  "cp-platform/AUTH_AUDIT_REPORT.md": {
+    "mtime": 1781122467.9687169,
+    "ast_hash": "a6b4f7a4021c8361dc1326a955ebbd88",
+    "semantic_hash": ""
+  },
+  "cp-platform/AUTH_DOMAIN_POLICY.md": {
+    "mtime": 1781123485.9249277,
+    "ast_hash": "2e207cbb612018bb5d479d1278a8c4cd",
+    "semantic_hash": ""
+  },
+  "cp-platform/AUTH_SECURITY_AUDIT.md": {
+    "mtime": 1781124660.5500371,
+    "ast_hash": "6edd2f3c1c86e14ff7371ded5ae1abd1",
+    "semantic_hash": ""
+  },
+  "cp-platform/AUTH_SETUP.md": {
+    "mtime": 1781202907.2285588,
+    "ast_hash": "7e9c8595d81f3d047cfed4a24b454c00",
+    "semantic_hash": ""
+  },
+  "cp-platform/BETA_RELEASE_REPORT.md": {
+    "mtime": 1780980436.0,
+    "ast_hash": "d890180ebec6a81c8f1c203e243af6c2",
+    "semantic_hash": ""
+  },
+  "cp-platform/CHANGELOG.md": {
+    "mtime": 1781125726.0160677,
+    "ast_hash": "32d6e1409a8577a2dbe449fcd8bdfd28",
+    "semantic_hash": ""
+  },
+  "cp-platform/CLAUDE.md": {
+    "mtime": 1780980436.0,
+    "ast_hash": "627187dfcb756fcb719d3fd4aca82978",
+    "semantic_hash": ""
+  },
+  "cp-platform/DATABASE_SCHEMA.md": {
+    "mtime": 1780980436.0,
+    "ast_hash": "dea54b73cba51c6cb778bcf8f67e5b17",
+    "semantic_hash": ""
+  },
+  "cp-platform/DEFECT_REPORT.md": {
+    "mtime": 1781039347.5726066,
+    "ast_hash": "54b1fbecfccfcfaa67480a69f38e8fee",
+    "semantic_hash": ""
+  },
+  "cp-platform/DEPLOYMENT_DIAGNOSTICS.md": {
+    "mtime": 1781124017.3743665,
+    "ast_hash": "5737c324406c92f477fa244dd3caefce",
+    "semantic_hash": ""
+  },
+  "cp-platform/DEVELOPMENT.md": {
+    "mtime": 1780980436.0,
+    "ast_hash": "6890cba44448355c1b01f46a5f10f736",
+    "semantic_hash": ""
+  },
+  "cp-platform/DOCUMENTATION_AUDIT.md": {
+    "mtime": 1780980436.0,
+    "ast_hash": "88ea0525da2705733ff69bc9b1647936",
+    "semantic_hash": ""
+  },
+  "cp-platform/ENGINEERING_VERIFICATION.md": {
+    "mtime": 1780980436.0,
+    "ast_hash": "8c03296f317b535806fd5579e06640e6",
+    "semantic_hash": ""
+  },
+  "cp-platform/FEATURE_TICKETS.md": {
+    "mtime": 1781039347.5726066,
+    "ast_hash": "152add6d36225a5ec0df51e15870deef",
+    "semantic_hash": ""
+  },
+  "cp-platform/FIREBASE_SETUP.md": {
+    "mtime": 1781123034.7863607,
+    "ast_hash": "aad35c2bc8a86045dcf3dcfc13250da7",
+    "semantic_hash": ""
+  },
+  "cp-platform/GOLDEN_DATASETS.md": {
+    "mtime": 1780980436.0,
+    "ast_hash": "3936676c33914f2e73322bd67c2dfc7f",
+    "semantic_hash": ""
+  },
+  "cp-platform/KNOWN_ISSUES.md": {
+    "mtime": 1781039347.5726066,
+    "ast_hash": "d09626344e59f00bade6a9d825082765",
+    "semantic_hash": ""
+  },
+  "cp-platform/MASTER.md": {
+    "mtime": 1780980436.0,
+    "ast_hash": "075041ce1c2df944e37784ddc0529825",
+    "semantic_hash": ""
+  },
+  "cp-platform/MEMORY.md": {
+    "mtime": 1780980436.0,
+    "ast_hash": "457e642f9ec08808ea9e11062e75feae",
+    "semantic_hash": ""
+  },
+  "cp-platform/MIGRATION_PLAN_MULTI_SEGMENT.md": {
+    "mtime": 1780980436.0,
+    "ast_hash": "f49fb3838626a220321160bd2ef7c4d9",
+    "semantic_hash": ""
+  },
+  "cp-platform/PRODUCT_REQUIREMENTS.md": {
+    "mtime": 1780980436.0,
+    "ast_hash": "3190406981f4329dc4fd0bdfae5e1a9d",
+    "semantic_hash": ""
+  },
+  "cp-platform/README.md": {
+    "mtime": 1781039347.5726066,
+    "ast_hash": "93e7aeeb88c0c151adc77328fc1376b3",
+    "semantic_hash": ""
+  },
+  "cp-platform/RELEASE_CANDIDATE_CHECKLIST.md": {
+    "mtime": 1781039347.5726066,
+    "ast_hash": "f8fd6f4a793b5bb6479abd792fee8901",
+    "semantic_hash": ""
+  },
+  "cp-platform/RELEASE_READINESS.md": {
+    "mtime": 1780980436.0,
+    "ast_hash": "3cbc7aac45f473af377def8c1abcfd10",
+    "semantic_hash": ""
+  },
+  "cp-platform/SECURITY.md": {
+    "mtime": 1780980436.0,
+    "ast_hash": "fb7c210c06249baeee378f00a8010b61",
+    "semantic_hash": ""
+  },
+  "cp-platform/SECURITY_HARDENING_REPORT.md": {
+    "mtime": 1781125365.8848,
+    "ast_hash": "031a2e9eb26c87151caefd935b8b4815",
+    "semantic_hash": ""
+  },
+  "cp-platform/SECURITY_SCORE.md": {
+    "mtime": 1781202935.3391135,
+    "ast_hash": "9231f251ce5b353d3a12f3a87e360115",
+    "semantic_hash": ""
+  },
+  "cp-platform/SETUP.md": {
+    "mtime": 1780980436.0,
+    "ast_hash": "672f5845ad8828bb8cea91a139b8544c",
+    "semantic_hash": ""
+  },
+  "cp-platform/SYNC_ARCHITECTURE.md": {
+    "mtime": 1780980436.0,
+    "ast_hash": "8078bab0d47d2acdeb0d80d1ab8d73f9",
+    "semantic_hash": ""
+  },
+  "cp-platform/TESTING_STRATEGY.md": {
+    "mtime": 1780980436.0,
+    "ast_hash": "233a6e459528d02c6ef53da0cc2db303",
+    "semantic_hash": ""
+  },
+  "cp-platform/TEST_CASES.md": {
+    "mtime": 1781039347.5726066,
+    "ast_hash": "2d192915b900b9cd20607c4284b75f41",
+    "semantic_hash": ""
+  },
+  "cp-platform/TEST_COVERAGE_REPORT.md": {
+    "mtime": 1781039347.5726066,
+    "ast_hash": "fcb9595f76eba1810f9c642d17e1a009",
+    "semantic_hash": ""
+  },
+  "cp-platform/UI_UX_GUIDELINES.md": {
+    "mtime": 1781125733.1549542,
+    "ast_hash": "ae757bb43292e021f9657939eafec2b0",
+    "semantic_hash": ""
+  },
+  "cp-platform/VARIANCE_ANALYSIS_REPORT.md": {
+    "mtime": 1780980436.0,
+    "ast_hash": "31e91589c639b01bc0753a5bf94f243f",
+    "semantic_hash": ""
+  },
+  "cp-platform/docs/ARCHITECTURE_REVIEW.md": {
+    "mtime": 1781029172.4230006,
+    "ast_hash": "b7f49400171997bc99b7a1d3db02fd30",
+    "semantic_hash": ""
+  },
+  "cp-platform/docs/PERFORMANCE_REPORT.md": {
+    "mtime": 1781029172.4290004,
+    "ast_hash": "82d3586ac97a70fc8a2cbc18db6df034",
+    "semantic_hash": ""
+  },
+  "cp-platform/docs/UI_UX_AUDIT.md": {
+    "mtime": 1781029172.4270005,
+    "ast_hash": "c359f1f4987d01e40206d417f548544a",
+    "semantic_hash": ""
+  },
+  "cp-platform/docs/architecture/overview.md": {
+    "mtime": 1780980436.0,
+    "ast_hash": "e7b94fb1efbab2015eb5e0c4a72431e4",
+    "semantic_hash": ""
+  },
+  "cp-platform/docs/development/ci-cd.md": {
+    "mtime": 1780980436.0,
+    "ast_hash": "905af3adfa95ed9891d09934c18ee26e",
+    "semantic_hash": ""
+  },
+  "cp-platform/docs/development/security.md": {
+    "mtime": 1780980436.0,
+    "ast_hash": "89bab51a0f4bbb7f627e9249faac858c",
+    "semantic_hash": ""
+  },
+  "cp-platform/docs/development/testing.md": {
+    "mtime": 1780980436.0,
+    "ast_hash": "29902514bab56e55230528fa355d60a1",
+    "semantic_hash": ""
+  },
+  "cp-platform/docs/engineering/ATTENUATION_ENGINE_SPEC.md": {
+    "mtime": 1781117268.0569077,
+    "ast_hash": "b7cbde1752ff37d199d6920a659e1fc6",
+    "semantic_hash": ""
+  },
+  "cp-platform/docs/engineering/CALCULATION_FLOW.md": {
+    "mtime": 1781028794.7795389,
+    "ast_hash": "ee4877b91fee10dd288e68cc36469710",
+    "semantic_hash": ""
+  },
+  "cp-platform/docs/engineering/DEPENDENCY_MAP.md": {
+    "mtime": 1781028794.7875388,
+    "ast_hash": "b524cec1b98c5807ed8103fc1b99e238",
+    "semantic_hash": ""
+  },
+  "cp-platform/docs/engineering/ENGINEERING_ASSUMPTIONS.md": {
+    "mtime": 1781032880.6324635,
+    "ast_hash": "0ed09c7df5bb389098c138d07e1a5bea",
+    "semantic_hash": ""
+  },
+  "cp-platform/docs/engineering/ENGINEERING_VALIDATION_REPORT.md": {
+    "mtime": 1781029568.756194,
+    "ast_hash": "ad26a413a2dbaad9303d1cd83108fdd7",
+    "semantic_hash": ""
+  },
+  "cp-platform/docs/engineering/EXCEL_INVENTORY.md": {
+    "mtime": 1781029313.989299,
+    "ast_hash": "c31d771ed85e3768386b532838710636",
+    "semantic_hash": ""
+  },
+  "cp-platform/docs/engineering/EXCEL_VS_APPLICATION.md": {
+    "mtime": 1781029715.290397,
+    "ast_hash": "280fa3634e3c8278addc0bef9b2e5e4f",
+    "semantic_hash": ""
+  },
+  "cp-platform/docs/engineering/FORMULA_CATALOG.md": {
+    "mtime": 1781029776.4036474,
+    "ast_hash": "30dd054a686506ee3ae8329b6499bd24",
+    "semantic_hash": ""
+  },
+  "cp-platform/docs/engineering/FORMULA_DEPENDENCY_MAP.md": {
+    "mtime": 1781029401.044251,
+    "ast_hash": "674da5f528068a99b8f2980a7179a607",
+    "semantic_hash": ""
+  },
+  "cp-platform/docs/engineering/FORMULA_INVENTORY.md": {
+    "mtime": 1781028768.9528494,
+    "ast_hash": "690d4e6bdfc3038c52f11f7422e28ef0",
+    "semantic_hash": ""
+  },
+  "cp-platform/docs/engineering/FORMULA_OPTIMIZATION_REPORT.md": {
+    "mtime": 1781029539.248556,
+    "ast_hash": "d9a7aaf55fb803437744ce17b6eaae38",
+    "semantic_hash": ""
+  },
+  "cp-platform/docs/engineering/MISSING_LOGIC_REPORT.md": {
+    "mtime": 1781029539.250556,
+    "ast_hash": "739b02d1fef1961709225b9d68b09874",
+    "semantic_hash": ""
+  },
+  "cp-platform/docs/engineering/PHASE8_RECOMMENDATIONS.md": {
+    "mtime": 1781029620.211563,
+    "ast_hash": "236955b98c2c47d74a93126364f6b1d7",
+    "semantic_hash": ""
+  },
+  "cp-platform/docs/engineering/attenuationIntegrationGuide.md": {
+    "mtime": 1781117268.0586276,
+    "ast_hash": "fb8d8e3f5ce2d0fc1754145629ebe5e5",
+    "semantic_hash": ""
+  },
+  "cp-platform/docs/engineering/attenuationTypes.md": {
+    "mtime": 1781117268.0596006,
+    "ast_hash": "286c827ed6e05c20f862dede84944513",
+    "semantic_hash": ""
+  },
+  "cp-platform/docs/engineering/attenuationVerification.md": {
+    "mtime": 1781117268.0577774,
+    "ast_hash": "a506361a6430fd9f08a01384e9304826",
+    "semantic_hash": ""
+  },
+  "cp-platform/docs/engineering/calculations.md": {
+    "mtime": 1780980436.0,
+    "ast_hash": "5eb6c2385370caadabad5f5dbdc0eddd",
+    "semantic_hash": ""
+  },
+  "cp-platform/docs/engineering/formulas.md": {
+    "mtime": 1780980436.0,
+    "ast_hash": "5a88dcd2546ae3a1fa2f83539f912d25",
+    "semantic_hash": ""
+  },
+  "cp-platform/docs/engineering/golden-datasets.md": {
+    "mtime": 1780980436.0,
+    "ast_hash": "ace5548f4ebef159f26f07a3a0ae546d",
+    "semantic_hash": ""
+  },
+  "cp-platform/docs/engineering/verification.md": {
+    "mtime": 1780980436.0,
+    "ast_hash": "08923c6777558f1a1188d3beb96fee5a",
+    "semantic_hash": ""
+  },
+  "cp-platform/docs/index.md": {
+    "mtime": 1780980436.0,
+    "ast_hash": "29ecc77c492e73cb5b3906f578e2a957",
+    "semantic_hash": ""
+  },
+  "cp-platform/docs/reference/changelog.md": {
+    "mtime": 1780980436.0,
+    "ast_hash": "f24512b41ecb0ab2268208c8a7f35c0a",
+    "semantic_hash": ""
+  },
+  "cp-platform/index.html": {
+    "mtime": 1780980436.0,
+    "ast_hash": "c4c48192f18c36440a44915a9ed3c42b",
+    "semantic_hash": ""
+  },
+  "cp-platform/mkdocs.yml": {
+    "mtime": 1781039347.5736065,
+    "ast_hash": "92e0a7d9bcd387ddec5133d1cc25cfe8",
+    "semantic_hash": ""
+  },
+  "cp-platform/requirements.txt": {
+    "mtime": 1780980436.0,
+    "ast_hash": "6d7185083b6746651e3e8d424653f978",
+    "semantic_hash": ""
+  },
+  "cp-platform/test-results/fullWorkflow-CP-Platform-\u2014-afd51-tup-\u2014-fill-project-metadata-chromium/error-context.md": {
+    "mtime": 1781038112.0537636,
+    "ast_hash": "055c0e690a79f3be9e07d65144b41d00",
+    "semantic_hash": ""
+  },
+  "cp-platform/public/favicon.svg": {
+    "mtime": 1780980436.0,
+    "ast_hash": "7e840862161341271697daa99a40d76b",
+    "semantic_hash": ""
+  },
+  "cp-platform/public/icons.svg": {
+    "mtime": 1780980436.0,
+    "ast_hash": "3b4fcfcf393eca4d264dca4a4663bc37",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/assets/hero.png": {
+    "mtime": 1780980436.0,
+    "ast_hash": "aead493361b27e7510691c5d7072dfc1",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/assets/react.svg": {
+    "mtime": 1780980436.0,
+    "ast_hash": "f0402b67b6ce880f65666bb49e841696",
+    "semantic_hash": ""
+  },
+  "cp-platform/src/assets/vite.svg": {
+    "mtime": 1780980436.0,
+    "ast_hash": "9960a24288958394ac50e57ff638b036",
+    "semantic_hash": ""
+  },
+  "cp-platform/test-results/fullWorkflow-CP-Platform-\u2014-afd51-tup-\u2014-fill-project-metadata-chromium/test-failed-1.png": {
+    "mtime": 1781038112.0417638,
+    "ast_hash": "5971e56286021e8b239797f0b14c77d2",
+    "semantic_hash": ""
+  }
 }
