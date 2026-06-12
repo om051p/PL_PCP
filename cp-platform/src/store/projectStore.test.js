@@ -93,6 +93,14 @@ describe('projectStore', () => {
       const after = useProjectStore.getState().getProject().updatedAt
       expect(typeof after).toBe('string')
     })
+
+    it('changes project reference on updateDesignBasis', () => {
+      const store = useProjectStore.getState()
+      const p1 = store.getProject()
+      store.updateDesignBasis({ designStandard: 'nace' })
+      const p2 = store.getProject()
+      expect(p1).not.toBe(p2)
+    })
   })
 
   describe('newProject', () => {
@@ -345,9 +353,9 @@ describe('projectStore', () => {
       expect(st.getProject().revisions[0].description).toBe('Initial design')
     })
 
-    it('sets currentRevision to REV-0 for first revision', () => {
+    it('sets currentRevision to Revision A for first revision', () => {
       useProjectStore.getState().createRevision('Initial design')
-      expect(useProjectStore.getState().getProject().currentRevision).toBe('REV-0')
+      expect(useProjectStore.getState().getProject().currentRevision).toBe('Revision A')
     })
 
     it('snapshot preserves project state at time of creation', () => {

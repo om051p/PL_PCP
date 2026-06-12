@@ -14,6 +14,7 @@ import {
 } from './index.js'
 import SAUDI_ARAMCO from './saudiAramco.js'
 import NACE_SP0169 from './naceSP0169.js'
+import ISO_15589 from './iso15589.js'
 
 // ─── getStandard() ───────────────────────────────────────────────────────────
 
@@ -81,6 +82,52 @@ describe('getActiveStandard()', () => {
   it('falls back to Saudi Aramco for unknown designStandard', () => {
     const project = { designStandard: 'iso' }
     expect(getActiveStandard(project)).toBe(SAUDI_ARAMCO)
+  })
+
+  // ─── Regression Tests for project modes and schemas ───
+
+  it('handles Saudi Aramco mode via designBasis', () => {
+    const project = {
+      designBasis: {
+        designStandard: 'saudiAramco',
+      },
+    }
+    expect(getActiveStandard(project)).toBe(SAUDI_ARAMCO)
+  })
+
+  it('handles NACE mode via designBasis', () => {
+    const project = {
+      designBasis: {
+        designStandard: 'nace',
+      },
+    }
+    expect(getActiveStandard(project)).toBe(NACE_SP0169)
+  })
+
+  it('handles Legacy projects (flat designStandard)', () => {
+    const project = {
+      designStandard: 'nace',
+    }
+    expect(getActiveStandard(project)).toBe(NACE_SP0169)
+  })
+
+  it('handles Migrated projects (both present, designBasis taking precedence)', () => {
+    const project = {
+      designStandard: 'saudiAramco',
+      designBasis: {
+        designStandard: 'nace',
+      },
+    }
+    expect(getActiveStandard(project)).toBe(NACE_SP0169)
+  })
+
+  it('handles DesignBasis projects with nested designStandard', () => {
+    const project = {
+      designBasis: {
+        designStandard: 'iso15589',
+      },
+    }
+    expect(getActiveStandard(project)).toBe(ISO_15589)
   })
 })
 

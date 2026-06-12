@@ -67,10 +67,14 @@ export function getStandard(standardId) {
  * @returns {object} Full standard configuration object
  */
 export function getActiveStandard(project) {
-  if (!project || !project.designStandard) {
+  if (!project) {
     return SAUDI_ARAMCO
   }
-  return getStandard(project.designStandard)
+  const standardId = project.designBasis?.designStandard || project.designStandard
+  if (!standardId) {
+    return SAUDI_ARAMCO
+  }
+  return getStandard(standardId)
 }
 
 export default { getStandard, getActiveStandard, STANDARD_OPTIONS }

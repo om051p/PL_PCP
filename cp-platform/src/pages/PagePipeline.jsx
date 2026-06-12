@@ -1,12 +1,8 @@
-/**
- * PagePipeline.jsx
- *
- * Pipeline geometry, operating conditions, soil resistivity, and groundbed location.
- */
-
+import { useState } from 'react'
 import { useProjectStore } from '../store/projectStore.js'
 import { useAuthStore } from '../store/authStore.js'
 import StationTabs from '../components/StationTabs.jsx'
+import { BulkGridEditor } from '../components/BulkGridEditor.jsx'
 import {
   FieldInput,
   SelectField,
@@ -17,9 +13,10 @@ import {
   Grid2,
 } from '../components/ui.jsx'
 import { getSoilClassification } from '../constants/index.js'
-import { Route, Zap, Layers, Plus, Trash2 } from 'lucide-react'
+import { Route, Zap, Layers, Plus, Trash2, Edit, TableProperties } from 'lucide-react'
 
 export function PagePipeline() {
+  const [activeViewTab, setActiveViewTab] = useState('form') // 'form' or 'bulk'
   const station = useProjectStore((s) => s.getActiveStation())
   const updateStation = useProjectStore((s) => s.updateStation)
   const updateSegment = useProjectStore((s) => s.updateSegment)
@@ -39,104 +36,134 @@ export function PagePipeline() {
     <div className="page">
       <StationTabs />
 
-      {station.pipelineSegments.map((seg, idx) => {
-        const odM = (seg.od * 0.0254).toFixed(4)
-        const area = (Math.PI * seg.od * 0.0254 * seg.lengthM).toFixed(2)
-
-        return (
-          <div key={seg.id} className="segment-group" style={{ marginBottom: 32 }}>
-            <Divider
-              label={`Segment ${idx + 1}: ${seg.name}`}
-              action={
-                station.pipelineSegments.length > 1 && !isEngineerOrReviewer && (
-                  <button
-                    className="btn btn-sm btn-icon-ghost"
-                    onClick={() => removeSegment(station.id, seg.id)}
-                    title="Remove segment"
-                  >
-                    <Trash2 size={14} />
-                  </button>
-                )
-              }
-            />
-            <Grid2>
-              <SectionCard title="Pipeline Geometry" icon={Route}>
-                <FieldInput
-                  label="Segment Name"
-                  value={seg.name}
-                  type="text"
-                  onChange={(v) => updateSegment(station.id, seg.id, { name: v })}
-                />
-                <Grid2>
-                  <FieldInput
-                    label="Outside Diameter"
-                    value={seg.od}
-                    unit="inches"
-                    hint={`= ${odM} m`}
-                    min={0}
-                    step={0.5}
-                    onChange={(v) => updateSegment(station.id, seg.id, { od: v })}
-                  />
-                  <FieldInput
-                    label="Wall Thickness"
-                    value={seg.wallThk}
-                    unit="inches"
-                    min={0}
-                    step={0.001}
-                    onChange={(v) => updateSegment(station.id, seg.id, { wallThk: v })}
-                  />
-                </Grid2>
-                <FieldInput
-                  label="Section Length"
-                  value={seg.lengthM}
-                  unit="m"
-                  min={0}
-                  onChange={(v) => updateSegment(station.id, seg.id, { lengthM: v })}
-                />
-                <div className="calc-preview">
-                  <ResultRow label="External Surface Area" symbol="A" value={area} unit="m²" />
-                </div>
-              </SectionCard>
-
-              <SectionCard title="Operating Conditions" icon={Zap}>
-                <FieldInput
-                  label="Operating Temperature"
-                  value={seg.opTempC}
-                  unit="°C"
-                  step={0.1}
-                  onChange={(v) => updateSegment(station.id, seg.id, { opTempC: v })}
-                />
-                <FieldInput
-                  label="Base Current Density @ 25°C"
-                  value={seg.currentDensityBase}
-                  unit="mA/m²"
-                  min={0}
-                  step={0.01}
-                  onChange={(v) => updateSegment(station.id, seg.id, { currentDensityBase: v })}
-                />
-                <SelectField
-                  label="Coating System"
-                  value={seg.coatingType}
-                  onChange={(v) => updateSegment(station.id, seg.id, { coatingType: v })}
-                  options={[
-                    { value: 'fusion_bonded_epoxy', label: 'Fusion Bonded Epoxy (FBE)' },
-                    { value: 'three_layer_polyethylene', label: '3-Layer Polyethylene (3LPE)' },
-                    { value: 'coal_tar_enamel', label: 'Coal Tar Enamel' },
-                    { value: 'bare', label: 'Bare Steel' },
-                  ]}
-                />
-              </SectionCard>
-            </Grid2>
-          </div>
-        )
-      })}
-
-      {!isReviewer && (
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 32 }}>
-          <button className="btn btn-secondary" onClick={() => addSegment(station.id)}>
-            <Plus size={14} /> Add Pipeline Segment
+      {/* Sub-tabs switcher */}
+      <div className="validation-filter-container" style={{ marginBottom: 20 }}>
+        <div className="validation-filter-tabs">
+          <button
+            className={`validation-filter-tab ${activeViewTab === 'form' ? 'validation-filter-tab--active' : ''}`}
+            onClick={() => setActiveViewTab('form')}
+            style={{ display: 'flex', alignItems: 'center', gap: 6 }}
+          >
+            <Edit size={13} />
+            <span>Form Editor</span>
+          </button>
+          <button
+            className={`validation-filter-tab ${activeViewTab === 'bulk' ? 'validation-filter-tab--active' : ''}`}
+            onClick={() => setActiveViewTab('bulk')}
+            style={{ display: 'flex', alignItems: 'center', gap: 6 }}
+          >
+            <TableProperties size={13} />
+            <span>Excel Bulk Ingest</span>
           </button>
         </div>
+      </div>
+
+      {activeViewTab === 'bulk' ? (
+        <div style={{ marginBottom: 32 }}>
+          <BulkGridEditor onComplete={() => setActiveViewTab('form')} />
+        </div>
+      ) : (
+        <>
+          {station.pipelineSegments.map((seg, idx) => {
+            const odM = (seg.od * 0.0254).toFixed(4)
+            const area = (Math.PI * seg.od * 0.0254 * seg.lengthM).toFixed(2)
+
+            return (
+              <div key={seg.id} className="segment-group" style={{ marginBottom: 32 }}>
+                <Divider
+                  label={`Segment ${idx + 1}: ${seg.name}`}
+                  action={
+                    station.pipelineSegments.length > 1 && !isReviewer && (
+                      <button
+                        className="btn btn-sm btn-icon-ghost"
+                        onClick={() => removeSegment(station.id, seg.id)}
+                        title="Remove segment"
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    )
+                  }
+                />
+                <Grid2>
+                  <SectionCard title="Pipeline Geometry" icon={Route}>
+                    <FieldInput
+                      label="Segment Name"
+                      value={seg.name}
+                      type="text"
+                      onChange={(v) => updateSegment(station.id, seg.id, { name: v })}
+                    />
+                    <Grid2>
+                      <FieldInput
+                        label="Outside Diameter"
+                        value={seg.od}
+                        unit="inches"
+                        hint={`= ${odM} m`}
+                        min={0}
+                        step={0.5}
+                        onChange={(v) => updateSegment(station.id, seg.id, { od: v })}
+                      />
+                      <FieldInput
+                        label="Wall Thickness"
+                        value={seg.wallThk}
+                        unit="inches"
+                        min={0}
+                        step={0.001}
+                        onChange={(v) => updateSegment(station.id, seg.id, { wallThk: v })}
+                      />
+                    </Grid2>
+                    <FieldInput
+                      label="Section Length"
+                      value={seg.lengthM}
+                      unit="m"
+                      min={0}
+                      onChange={(v) => updateSegment(station.id, seg.id, { lengthM: v })}
+                    />
+                    <div className="calc-preview">
+                      <ResultRow label="External Surface Area" symbol="A" value={area} unit="m²" />
+                    </div>
+                  </SectionCard>
+
+                  <SectionCard title="Operating Conditions" icon={Zap}>
+                    <FieldInput
+                      label="Operating Temperature"
+                      value={seg.opTempC}
+                      unit="°C"
+                      step={0.1}
+                      onChange={(v) => updateSegment(station.id, seg.id, { opTempC: v })}
+                    />
+                    <FieldInput
+                      label="Base Current Density @ 25°C"
+                      value={seg.currentDensityBase}
+                      unit="mA/m²"
+                      min={0}
+                      step={0.01}
+                      onChange={(v) => updateSegment(station.id, seg.id, { currentDensityBase: v })}
+                    />
+                    <SelectField
+                      label="Coating System"
+                      value={seg.coatingType}
+                      onChange={(v) => updateSegment(station.id, seg.id, { coatingType: v })}
+                      options={[
+                        { value: 'fusion_bonded_epoxy', label: 'Fusion Bonded Epoxy (FBE)' },
+                        { value: 'three_layer_polyethylene', label: '3-Layer Polyethylene (3LPE)' },
+                        { value: 'coal_tar_enamel', label: 'Coal Tar Enamel' },
+                        { value: 'bare', label: 'Bare Steel' },
+                      ]}
+                    />
+                  </SectionCard>
+                </Grid2>
+              </div>
+            )
+          })}
+
+          {!isReviewer && (
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 32 }}>
+              <button className="btn btn-secondary" onClick={() => addSegment(station.id)}>
+                <Plus size={14} /> Add Pipeline Segment
+              </button>
+            </div>
+          )}
+        </>
       )}
 
       <Grid2>

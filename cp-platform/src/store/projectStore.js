@@ -1,42 +1,20 @@
-/**
- * PROJECT STORE
- * Zustand store with Immer for immutable state updates.
- * Multi-project support: manages a collection of projects with an active project context.
- * Handles: project CRUD, station CRUD, calculations, workflow, revisions.
- */
-
 import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
+import { persist, createJSONStorage } from 'zustand/middleware'
 import { immer } from 'zustand/middleware/immer'
+import { localStorageApi } from '../api/localStorageApi.js'
+import { projectRepository } from '../repositories/projectRepository.js'
+import { useAuthStore } from './authStore.js'
 
-const inMemoryMap = new Map()
-const safeStorage = {
-  getItem: (name) => {
-    try {
-      return localStorage.getItem(name)
-    } catch {
-      return inMemoryMap.get(name) ?? null
-    }
-  },
-  setItem: (name, value) => {
-    try {
-      localStorage.setItem(name, value)
-    } catch {
-      inMemoryMap.set(name, value)
-    }
-  },
-  removeItem: (name) => {
-    try {
-      localStorage.removeItem(name)
-    } catch {
-      inMemoryMap.delete(name)
-    }
-  },
+const customStorage = {
+  getItem: (name) => localStorageApi.getItem(name),
+  setItem: (name, value) => localStorageApi.setItem(name, value),
+  removeItem: (name) => localStorageApi.removeItem(name),
 }
+
 // Synchronous theme detection — prevents flash of light mode before React hydration
 function getInitialTheme() {
   try {
-    const stored = localStorage.getItem('cp-designer-theme')
+    const stored = localStorageApi.getItem('cp-designer-theme')
     if (stored === 'dark' || stored === 'light') return stored
     return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
   } catch {
@@ -128,6 +106,7 @@ export function makeDefaultProject(overrides = {}) {
     stations: [makeDefaultStation()],
     revisions: [],
     currentRevision: null,
+    activityLog: [],
     archived: false,
     hasCalculationsMismatch: false,
     designBasis: {
@@ -143,6 +122,26 @@ export function makeDefaultProject(overrides = {}) {
       minRemotenessDistanceM: 20,
       actualRemotenessDistanceM: 56,
       soilResistivityOhmCm: 361,
+    },
+    tank: {
+      diameter: 30,
+      currentDensity: 15,
+      anodeSpacing: 1.5,
+      layoutType: 'concentric',
+      anodeRating: 17,
+      status: 'draft',
+      lastCalcResult: null,
+    },
+    vessel: {
+      length: 8.0,
+      diameter: 2.4,
+      currentDensity: 30,
+      anodeType: 'al_zn_in',
+      anodeQty: 6,
+      electrolyteResistivity: 80,
+      drivingVoltageMode: 'polarized',
+      status: 'draft',
+      lastCalcResult: null,
     },
     ...overrides,
   }
@@ -187,6 +186,30 @@ function migrateLegacyState(state, version) {
         soilResistivityOhmCm: p.soil_resistivity_ohm_cm !== undefined ? p.soil_resistivity_ohm_cm : (p.stations?.[0]?.soilResistivityOhmCm || 361),
       }
     }
+    if (!p.tank) {
+      p.tank = {
+        diameter: 30,
+        currentDensity: 15,
+        anodeSpacing: 1.5,
+        layoutType: 'concentric',
+        anodeRating: 17,
+        status: 'draft',
+        lastCalcResult: null,
+      }
+    }
+    if (!p.vessel) {
+      p.vessel = {
+        length: 8.0,
+        diameter: 2.4,
+        currentDensity: 30,
+        anodeType: 'al_zn_in',
+        anodeQty: 6,
+        electrolyteResistivity: 80,
+        drivingVoltageMode: 'polarized',
+        status: 'draft',
+        lastCalcResult: null,
+      }
+    }
     return p
   })
 
@@ -197,85 +220,33 @@ function migrateLegacyState(state, version) {
 
 // ─── Export / Import ─────────────────────────────────────────────────────────
 
-const EXPORT_VERSION = 1
-
-/** Validate that an imported object has the minimum required project fields */
-function validateImportedProject(data) {
-  if (!data || typeof data !== 'object') return { valid: false, error: 'Invalid file format' }
-  if (!data.projectNumber || typeof data.projectNumber !== 'string')
-    return { valid: false, error: 'Missing or invalid project number' }
-  if (!Array.isArray(data.stations))
-    return { valid: false, error: 'Missing or invalid stations array' }
-  return { valid: true }
-}
-
 /** Export a single project as a downloadable JSON file */
 export function exportProjectAsJSON(projectId) {
   const state = useProjectStore.getState()
   const project = state.projects.find((p) => p.id === projectId)
-  if (!project) return
-
-  const payload = {
-    _format: 'cp-designer-project',
-    _version: EXPORT_VERSION,
-    _exportedAt: new Date().toISOString(),
-    project: JSON.parse(JSON.stringify(project)),
-  }
-
-  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' })
-  const url = URL.createObjectURL(blob)
-  const a = document.createElement('a')
-  a.href = url
-  a.download = `${project.projectNumber.replace(/[^a-zA-Z0-9_-]/g, '_')}.cp-project.json`
-  document.body.appendChild(a)
-  a.click()
-  document.body.removeChild(a)
-  URL.revokeObjectURL(url)
+  projectRepository.exportProject(project)
 }
 
 /** Import a project from a .cp-project.json file — returns { success, project?, error? } */
 export function parseImportedFile(fileContent) {
-  try {
-    const data = JSON.parse(fileContent)
+  return projectRepository.parseImportedFile(fileContent)
+}
 
-    // Handle both wrapped format (with _format header) and raw project JSON
-    const project = data._format === 'cp-designer-project' ? data.project : data
-
-    const validation = validateImportedProject(project)
-    if (!validation.valid) return { success: false, error: validation.error }
-
-    // Assign a new ID so it never collides with existing projects
-    project.id = uuid()
-    project.archived = false
-    project.updatedAt = new Date().toISOString()
-
-    // Give all stations new IDs to avoid collisions
-    project.stations.forEach((st) => {
-      st.id = uuid()
-    })
-
-    // Migrate imported project designBasis if needed
-    if (!project.designBasis) {
-      project.designBasis = {
-        designStandard: project.designStandard || 'saudiAramco',
-        systemDesignLifeYears: project.systemDesignLifeYears !== undefined ? project.systemDesignLifeYears : (project.design_life_target || 25),
-        backEmfV: project.back_emf_v !== undefined ? project.back_emf_v : 2.0,
-        structureResistanceOhm: project.structure_resistance_ohm !== undefined ? project.structure_resistance_ohm : 0.055,
-        acInputVoltageV: project.ac_input_voltage_v !== undefined ? project.ac_input_voltage_v : 480,
-        acInputPhase: project.ac_input_phase !== undefined ? project.ac_input_phase : 3,
-        trEfficiencyPct: project.tr_efficiency_pct !== undefined ? project.tr_efficiency_pct : 80,
-        trPowerFactor: project.tr_power_factor !== undefined ? project.tr_power_factor : 0.8,
-        cokeContingencyPct: project.coke_contingency_pct !== undefined ? project.coke_contingency_pct : 10,
-        minRemotenessDistanceM: project.min_remoteness_distance_m !== undefined ? project.min_remoteness_distance_m : 20,
-        actualRemotenessDistanceM: project.actual_remoteness_distance_m !== undefined ? project.actual_remoteness_distance_m : 56,
-        soilResistivityOhmCm: project.soil_resistivity_ohm_cm !== undefined ? project.soil_resistivity_ohm_cm : (project.stations?.[0]?.soilResistivityOhmCm || 361),
-      }
-    }
-
-    return { success: true, project }
-  } catch (e) {
-    return { success: false, error: `Failed to parse file: ${e.message}` }
-  }
+function logActivityHelper(proj, action, moduleName, details) {
+  if (!proj) return
+  if (!proj.activityLog) proj.activityLog = []
+  
+  const user = useAuthStore.getState().user
+  const userEmail = user?.email || user?.displayName || 'Engineer'
+  
+  proj.activityLog.push({
+    id: uuid(),
+    timestamp: new Date().toISOString(),
+    user: userEmail,
+    action,
+    module: moduleName,
+    details,
+  })
 }
 
 export const useProjectStore = create(
@@ -305,6 +276,26 @@ export const useProjectStore = create(
         const { projects, activeProjectId } = get()
         return projects.find((p) => p.id === activeProjectId) || projects[0]
       },
+
+      logActivity: (action, moduleName, details) =>
+        set((state) => {
+          const proj = state.projects.find((p) => p.id === state.activeProjectId)
+          if (!proj) return
+          if (!proj.activityLog) proj.activityLog = []
+          
+          const user = useAuthStore.getState().user
+          const userEmail = user?.email || user?.displayName || 'Engineer'
+          
+          proj.activityLog.push({
+            id: uuid(),
+            timestamp: new Date().toISOString(),
+            user: userEmail,
+            action,
+            module: moduleName,
+            details,
+          })
+          proj.updatedAt = new Date().toISOString()
+        }),
 
       /** Import a validated project into the store and switch to it */
       importProject: (project) =>
@@ -341,6 +332,7 @@ export const useProjectStore = create(
           state.attenuationInput = null
           state.attenuationResult = null
           state.attenuationDirty = false
+          logActivityHelper(newProj, 'Project Created', 'Workspace', `Created new project ${newProj.projectNumber}`)
         }),
 
       /** Duplicate the current project (or any project by id) */
@@ -357,6 +349,7 @@ export const useProjectStore = create(
           duplicate.updatedAt = now
           duplicate.revisions = []
           duplicate.currentRevision = null
+          duplicate.activityLog = []
           duplicate.archived = false
           // Give stations new IDs
           duplicate.stations.forEach((st) => {
@@ -368,6 +361,7 @@ export const useProjectStore = create(
           state.projects.push(duplicate)
           state.activeProjectId = duplicate.id
           state.activeStationId = duplicate.stations[0]?.id || null
+          logActivityHelper(duplicate, 'Project Duplicated', 'Workspace', `Duplicated from project ${source.projectNumber}`)
         }),
 
       /** Archive a project (soft-delete) */
@@ -428,6 +422,7 @@ export const useProjectStore = create(
           if (!proj) return
           Object.assign(proj, fields)
           proj.updatedAt = new Date().toISOString()
+          logActivityHelper(proj, 'Project Modified', 'Workspace', `Updated fields: ${Object.keys(fields).join(', ')}`)
         }),
 
       updateDesignBasis: (fields) =>
@@ -442,8 +437,15 @@ export const useProjectStore = create(
           proj.stations.forEach((st) => {
             st.status = 'needs_recalculation'
           })
+          if (proj.tank) {
+            proj.tank.status = 'needs_recalculation'
+          }
+          if (proj.vessel) {
+            proj.vessel.status = 'needs_recalculation'
+          }
           proj.hasCalculationsMismatch = true
           proj.updatedAt = new Date().toISOString()
+          logActivityHelper(proj, 'Design Basis Modified', 'Design Basis', `Updated design basis constants: ${Object.keys(fields).join(', ')}`)
         }),
 
       setNeedsRecalculation: () =>
@@ -453,7 +455,195 @@ export const useProjectStore = create(
           proj.stations.forEach((st) => {
             st.status = 'needs_recalculation'
           })
+          if (proj.tank) {
+            proj.tank.status = 'needs_recalculation'
+          }
+          if (proj.vessel) {
+            proj.vessel.status = 'needs_recalculation'
+          }
           proj.hasCalculationsMismatch = true
+          proj.updatedAt = new Date().toISOString()
+        }),
+
+      updateTankParameters: (fields) =>
+        set((state) => {
+          const proj = state.projects.find((p) => p.id === state.activeProjectId)
+          if (!proj) return
+          if (!proj.tank) {
+            proj.tank = {
+              diameter: 30,
+              currentDensity: 15,
+              anodeSpacing: 1.5,
+              layoutType: 'concentric',
+              anodeRating: 17,
+              status: 'draft',
+              lastCalcResult: null,
+            }
+          }
+          Object.assign(proj.tank, fields)
+          proj.tank.status = 'needs_recalculation'
+          proj.hasCalculationsMismatch = true
+          proj.updatedAt = new Date().toISOString()
+        }),
+
+      updateVesselParameters: (fields) =>
+        set((state) => {
+          const proj = state.projects.find((p) => p.id === state.activeProjectId)
+          if (!proj) return
+          if (!proj.vessel) {
+            proj.vessel = {
+              length: 8.0,
+              diameter: 2.4,
+              currentDensity: 30,
+              anodeType: 'al_zn_in',
+              anodeQty: 6,
+              electrolyteResistivity: 80,
+              drivingVoltageMode: 'polarized',
+              status: 'draft',
+              lastCalcResult: null,
+            }
+          }
+          Object.assign(proj.vessel, fields)
+          proj.vessel.status = 'needs_recalculation'
+          proj.hasCalculationsMismatch = true
+          proj.updatedAt = new Date().toISOString()
+        }),
+
+      runTankCalculations: () =>
+        set((state) => {
+          const proj = state.projects.find((p) => p.id === state.activeProjectId)
+          if (!proj || !proj.tank) return
+          
+          const { diameter, currentDensity, anodeSpacing, layoutType, anodeRating } = proj.tank
+          const designLife = proj.designBasis.systemDesignLifeYears
+          const soilResistivity = proj.designBasis.soilResistivityOhmCm
+
+          const radius = diameter / 2
+          const bottomArea = Math.PI * Math.pow(radius, 2)
+          const reqCurrent = (bottomArea * currentDensity) / 1000
+          const designCurrent = reqCurrent * 1.3
+
+          let geomLength = 0
+          const rings = []
+          const gridLines = []
+
+          if (layoutType === 'concentric') {
+            const numRings = Math.floor(radius / anodeSpacing)
+            for (let i = 1; i <= numRings; i++) {
+              const ringRadius = i * anodeSpacing
+              const circ = 2 * Math.PI * ringRadius
+              geomLength += circ
+              rings.push(ringRadius)
+            }
+          } else {
+            const numLines = Math.floor(radius / anodeSpacing)
+            geomLength += diameter
+            gridLines.push(0)
+            for (let i = 1; i <= numLines; i++) {
+              const dist = i * anodeSpacing
+              const chordLength = 2 * Math.sqrt(Math.pow(radius, 2) - Math.pow(dist, 2))
+              geomLength += chordLength * 2
+              gridLines.push(dist)
+              gridLines.push(-dist)
+            }
+          }
+
+          const weightKgPerM = anodeRating === 34 ? 0.045 : 0.03
+          const minLengthForCurrent = designCurrent / (anodeRating / 1000)
+          const finalLength = Math.max(geomLength, minLengthForCurrent)
+          const totalAnodeWeight = finalLength * weightKgPerM
+          const operatingCurrentDensity = finalLength > 0 ? (designCurrent / finalLength) * 1000 : 0
+
+          const ribbonDiaApprox = 0.008
+          const r = ribbonDiaApprox / 2 // 0.004 m
+          const W = diameter // grid width (tank diameter)
+          const depthOfBurial = 0.1 // 10 cm default depth of burial
+          const soilResistivityOhmM = soilResistivity / 100
+          const resistance = finalLength > 0 && W > 0 && depthOfBurial > 0
+            ? (soilResistivityOhmM / (2 * Math.PI * finalLength)) * (Math.log((4 * finalLength) / r) + (finalLength / W) * Math.log(W / depthOfBurial) - 1)
+            : 0
+
+          const dcVoltage = designCurrent * resistance + 2.0
+          const powerW = designCurrent * dcVoltage
+
+          proj.tank.lastCalcResult = {
+            bottomArea,
+            reqCurrent,
+            designCurrent,
+            geomLength,
+            rings,
+            gridLines,
+            minLengthForCurrent,
+            finalLength,
+            totalAnodeWeight,
+            operatingCurrentDensity,
+            resistance,
+            dcVoltage,
+            powerW,
+          }
+          proj.tank.status = 'calculated'
+
+          const allStationsCalculated = proj.stations.every((s) => s.status === 'calculated')
+          const vesselCalculated = proj.vessel ? proj.vessel.status === 'calculated' : true
+          if (allStationsCalculated && vesselCalculated) {
+            proj.hasCalculationsMismatch = false
+          }
+          proj.updatedAt = new Date().toISOString()
+        }),
+
+      runVesselCalculations: () =>
+        set((state) => {
+          const proj = state.projects.find((p) => p.id === state.activeProjectId)
+          if (!proj || !proj.vessel) return
+
+          const { length, diameter, currentDensity, anodeType, anodeQty, electrolyteResistivity, drivingVoltageMode = 'polarized' } = proj.vessel
+          
+          const ANODE_SPECS = {
+            al_zn_in: { weightKg: 4.5, lengthMm: 300, radiusMm: 45, consumptionRate: 3.4, drivingVoltageV: drivingVoltageMode === 'bare' ? 0.45 : 0.25, utilizationFactor: 0.85 },
+            zinc_high_pure: { weightKg: 6.0, lengthMm: 400, radiusMm: 35, consumptionRate: 11.8, drivingVoltageV: drivingVoltageMode === 'bare' ? 0.45 : 0.25, utilizationFactor: 0.85 },
+            magnesium_h1: { weightKg: 4.0, lengthMm: 350, radiusMm: 50, consumptionRate: 17.7, drivingVoltageV: drivingVoltageMode === 'bare' ? 0.90 : 0.70, utilizationFactor: 0.50 },
+          }
+          const spec = ANODE_SPECS[anodeType] || ANODE_SPECS.al_zn_in
+
+          const cylinderArea = Math.PI * diameter * length
+          const headsArea = 2 * Math.PI * Math.pow(diameter / 2, 2)
+          const totalArea = cylinderArea + headsArea
+
+          const reqCurrent = (totalArea * currentDensity) / 1000
+          const designCurrent = reqCurrent * 1.3
+
+          const anodeLenM = spec.lengthMm / 1000
+          const anodeRadM = spec.radiusMm / 1000
+          const resistivityOhmM = electrolyteResistivity / 100
+          
+          const fBoundary = 1.25 // Vessel boundary proximity safety factor
+          const anodeResistance = anodeLenM > 0
+            ? (resistivityOhmM / (2 * Math.PI * anodeLenM)) * (Math.log((4 * anodeLenM) / anodeRadM) - 1) * fBoundary
+            : 0
+
+          const outputCurrentPerAnode = spec.drivingVoltageV / anodeResistance
+          const totalOutputCapacity = outputCurrentPerAnode * anodeQty
+
+          const expectedLife = designCurrent > 0
+            ? (anodeQty * spec.weightKg * spec.utilizationFactor) / (designCurrent * spec.consumptionRate)
+            : 0
+
+          proj.vessel.lastCalcResult = {
+            totalArea,
+            reqCurrent,
+            designCurrent,
+            anodeResistance,
+            outputCurrentPerAnode,
+            totalOutputCapacity,
+            expectedLife,
+          }
+          proj.vessel.status = 'calculated'
+
+          const allStationsCalculated = proj.stations.every((s) => s.status === 'calculated')
+          const tankCalculated = proj.tank ? proj.tank.status === 'calculated' : true
+          if (allStationsCalculated && tankCalculated) {
+            proj.hasCalculationsMismatch = false
+          }
           proj.updatedAt = new Date().toISOString()
         }),
 
@@ -581,6 +771,7 @@ export const useProjectStore = create(
               st.lastCalcResult = null
               st.status = st.status === 'draft' ? 'draft' : 'input_complete'
               p.updatedAt = new Date().toISOString()
+              logActivityHelper(p, 'Calculation Run Failed', 'Calculations', `Failed calculation on station ${st.name}`)
               return
             }
 
@@ -595,6 +786,7 @@ export const useProjectStore = create(
               p.hasCalculationsMismatch = false
             }
             p.updatedAt = new Date().toISOString()
+            logActivityHelper(p, 'Calculation Run', 'Calculations', `Calculated station ${st.name}: Req=${st.lastCalcResult.requiredCurrentA.toFixed(2)}A, Design=${st.lastCalcResult.designCurrentA.toFixed(2)}A`)
           })
         } finally {
           set((state) => { state.ui.calculatingStationId = null })
@@ -607,6 +799,8 @@ export const useProjectStore = create(
         proj.stations.forEach((s) => {
           get().calculateStation(s.id)
         })
+        get().runTankCalculations()
+        get().runVesselCalculations()
         set((state) => {
           const p = state.projects.find((pp) => pp.id === state.activeProjectId)
           if (p) {
@@ -630,10 +824,19 @@ export const useProjectStore = create(
           if (!proj) return
           const station = proj.stations.find((s) => s.id === stationId)
           if (!station) return
+          const oldStatus = station.status
           station.status = newStatus
           station.statusNotes = notes
           station.statusUpdatedAt = new Date().toISOString()
           proj.updatedAt = new Date().toISOString()
+          
+          let actionLabel = 'Workflow Changed'
+          if (newStatus === 'approved') actionLabel = 'Design Approved'
+          else if (newStatus === 'issued_for_construction') actionLabel = 'Design Issued'
+          else if (newStatus === 'engineering_review') actionLabel = 'Submitted for Review'
+          else if (oldStatus === 'approved' || oldStatus === 'issued_for_construction') actionLabel = 'Design Unlocked'
+          
+          logActivityHelper(proj, actionLabel, 'Validation', `Status changed for station ${station.name} from ${oldStatus.replace(/_/g, ' ')} to ${newStatus.replace(/_/g, ' ')}${notes ? ' (Notes/Justification: ' + notes + ')' : ''}`)
         }),
 
       // ── Revision Actions ───────────────────────────────────────────────────
@@ -642,7 +845,8 @@ export const useProjectStore = create(
         set((state) => {
           const proj = state.projects.find((p) => p.id === state.activeProjectId)
           if (!proj) return
-          const revNum = `REV-${proj.revisions.length}`
+          const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
+          const revNum = `Revision ${letters[proj.revisions.length] || String(proj.revisions.length)}`
           const revision = {
             id: uuid(),
             revNumber: revNum,
@@ -655,6 +859,27 @@ export const useProjectStore = create(
           proj.revisions.push(revision)
           proj.currentRevision = revNum
           proj.updatedAt = new Date().toISOString()
+          logActivityHelper(proj, 'Revision Created', 'Document Control', `Created new revision: ${revNum} - ${description}`)
+        }),
+
+      restoreRevision: (revisionId) =>
+        set((state) => {
+          const proj = state.projects.find((p) => p.id === state.activeProjectId)
+          if (!proj) return
+          const rev = proj.revisions.find((r) => r.id === revisionId)
+          if (!rev) return
+          
+          const targetSnapshot = JSON.parse(JSON.stringify(rev.snapshot))
+          const tempRevisions = [...proj.revisions]
+          const tempHistory = [...proj.activityLog]
+          
+          Object.assign(proj, targetSnapshot)
+          
+          proj.revisions = tempRevisions
+          proj.activityLog = tempHistory
+          
+          proj.updatedAt = new Date().toISOString()
+          logActivityHelper(proj, 'Revision Restored', 'Document Control', `Restored design to state of ${rev.revNumber}`)
         }),
 
       // ── UI Actions ─────────────────────────────────────────────────────────
@@ -798,12 +1023,98 @@ export const useProjectStore = create(
         if (!proj) return false
         return proj.stations.every((s) => s.lastCalcResult !== null)
       },
+
+      compareRevisions: (revIdA, revIdB) => {
+        const proj = get().getProject()
+        if (!proj) return null
+        const revA = proj.revisions.find((r) => r.id === revIdA)
+        const revB = proj.revisions.find((r) => r.id === revIdB)
+        if (!revA || !revB) return null
+        
+        const diffs = {
+          basis: [],
+          stations: [],
+        }
+        
+        const snapA = revA.snapshot
+        const snapB = revB.snapshot
+        
+        const basisA = snapA.designBasis || {}
+        const basisB = snapB.designBasis || {}
+        
+        const allBasisKeys = Array.from(new Set([...Object.keys(basisA), ...Object.keys(basisB)]))
+        allBasisKeys.forEach((key) => {
+          if (basisA[key] !== basisB[key]) {
+            diffs.basis.push({
+              param: key,
+              valA: basisA[key],
+              valB: basisB[key],
+            })
+          }
+        })
+        
+        const stationsA = snapA.stations || []
+        const stationsB = snapB.stations || []
+        
+        stationsA.forEach((stA) => {
+          const stB = stationsB.find((s) => s.name === stA.name)
+          if (!stB) {
+            diffs.stations.push({
+              name: stA.name,
+              status: 'deleted',
+              changes: []
+            })
+            return
+          }
+          
+          const changes = []
+          if (stA.soilResistivityOhmCm !== stB.soilResistivityOhmCm) {
+            changes.push({ param: 'Soil Resistivity', valA: stA.soilResistivityOhmCm, valB: stB.soilResistivityOhmCm })
+          }
+          if (stA.proposedAnodes !== stB.proposedAnodes) {
+            changes.push({ param: 'Proposed Anodes', valA: stA.proposedAnodes, valB: stB.proposedAnodes })
+          }
+          if (stA.tr?.ratedVoltage !== stB.tr?.ratedVoltage) {
+            changes.push({ param: 'TR Rated Voltage', valA: stA.tr?.ratedVoltage, valB: stB.tr?.ratedVoltage })
+          }
+          if (stA.tr?.ratedCurrent !== stB.tr?.ratedCurrent) {
+            changes.push({ param: 'TR Rated Current', valA: stA.tr?.ratedCurrent, valB: stB.tr?.ratedCurrent })
+          }
+          
+          const segsA = stA.pipelineSegments || []
+          const segsB = stB.pipelineSegments || []
+          
+          segsA.forEach((segA, i) => {
+            const segB = segsB[i]
+            if (!segB) return
+            if (segA.lengthM !== segB.lengthM) {
+              changes.push({ param: `Seg ${i+1} Length`, valA: segA.lengthM, valB: segB.lengthM })
+            }
+            if (segA.od !== segB.od) {
+              changes.push({ param: `Seg ${i+1} Diameter`, valA: segA.od, valB: segB.od })
+            }
+            if (segA.currentDensityBase !== segB.currentDensityBase) {
+              changes.push({ param: `Seg ${i+1} CD Base`, valA: segA.currentDensityBase, valB: segB.currentDensityBase })
+            }
+          })
+          
+          if (changes.length > 0) {
+            diffs.stations.push({
+              name: stA.name,
+              status: 'modified',
+              changes,
+            })
+          }
+        })
+        
+        return diffs
+      },
     })),
     {
       name: 'cp-platform-project',
-      version: 4,
-      storage: safeStorage,
-      // Migrate legacy formats to version 4 with nested designBasis
+      version: 6,
+      storage: createJSONStorage(() => customStorage),
+      // Migrate legacy formats to version 5 with nested designBasis, tank, and vessel
       migrate: migrateLegacyState,
       // Only persist project data, not transient UI state
       partialize: (state) => ({

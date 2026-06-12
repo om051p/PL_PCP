@@ -12,12 +12,13 @@ import {
   InfoBox,
   Divider,
   ValidationErrors,
+  ResultKPICard,
 } from '../components/ui.jsx'
 import { getActiveStandard } from '../constants/index.js'
-import { Zap } from 'lucide-react'
+import { Zap, AlertTriangle } from 'lucide-react'
 
 function DesignStandardInfoBox() {
-  const project = useProjectStore((s) => s.getProject())
+  const project = useProjectStore((s) => s.projects.find((p) => p.id === s.activeProjectId) || s.projects[0])
   const std = getActiveStandard(project)
   const tc = std.temperatureCorrection || {}
   const cr = std.currentRequirement || {}
@@ -32,9 +33,9 @@ function DesignStandardInfoBox() {
 }
 
 export function PageCurrentRequirement() {
-  const stations = useProjectStore((s) => s.getProject()?.stations ?? [])
+  const stations = useProjectStore((s) => s.projects.find((p) => p.id === s.activeProjectId)?.stations ?? s.projects[0]?.stations ?? [])
   const calculateStation = useProjectStore((s) => s.calculateStation)
-  const project = useProjectStore((s) => s.getProject())
+  const project = useProjectStore((s) => s.projects.find((p) => p.id === s.activeProjectId) || s.projects[0])
   const std = getActiveStandard(project)
   const cr = std.currentRequirement || {}
   const tc = std.temperatureCorrection || {}
@@ -66,6 +67,8 @@ export function PageCurrentRequirement() {
       {stations.map((st) => {
         const r = st.lastCalcResult
         const totalLength = st.pipelineSegments.reduce((acc, s) => acc + s.lengthM, 0)
+        const isStale = st.status === 'needs_recalculation' || (!r && st.pipelineSegments.length > 0)
+        
         return (
           <SectionCard
             key={st.id}
@@ -77,9 +80,46 @@ export function PageCurrentRequirement() {
               </button>
             }
           >
+            {isStale && r && (
+              <div className="staleness-banner">
+                <AlertTriangle className="staleness-banner-icon" size={15} />
+                <span>Pipeline inputs have changed. Click Calculate to refresh the protection current requirements.</span>
+              </div>
+            )}
             <ValidationErrors errors={st.validationErrors} />
             {r ? (
               <>
+                <div className="result-kpi-grid">
+                  <ResultKPICard
+                    title="Required Current"
+                    value={r.requiredCurrentA.toFixed(4)}
+                    unit="A"
+                    status="pass"
+                    limitText="I_req calculation"
+                    stale={isStale}
+                  />
+                  <ResultKPICard
+                    title="Design Current"
+                    value={r.designCurrentA.toFixed(4)}
+                    unit="A"
+                    status="pass"
+                    limitText={`Safety margin applied`}
+                    safetyMargin={`+${sparePct}%`}
+                    stale={isStale}
+                  />
+                  <ResultKPICard
+                    title="Proposed Anodes"
+                    value={st.proposedAnodes.toString()}
+                    unit="ea"
+                    status={st.proposedAnodes >= Math.ceil(r.designCurrentA / st.anodeSpec.outputAmps) ? 'pass' : 'fail'}
+                    limitText={`Min required: ${Math.ceil(r.designCurrentA / st.anodeSpec.outputAmps)} ea`}
+                    safetyMargin={st.proposedAnodes >= Math.ceil(r.designCurrentA / st.anodeSpec.outputAmps) ? 'PASS' : 'FAIL'}
+                    stale={isStale}
+                  />
+                </div>
+
+                <Divider label="Calculation Breakdown" />
+
                 <ResultRow
                   label="Total Pipeline Length"
                   value={totalLength.toFixed(0)}

@@ -38,28 +38,51 @@ import {
   convertDiameterInchesToMetres,
 } from './resistivityEngine.js';
 
-import { describe, it, expect } from 'vitest'
+const isVitest = process.env.VITEST === 'true';
 
-function assertClose(actual, expected, tol, label) {
-  const tolerance = tol ?? 1e-6;
-  expect(Math.abs(actual - expected)).toBeLessThanOrEqual(tolerance);
-}
-function assertEqual(actual, expected, label) {
-  expect(actual).toEqual(expected);
-}
-function assertTrue(cond, label) {
-  expect(cond).toBe(true);
-}
-function assertFalse(cond, label) {
-  expect(cond).toBe(false);
+let assertClose, assertEqual, assertTrue, assertFalse;
+let passed = 0, failed = 0;
+const failures = [];
+
+if (isVitest) {
+  const { expect } = await import('vitest');
+  assertClose = (actual, expected, tol, label) => {
+    const tolerance = tol ?? 1e-6;
+    expect(Math.abs(actual - expected)).toBeLessThanOrEqual(tolerance);
+  };
+  assertEqual = (actual, expected, label) => {
+    expect(actual).toEqual(expected);
+  };
+  assertTrue = (cond, label) => {
+    expect(cond).toBe(true);
+  };
+  assertFalse = (cond, label) => {
+    expect(cond).toBe(false);
+  };
+} else {
+  assertClose = (actual, expected, tol, label) => {
+    const diff = Math.abs(actual - expected);
+    if (diff <= (tol ?? 1e-6)) { passed++; }
+    else { failed++; failures.push(`FAIL [${label}]: expected ${expected} ± ${tol}, got ${actual} (diff=${diff})`); }
+  };
+  assertEqual = (actual, expected, label) => {
+    if (actual === expected) { passed++; }
+    else { failed++; failures.push(`FAIL [${label}]: expected ${JSON.stringify(expected)}, got ${JSON.stringify(actual)}`); }
+  };
+  assertTrue = (cond, label) => {
+    if (cond) { passed++; }
+    else { failed++; failures.push(`FAIL [${label}]: expected true`); }
+  };
+  assertFalse = (cond, label) => {
+    if (!cond) { passed++; }
+    else { failed++; failures.push(`FAIL [${label}]: expected false`); }
+  };
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Reference values from PCP.xlsx (HAJAR IPP project)
 // ─────────────────────────────────────────────────────────────────────────────
-describe('Resistivity Engine Tests', () => {
-  it('runs all resistivity and current density formulas', () => {
-    const REF_DEEPWELL = {
+const REF_DEEPWELL = {
   soilResistivityOhmCm: 361.01083032490976,  // F71
   activeColumnLengthCm: 3500,                // F72 (35m × 100)
   columnDiameterCm: 25,                      // F73
@@ -91,6 +114,8 @@ const REF_INPUT = buildResistivityInput({
   negativeMainCableLengthM: 100,
   proposedNumberOfAnodes: 9,
 });
+
+function runAllTests() {
 
 // ─────────────────────────────────────────────────────────────────────────────
 // T1xx — Wenner formula tests
@@ -584,10 +609,31 @@ const REF_INPUT = buildResistivityInput({
   assertClose(a2 / a1, 2.0, 1e-10, 'T615: surface area doubles with double diameter');
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+} // end of runAllTests
 
-  })
-})
-// RESULTS
-// ─────────────────────────────────────────────────────────────────────────────
-console.log('Resistivity Engine tests complete');
+if (isVitest) {
+  const { describe, it } = await import('vitest');
+  describe('Resistivity Engine Tests', () => {
+    it('runs all resistivity and current density formulas', () => {
+      runAllTests();
+    });
+  });
+} else {
+  runAllTests();
+  console.log('\n═══════════════════════════════════════════════════════════');
+  console.log('  Resistivity Engine — Test Results');
+  console.log('═══════════════════════════════════════════════════════════');
+  console.log(`  PASSED: ${passed}`);
+  console.log(`  FAILED: ${failed}`);
+  console.log(`  TOTAL:  ${passed + failed}`);
+
+  if (failures.length > 0) {
+    console.log('\n  FAILURES:');
+    failures.forEach(f => console.log(`    ${f}`));
+    process.exit(1);
+  } else {
+    console.log('\n  ✅ All tests passed');
+    console.log('═══════════════════════════════════════════════════════════\n');
+    process.exit(0);
+  }
+}

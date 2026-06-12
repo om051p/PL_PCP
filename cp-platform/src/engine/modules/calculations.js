@@ -17,7 +17,7 @@
  *   The orchestrator (runStationCalculations) resolves the active standard and passes values through.
  */
 
-import { THRESHOLDS, CABLE_SPECS } from '../../constants/index.js'
+import { THRESHOLDS, CABLE_SPECS, calcRequiredRemotenessM } from '../../constants/index.js'
 
 // ─── Module 1: Surface Area ───────────────────────────────────────────────────
 
@@ -389,9 +389,12 @@ export function calcTRCircuit(
  * @param {number} [utilizationFactor=0.85] - Anode utilization factor (default: 0.85 per NACE SP0169)
  * @returns {number} Design life (years)
  */
-export function calcDesignLife(numAnodes, anodeWeightKg, consumptionRateKgAY, trRatedCurrentA, utilizationFactor = THRESHOLDS.ANODE_UTILIZATION_FACTOR) {
+export function calcDesignLife(numAnodes, anodeWeightKg, consumptionRateKgAY, trRatedCurrentA, utilizationFactor) {
+  const uf = (utilizationFactor !== undefined && utilizationFactor !== null)
+    ? utilizationFactor
+    : THRESHOLDS.ANODE_UTILIZATION_FACTOR
   if (consumptionRateKgAY <= 0 || trRatedCurrentA <= 0) return 0
-  return (numAnodes * anodeWeightKg * utilizationFactor) / (consumptionRateKgAY * trRatedCurrentA)
+  return (numAnodes * anodeWeightKg * uf) / (consumptionRateKgAY * trRatedCurrentA)
 }
 
 // ─── Module 7: Coke (Calcined Petroleum Coke) Requirement ──────────────────
@@ -456,8 +459,10 @@ export function runStationCalculations(station, systemDesignLifeYears, standardC
   const backEMF = db.backEmfV !== undefined ? db.backEmfV : tr.backEMF
   const structureResistance = db.structureResistanceOhm !== undefined ? db.structureResistanceOhm : tr.structureResistance
   const actualRemoteness = db.actualRemotenessDistanceM !== undefined ? db.actualRemotenessDistanceM : station.actualRemotenesM
-  const minRemoteness = db.minRemotenessDistanceM !== undefined ? db.minRemotenessDistanceM : station.requiredRemotenesM
   const soilResistivity = db.soilResistivityOhmCm !== undefined ? db.soilResistivityOhmCm : soilResistivityOhmCm
+  const minRemoteness = db.minRemotenessDistanceM !== undefined 
+    ? db.minRemotenessDistanceM 
+    : (calcRequiredRemotenessM(tr.ratedCurrent, soilResistivity) ?? station.requiredRemotenesM ?? THRESHOLDS.MIN_REMOTENESS_M)
 
   // ── Extract standard-driven values ───────────────────────────────────────
   const cr = standardConfig?.currentRequirement || {}

@@ -14,8 +14,9 @@ import {
   ValidationErrors,
   Divider,
   Grid2,
+  ResultKPICard,
 } from '../components/ui.jsx'
-import { Cpu, BarChart3 } from 'lucide-react'
+import { Cpu, BarChart3, AlertTriangle } from 'lucide-react'
 
 export function PageTRSizing() {
   const station = useProjectStore((s) => s.getActiveStation())
@@ -26,12 +27,20 @@ export function PageTRSizing() {
   const r = station.lastCalcResult
   const tr = station.tr
 
+  const isStale = station.status === 'needs_recalculation' || (!r && station.pipelineSegments.length > 0)
+
   return (
     <div className="page">
       <StationTabs />
       <div style={{ marginBottom: 12 }}>
         <StandardBadge project={project} />
       </div>
+      {isStale && r && (
+        <div className="staleness-banner">
+          <AlertTriangle className="staleness-banner-icon" size={15} />
+          <span>Design settings have changed. Please click Analyse Circuit to update the transformer-rectifier sizing and voltage drops.</span>
+        </div>
+      )}
       <ValidationErrors errors={station.validationErrors} />
       <Grid2>
         <SectionCard title="TR Unit Ratings" icon={Cpu}>
@@ -61,14 +70,14 @@ export function PageTRSizing() {
           </Grid2>
           <FieldInput
             label="Back EMF"
-            value={project.back_emf_v}
+            value={project.designBasis?.backEmfV}
             unit="V"
             readOnly={true}
             hint="Locked to Central Design Settings in Design Basis"
           />
           <FieldInput
             label="Structure-to-Earth Resistance"
-            value={project.structure_resistance_ohm}
+            value={project.designBasis?.structureResistanceOhm}
             unit="Ω"
             readOnly={true}
             hint="Locked to Central Design Settings in Design Basis"
@@ -81,6 +90,36 @@ export function PageTRSizing() {
         <SectionCard title="Circuit Analysis" icon={BarChart3}>
           {r ? (
             <>
+              <div className="result-kpi-grid">
+                <ResultKPICard
+                  title="Min TR Voltage"
+                  value={r.minTRVoltage.toFixed(2)}
+                  unit="V"
+                  status="pass"
+                  limitText="Required minimum voltage"
+                  stale={isStale}
+                />
+                <ResultKPICard
+                  title="TR Adequacy"
+                  value={`${tr.ratedVoltage} V`}
+                  unit=""
+                  status={tr.ratedVoltage >= r.minTRVoltage ? 'pass' : 'fail'}
+                  limitText={`Req: >= ${r.minTRVoltage.toFixed(2)} V`}
+                  safetyMargin={tr.ratedVoltage >= r.minTRVoltage ? 'PASS' : 'FAIL'}
+                  stale={isStale}
+                />
+                <ResultKPICard
+                  title="Total Resistance"
+                  value={r.totalCircuitResistanceOhm.toFixed(4)}
+                  unit="Ω"
+                  status="pass"
+                  limitText="R_T total circuit"
+                  stale={isStale}
+                />
+              </div>
+
+              <Divider label="Resistance & Voltage Drops Breakdown" />
+
               <ResultRow
                 label="Groundbed Resistance"
                 symbol="R_G"
@@ -103,7 +142,7 @@ export function PageTRSizing() {
               <ResultRow
                 label="Structure Resistance"
                 symbol="R_s"
-                value={project.structure_resistance_ohm.toFixed(4)}
+                value={project.designBasis?.structureResistanceOhm?.toFixed(4)}
                 unit="Ω"
               />
               <Divider />
@@ -134,7 +173,7 @@ export function PageTRSizing() {
               <ResultRow label="DC Power" value={r.dcPowerW.toString()} unit="W" />
               <ResultRow label="AC Input Power" value={r.acInputKVA.toFixed(2)} unit="kVA" />
               <ResultRow
-                label={`AC Input Current (${project.ac_input_voltage_v}V/${project.ac_input_phase}Φ)`}
+                label={`AC Input Current (${project.designBasis?.acInputVoltageV}V/${project.designBasis?.acInputPhase}Φ)`}
                 value={r.acInputCurrentA.toFixed(2)}
                 unit="A"
               />

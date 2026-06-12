@@ -46,6 +46,23 @@ export function PageBOM() {
           return null
         const bom = st.lastCalcResult ? generateBOMForDisplay(st, project) : []
 
+        // Group BOM by tag category
+        const categories = {
+          ANODE: 'Anodes & Accessories',
+          CABLE: 'Cables & Cabling Equipment',
+          TR: 'Transformer-Rectifier Units',
+          COKE: 'Coke Breeze Backfill',
+          BACKFILL: 'Well Backfill Materials',
+          OTHER: 'Miscellaneous Accessories',
+        }
+
+        const groupedBOM = bom.reduce((acc, item) => {
+          const tag = item.tag || 'OTHER'
+          if (!acc[tag]) acc[tag] = []
+          acc[tag].push(item)
+          return acc
+        }, {})
+
         return (
           <SectionCard
             key={st.id}
@@ -69,19 +86,24 @@ export function PageBOM() {
                 <div>Description</div>
                 <div>Standard</div>
                 <div>Unit</div>
-                <div>Qty</div>
+                <div style={{ textAlign: 'right', paddingRight: 16 }}>Qty</div>
               </div>
-              {bom.map((item, i) => (
-                <div key={i} className="bom-row">
-                  <div>
-                    <span className={`tag tag-${item.tag.toLowerCase().replace(/\s+/g, '-')}`}>
-                      {item.tag}
-                    </span>
-                  </div>
-                  <div>{item.description}</div>
-                  <div className="bom-std">{item.standard || '—'}</div>
-                  <div>{item.unit}</div>
-                  <div className="bom-qty">{item.quantity}</div>
+              {Object.keys(groupedBOM).map((tag) => (
+                <div key={tag}>
+                  <div className="bom-category-title">{categories[tag] || tag}</div>
+                  {groupedBOM[tag].map((item, i) => (
+                    <div key={i} className="bom-row">
+                      <div>
+                        <span className={`tag tag-${item.tag.toLowerCase().replace(/\s+/g, '-')}`}>
+                          {item.tag}
+                        </span>
+                      </div>
+                      <div style={{ fontWeight: 500 }}>{item.description}</div>
+                      <div className="bom-std">{item.standard || '—'}</div>
+                      <div style={{ color: 'var(--text-secondary)' }}>{item.unit}</div>
+                      <div className="bom-qty">{item.quantity}</div>
+                    </div>
+                  ))}
                 </div>
               ))}
             </div>
