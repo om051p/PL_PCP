@@ -30,6 +30,7 @@ test.describe('NACE SP0169 — Full Engineering Workflow', () => {
   }
 
   async function selectDesignStandard(page, standardLabel) {
+    await navigateTo(page, 'Design Basis')
     const standardSelect = page.locator('.field').filter({ hasText: 'Design Standard' }).locator('select')
     await standardSelect.selectOption({ label: standardLabel })
     await page.waitForTimeout(300)
@@ -62,6 +63,137 @@ test.describe('NACE SP0169 — Full Engineering Workflow', () => {
     await page.goto('/')
     await page.evaluate(() => {
       localStorage.clear()
+      localStorage.setItem('e2e-mock-auth', 'true')
+      
+      const mockProject = {
+        id: 'mock-e2e-project',
+        projectNumber: 'PCP-BETA-001',
+        clientName: 'Saudi Aramco',
+        endClient: 'Saudi Aramco',
+        projectName: 'Beta Release Test Project',
+        designer: 'QA Engineer',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        status: 'draft',
+        stations: [
+          {
+            id: 'mock-e2e-station',
+            name: 'ICCP Station-1',
+            location: 'KM 00+000',
+            designMode: 'deepwell',
+            pipelineSegments: [
+              {
+                id: 'mock-e2e-segment',
+                name: '48" Gas Sales Pipeline',
+                od: 48,
+                wallThk: 0.875,
+                lengthM: 292,
+                opTempC: 57.22,
+                currentDensityBase: 0.1,
+                coatingType: 'fusion_bonded_epoxy',
+                coatingEfficiency: 0.98,
+              }
+            ],
+            groundbed: {
+              type: 'deepwell',
+              startDepthM: 15,
+              anodeLengthM: 2.13,
+              inactiveLenM: 1.5,
+              anodeSpacingM: 1.5,
+              boreholeDiaM: 0.25,
+              numHoles: 1,
+              cokeCoverM: 2.5,
+              cementPlugM: 0.5,
+            },
+            anodeSpec: {
+              id: 'HSCI_TA4',
+              type: 'HSCI',
+              label: 'High-Silicon Cast Iron Tubular TA-4',
+              standard: '17-SAMSS-016',
+              weightKg: 38.6,
+              outputAmps: 3.56,
+              consumptionRate: 0.45,
+              lengthM: 2.13,
+              diameterM: 0.064,
+              maxCurrentDensity: 10.8,
+              material: 'High-Silicon Cast Iron (14.5% Si)',
+            },
+            proposedAnodes: 9,
+            cables: {
+              anodeTailLengths: [25, 30, 35, 40, 45, 50, 55, 60, 65, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+              anodeCableSizeMm2: 16,
+              posMainLengthM: 180,
+              posMainSizeMm2: 35,
+              negMainLengthM: 100,
+              negMainSizeMm2: 35,
+              negSecLengthM: 60,
+              negSecSizeMm2: 25,
+            },
+            tr: {
+              ratedVoltage: 30,
+              ratedCurrent: 25,
+              backEMF: 2,
+              structureResistance: 0.055,
+            },
+            soilResistivityOhmCm: 361,
+            actualRemotenesM: 56,
+            requiredRemotenesM: 20,
+            designLifeYears: 25,
+            status: 'draft',
+            lastCalcResult: null,
+            insights: [],
+            alternatives: [],
+          }
+        ],
+        revisions: [],
+        currentRevision: null,
+        archived: false,
+        hasCalculationsMismatch: false,
+        designBasis: {
+          designStandard: 'saudiAramco',
+          systemDesignLifeYears: 25,
+          backEmfV: 2.0,
+          structureResistanceOhm: 0.055,
+          acInputVoltageV: 480,
+          acInputPhase: 3,
+          trEfficiencyPct: 80,
+          trPowerFactor: 0.8,
+          cokeContingencyPct: 10,
+          minRemotenessDistanceM: 20,
+          actualRemotenessDistanceM: 56,
+          soilResistivityOhmCm: 361,
+        },
+        tank: {
+          diameter: 30,
+          currentDensity: 15,
+          anodeSpacing: 1.5,
+          layoutType: 'concentric',
+          anodeRating: 17,
+          status: 'draft',
+          lastCalcResult: null,
+        },
+        vessel: {
+          length: 8.0,
+          diameter: 2.4,
+          currentDensity: 30,
+          anodeType: 'al_zn_in',
+          anodeQty: 6,
+          electrolyteResistivity: 80,
+          drivingVoltageMode: 'polarized',
+          status: 'draft',
+          lastCalcResult: null,
+        }
+      }
+
+      localStorage.setItem('cp-platform-project', JSON.stringify({
+        state: {
+          activeWorkspace: 'pipeline',
+          projects: [mockProject],
+          activeProjectId: 'mock-e2e-project',
+          activeStationId: 'mock-e2e-station'
+        },
+        version: 6
+      }))
     })
     await page.reload()
     await page.waitForLoadState('networkidle')
@@ -69,7 +201,8 @@ test.describe('NACE SP0169 — Full Engineering Workflow', () => {
   })
 
   test('1. Project Setup — switch to NACE and verify badge', async ({ page }) => {
-    await expect(page.getByText('Project Setup').first()).toBeVisible()
+    await navigateTo(page, 'Design Basis')
+    await expect(page.locator('.page').getByText('Client Information')).toBeVisible()
 
     // Fill project metadata
     await field(page, 'Project Number').fill('NACE-E2E-001')
@@ -94,6 +227,10 @@ test.describe('NACE SP0169 — Full Engineering Workflow', () => {
   })
 
   test('2. Pipeline Parameters — fill NACE-relevant values', async ({ page }) => {
+    await selectDesignStandard(page, 'NACE SP0169')
+    await field(page, 'Design Soil Resistivity').fill('3000')
+    await field(page, 'Actual Nearest Structure Distance').fill('50')
+
     await navigateTo(page, 'Pipeline Parameters')
     await page.waitForTimeout(200)
 
@@ -102,10 +239,6 @@ test.describe('NACE SP0169 — Full Engineering Workflow', () => {
     await field(page, 'Section Length').fill('5000')
     await field(page, 'Operating Temperature').fill('50')
     await field(page, 'Base Current Density').fill('0.05')
-
-    // Set soil conditions
-    await field(page, 'Soil Resistivity').fill('3000')
-    await field(page, 'Actual Groundbed Distance').fill('50')
 
     // Verify surface area is computed
     const surfaceArea = resultValue(page, 'Surface Area')
@@ -117,6 +250,8 @@ test.describe('NACE SP0169 — Full Engineering Workflow', () => {
   test('3. Current Requirement — NACE formula and badge visible', async ({ page }) => {
     // First switch to NACE and set pipeline params
     await selectDesignStandard(page, 'NACE SP0169')
+    await field(page, 'Design Soil Resistivity').fill('3000')
+    await field(page, 'Actual Nearest Structure Distance').fill('50')
     await page.waitForTimeout(200)
 
     await navigateTo(page, 'Pipeline Parameters')
@@ -125,8 +260,6 @@ test.describe('NACE SP0169 — Full Engineering Workflow', () => {
     await field(page, 'Section Length').fill('5000')
     await field(page, 'Operating Temperature').fill('50')
     await field(page, 'Base Current Density').fill('0.05')
-    await field(page, 'Soil Resistivity').fill('3000')
-    await field(page, 'Actual Groundbed Distance').fill('50')
 
     await navigateTo(page, 'Current Requirement')
     await page.waitForTimeout(200)
@@ -164,6 +297,8 @@ test.describe('NACE SP0169 — Full Engineering Workflow', () => {
 
   test('4. Groundbed Design — NACE results and badge', async ({ page }) => {
     await selectDesignStandard(page, 'NACE SP0169')
+    await field(page, 'Design Soil Resistivity').fill('3000')
+    await field(page, 'Actual Nearest Structure Distance').fill('50')
     await page.waitForTimeout(200)
 
     // Fill pipeline data and calculate
@@ -173,8 +308,6 @@ test.describe('NACE SP0169 — Full Engineering Workflow', () => {
     await field(page, 'Section Length').fill('5000')
     await field(page, 'Operating Temperature').fill('50')
     await field(page, 'Base Current Density').fill('0.05')
-    await field(page, 'Soil Resistivity').fill('3000')
-    await field(page, 'Actual Groundbed Distance').fill('50')
 
     await runFullCalculation(page)
 
@@ -200,6 +333,8 @@ test.describe('NACE SP0169 — Full Engineering Workflow', () => {
 
   test('5. TR Sizing — NACE circuit analysis and badge', async ({ page }) => {
     await selectDesignStandard(page, 'NACE SP0169')
+    await field(page, 'Design Soil Resistivity').fill('3000')
+    await field(page, 'Actual Nearest Structure Distance').fill('50')
     await page.waitForTimeout(200)
 
     await navigateTo(page, 'Pipeline Parameters')
@@ -208,8 +343,6 @@ test.describe('NACE SP0169 — Full Engineering Workflow', () => {
     await field(page, 'Section Length').fill('5000')
     await field(page, 'Operating Temperature').fill('50')
     await field(page, 'Base Current Density').fill('0.05')
-    await field(page, 'Soil Resistivity').fill('3000')
-    await field(page, 'Actual Groundbed Distance').fill('50')
 
     // Set TR ratings
     await navigateTo(page, 'TR Sizing')
@@ -248,6 +381,8 @@ test.describe('NACE SP0169 — Full Engineering Workflow', () => {
 
   test('6. Validation — NACE checks pass', async ({ page }) => {
     await selectDesignStandard(page, 'NACE SP0169')
+    await field(page, 'Design Soil Resistivity').fill('3000')
+    await field(page, 'Actual Nearest Structure Distance').fill('50')
     await page.waitForTimeout(200)
 
     await navigateTo(page, 'Pipeline Parameters')
@@ -256,8 +391,6 @@ test.describe('NACE SP0169 — Full Engineering Workflow', () => {
     await field(page, 'Section Length').fill('5000')
     await field(page, 'Operating Temperature').fill('50')
     await field(page, 'Base Current Density').fill('0.05')
-    await field(page, 'Soil Resistivity').fill('3000')
-    await field(page, 'Actual Groundbed Distance').fill('50')
 
     await navigateTo(page, 'TR Sizing')
     await page.waitForTimeout(200)
@@ -282,6 +415,8 @@ test.describe('NACE SP0169 — Full Engineering Workflow', () => {
 
   test('7. Summary Report — NACE badge and export buttons', async ({ page }) => {
     await selectDesignStandard(page, 'NACE SP0169')
+    await field(page, 'Design Soil Resistivity').fill('3000')
+    await field(page, 'Actual Nearest Structure Distance').fill('50')
     await page.waitForTimeout(200)
 
     await navigateTo(page, 'Pipeline Parameters')
@@ -290,8 +425,6 @@ test.describe('NACE SP0169 — Full Engineering Workflow', () => {
     await field(page, 'Section Length').fill('5000')
     await field(page, 'Operating Temperature').fill('50')
     await field(page, 'Base Current Density').fill('0.05')
-    await field(page, 'Soil Resistivity').fill('3000')
-    await field(page, 'Actual Groundbed Distance').fill('50')
 
     await navigateTo(page, 'TR Sizing')
     await page.waitForTimeout(200)
@@ -300,7 +433,7 @@ test.describe('NACE SP0169 — Full Engineering Workflow', () => {
 
     await runFullCalculation(page)
 
-    await navigateTo(page, 'Summary Report')
+    await navigateTo(page, 'Engineering Report')
     await page.waitForTimeout(300)
 
     // Verify badge on report page
@@ -319,6 +452,8 @@ test.describe('NACE SP0169 — Full Engineering Workflow', () => {
 
   test('8. BOM Generation — NACE references in BOM after approval', async ({ page }) => {
     await selectDesignStandard(page, 'NACE SP0169')
+    await field(page, 'Design Soil Resistivity').fill('3000')
+    await field(page, 'Actual Nearest Structure Distance').fill('50')
     await page.waitForTimeout(200)
 
     await navigateTo(page, 'Pipeline Parameters')
@@ -327,8 +462,6 @@ test.describe('NACE SP0169 — Full Engineering Workflow', () => {
     await field(page, 'Section Length').fill('5000')
     await field(page, 'Operating Temperature').fill('50')
     await field(page, 'Base Current Density').fill('0.05')
-    await field(page, 'Soil Resistivity').fill('3000')
-    await field(page, 'Actual Groundbed Distance').fill('50')
 
     await navigateTo(page, 'TR Sizing')
     await page.waitForTimeout(200)
@@ -374,6 +507,6 @@ test.describe('NACE SP0169 — Full Engineering Workflow', () => {
     await checkBadgeOnPage('Validation')
     await checkBadgeOnPage('Design Optimizer')
     await checkBadgeOnPage('Bill of Materials')
-    await checkBadgeOnPage('Summary Report')
+    await checkBadgeOnPage('Engineering Report')
   })
 })
