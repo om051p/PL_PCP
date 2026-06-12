@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom'
 import { useProjectStore } from '../store/projectStore.js'
 import { StatusBadge } from '../components/ui.jsx'
 import { getActiveStandard } from '../constants/index.js'
+import { PipelineOverviewCanvas } from '../visualizations/index.js'
 import {
   Plus,
   Copy,
@@ -192,6 +193,7 @@ export default function PageDashboard() {
 
   const activeProjects = projects.filter((p) => !p.archived)
   const archivedProjects = projects.filter((p) => p.archived)
+  const activeProject = projects.find((p) => p.id === activeProjectId) || null
 
   const handleNew = () => {
     createProject({
@@ -227,25 +229,42 @@ export default function PageDashboard() {
           </button>
         </div>
       ) : (
-        <div className="dashboard-grid">
-          {activeProjects
-            .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
-            .map((p) => (
-              <ProjectCard
-                key={p.id}
-                project={p}
-                isActive={p.id === activeProjectId}
-                onSwitch={switchProject}
-                onDuplicate={duplicateProject}
-                onArchive={archiveProject}
-                onUnarchive={unarchiveProject}
-                onDelete={(id) => {
-                  if (projects.length <= 1) return
-                  deleteProject(id)
-                }}
-              />
-            ))}
-        </div>
+        <>
+          {activeProject && activeProject.stations && activeProject.stations.length > 0 && (
+            <section className="dashboard-pipeline-section" aria-labelledby="pipeline-overview-heading">
+              <div className="dashboard-section-header">
+                <h2 id="pipeline-overview-heading" style={{ fontSize: 14, fontWeight: 600, margin: 0 }}>
+                  Active Project — Pipeline Overview
+                </h2>
+                <div style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>
+                  {activeProject.projectName} · {activeProject.stations.length} station
+                  {activeProject.stations.length !== 1 ? 's' : ''}
+                </div>
+              </div>
+              <PipelineOverviewCanvas stations={activeProject.stations} />
+            </section>
+          )}
+
+          <div className="dashboard-grid">
+            {activeProjects
+              .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
+              .map((p) => (
+                <ProjectCard
+                  key={p.id}
+                  project={p}
+                  isActive={p.id === activeProjectId}
+                  onSwitch={switchProject}
+                  onDuplicate={duplicateProject}
+                  onArchive={archiveProject}
+                  onUnarchive={unarchiveProject}
+                  onDelete={(id) => {
+                    if (projects.length <= 1) return
+                    deleteProject(id)
+                  }}
+                />
+              ))}
+          </div>
+        </>
       )}
 
       {archivedProjects.length > 0 && (
