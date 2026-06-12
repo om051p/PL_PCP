@@ -2,3 +2,5 @@
 .vercel
 # Graphify AST cache (auto-regenerated on next graphify run; tracked files in graphify-out/cache/ast/ remain)
 **/graphify-out/cache/ast/*.json
+# Playwright / e2e smoke evidence (artifacts, not source)
+**/smoke-evidence/
