@@ -2324,3 +2324,48 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+/* ─── Motion Design System (Phase C / C0) ────────────────────────────────── */
+
+/* Sidebar active indicator — the motion.span with layoutId="sidebar-active-indicator"
+   gets this style; it slides between active nav items via Framer Motion's
+   shared-layout animation. */
+.nav-item {
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-active-indicator {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.12);
+  border-left: 3px solid var(--accent);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.nav-item > *:not(.nav-active-indicator) {
+  position: relative;
+  z-index: 1;
+}
+
+/* Smooth color/background transitions on the sidebar (paired with motion.span
+   layout animation; harmless when motion is disabled). */
+.nav-item {
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+/* Respect user-level reduced-motion preference. Disable all transitions,
+   animations, and Framer Motion visual effects. The MotionConfig wrapper
+   in App.jsx with reducedMotion="user" already handles JS-driven motion;
+   this handles CSS-driven motion. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

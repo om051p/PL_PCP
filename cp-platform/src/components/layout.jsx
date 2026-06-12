@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
+import { motion } from 'framer-motion'
 import { useProjectStore } from '../store/projectStore.js'
 import { useAuthStore } from '../store/authStore.js'
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
@@ -518,14 +519,25 @@ export function Sidebar({ collapsed, onToggle }) {
                     className={({ isActive }) => `nav-item ${isActive ? 'nav-item--active' : ''}`}
                     title={collapsed ? item.label : undefined}
                   >
-                    <Icon size={16} className="nav-icon" />
-                    {!collapsed && <span className="nav-label">{item.label}</span>}
-                    {!collapsed && getNavItemStatus(item.id)}
-                    {!collapsed && item.badge && failCount > 0 && (
-                      <span className="nav-badge nav-badge--fail" style={{ marginLeft: 6 }}>{failCount}</span>
-                    )}
-                    {!collapsed && item.badge && failCount === 0 && (
-                      <span className="nav-badge nav-badge--pass" style={{ marginLeft: 6 }}>✓</span>
+                    {({ isActive }) => (
+                      <>
+                        {isActive && (
+                          <motion.span
+                            layoutId="sidebar-active-indicator"
+                            className="nav-active-indicator"
+                            transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                          />
+                        )}
+                        <Icon size={16} className="nav-icon" />
+                        {!collapsed && <span className="nav-label">{item.label}</span>}
+                        {!collapsed && getNavItemStatus(item.id)}
+                        {!collapsed && item.badge && failCount > 0 && (
+                          <span className="nav-badge nav-badge--fail" style={{ marginLeft: 6 }}>{failCount}</span>
+                        )}
+                        {!collapsed && item.badge && failCount === 0 && (
+                          <span className="nav-badge nav-badge--pass" style={{ marginLeft: 6 }}>✓</span>
+                        )}
+                      </>
                     )}
                   </NavLink>
                 )
