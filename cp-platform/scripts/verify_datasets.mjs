@@ -86,7 +86,8 @@ function handDesignLife(N, W, C, I) {
 }
 
 function handTRCircuit(Rg, Rcable, backEMF, Rs, trRatedCurrent) {
-  const R_emf = trRatedCurrent > 0 ? (2 * backEMF) / trRatedCurrent : 0
+  // SAES-X-600 §5.2.5: R_emf = V_backEMF / I_rated
+  const R_emf = trRatedCurrent > 0 ? backEMF / trRatedCurrent : 0
   const R_T = Rg + Rcable + R_emf + Rs
   const V_min = R_T * trRatedCurrent + backEMF
   return { backEMFResOhm: R_emf, totalCircuitResOhm: R_T, minTRVoltage: V_min }

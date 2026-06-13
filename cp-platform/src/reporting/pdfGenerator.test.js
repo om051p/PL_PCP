@@ -100,7 +100,7 @@ const baseStation = {
     posMainCableResOhm: 0.1464,
     negMainCableResOhm: 0.0146,
     totalCableResOhm: 0.2004,
-    backEMFResistanceOhm: 0.0642,
+    backEMFResistanceOhm: 0.02,
     totalCircuitResistanceOhm: 1.0774,
     minTRVoltage: 69.13,
     maxCircuitRes70pct: 1.142,

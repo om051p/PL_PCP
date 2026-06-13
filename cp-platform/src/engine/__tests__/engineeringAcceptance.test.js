@@ -65,9 +65,9 @@ const TIEData = {
     posMainCableResOhm: 0.1186,
     negMainCableResOhm: 0.1291,
     totalCableResOhm: 0.2553,
-    backEMFResistanceOhm: 0.16,
-    totalCircuitResistanceOhm: 0.5839,
-    minTRVoltage: 16.6,
+    backEMFResistanceOhm: 0.08,
+    totalCircuitResistanceOhm: 0.5039,
+    minTRVoltage: 14.6,
     designLifeYears: 26.25,
   },
 }
@@ -384,16 +384,16 @@ describe('Engineering Acceptance — Formula Correctness', () => {
     expect(parallel).toBeCloseTo(single / 2, 4)
   })
 
-  // TR Circuit: R_T = R_G + R_c + R_emf + R_s
+  // TR Circuit: R_T = R_G + R_c + R_emf + R_s  (SAES-X-600 §5.2.5: R_emf = V_emf/I)
   it('total circuit resistance = sum of all components', () => {
     const result = calcTRCircuit(0.1135, 0.2553, 2, 0.055, 30, 25)
-    const expected = 0.1135 + 0.2553 + (2 * 2) / 25 + 0.055
+    const expected = 0.1135 + 0.2553 + 2 / 25 + 0.055
     expect(result.totalCircuitResOhm).toBeCloseTo(expected, 10)
   })
 
   it('min TR voltage = R_T × I_rated + V_emf', () => {
     const result = calcTRCircuit(0.1135, 0.2553, 2, 0.055, 30, 25)
-    const expected = (0.1135 + 0.2553 + (2 * 2) / 25 + 0.055) * 25 + 2
+    const expected = (0.1135 + 0.2553 + 2 / 25 + 0.055) * 25 + 2
     expect(result.minTRVoltage).toBeCloseTo(expected, 10)
   })
 

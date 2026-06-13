@@ -350,7 +350,11 @@ export function calcTRCircuit(
     acInputPhase = 3,
   } = circuitConfig
 
-  const R_emf = trRatedCurrent > 0 ? (2 * backEMFVolts) / trRatedCurrent : 0
+  // SAES-X-600 §5.2.5: effective back-EMF resistance is the total counter-EMF
+  // (anode bed + structure) modelled as an equivalent series resistance.
+  // The tr.backEMF value already represents the total back EMF (anode + structure).
+  // R_emf = V_backEMF / I_rated  (no "2x" factor — that was the pre-fix bug)
+  const R_emf = trRatedCurrent > 0 ? backEMFVolts / trRatedCurrent : 0
   const R_T = groundbedResOhm + totalCableResOhm + R_emf + structureResOhm
   const V_min = R_T * trRatedCurrent + backEMFVolts
   const R_max_70 = circuitResOperating * (trRatedVoltage / trRatedCurrent)

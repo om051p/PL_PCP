@@ -422,7 +422,7 @@ export function generateEngineeringReport(project) {
         ['TR Rated Voltage', `${station.tr.ratedVoltage} V DC`],
         ['TR Rated Current', `${station.tr.ratedCurrent} A DC`],
         ['Back EMF', `${station.tr.backEMF} V`],
-        ['Back EMF Resistance R_emf', `${f4(r.backEMFResistanceOhm)} Ω`, 'R_emf = 2×V_emf/I'],
+        ['Back EMF Resistance R_emf', `${f4(r.backEMFResistanceOhm)} Ω`, 'R_emf = V_emf/I'],
         ['Structure Resistance R_s', `${station.tr.structureResistance} Ω`],
         ['Groundbed Resistance R_G', `${f4(r.groundbedResistanceOhm)} Ω`],
         ['Total Cable Resistance R_c', `${f4(r.totalCableResOhm)} Ω`],

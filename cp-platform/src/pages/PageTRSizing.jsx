@@ -16,6 +16,10 @@ import {
   Grid2,
   ResultKPICard,
 } from '../components/ui.jsx'
+import { FormulaCard, FormulaCardGroup } from '../components/FormulaCard.jsx'
+import { CalculationBreakdown } from '../components/CalculationBreakdown.jsx'
+import { FormulaDrawer } from '../components/FormulaDrawer.jsx'
+import { getActiveStandard, THRESHOLDS } from '../constants/index.js'
 import { Cpu, BarChart3, AlertTriangle } from 'lucide-react'
 
 export function PageTRSizing() {
@@ -26,6 +30,89 @@ export function PageTRSizing() {
   if (!station) return null
   const r = station.lastCalcResult
   const tr = station.tr
+
+  const std = getActiveStandard(project)
+  const ts = std?.trSizing || {}
+
+  // TR circuit formulas
+  const circuitResFormula = 'R_T = R_G + R_c + R_emf + R_s'
+  const minVoltageFormula = 'V_min = R_T × I_rated + V_emf'
+  const backEMFFormula = 'R_emf = V_emf / I_rated (SAES-X-600 §5.2.5)'
+  const dcPowerFormula = 'P_dc = V_rated × I_rated'
+  const acInputFormula = 'S_ac = P_dc / (η_tr × η_rect × 1000)'
+
+  const trFormulas = [
+    {
+      name: 'Total Circuit Resistance',
+      equation: circuitResFormula,
+      standardRef: 'SAES-X-400 / IEEE 80',
+      assumptions: [
+        'All resistances in series',
+        'Back EMF converted to equivalent resistance',
+        'Structure resistance from design basis',
+      ],
+      units: ['R_G: Ω', 'R_c: Ω', 'R_emf: Ω', 'R_s: Ω'],
+      variables: ['R_G (groundbed resistance)', 'R_c (cable resistance)', 'R_emf (back EMF equivalent)', 'R_s (structure resistance)'],
+    },
+    {
+      name: 'Minimum TR Voltage',
+      equation: minVoltageFormula,
+      standardRef: 'Ohm Law / SAES-X-400',
+      assumptions: [
+        'DC circuit analysis',
+        'Steady-state operating conditions',
+        'Back EMF included as offset',
+      ],
+      units: ['R_T: Ω', 'I_rated: A', 'V_emf: V'],
+      variables: ['R_T (total circuit resistance)', 'I_rated (rated DC current)', 'V_emf (back EMF voltage)'],
+    },
+    {
+      name: 'Back EMF Equivalent Resistance',
+      equation: backEMFFormula,
+      standardRef: 'SAES-X-400 / IEEE 80',
+      assumptions: [
+        'Factor of 2 accounts for full-wave rectification',
+        'Back EMF opposes forward current flow',
+      ],
+      units: ['V_emf: V', 'I_rated: A', 'R_emf: Ω'],
+      variables: ['V_emf (back EMF voltage)', 'I_rated (rated DC current)'],
+    },
+    {
+      name: 'DC Power Rating',
+      equation: dcPowerFormula,
+      standardRef: 'IEEE 80 / 17-SAMSS-003',
+      assumptions: [
+        'Rated voltage and current from TR nameplate',
+        'DC output power at rated conditions',
+      ],
+      units: ['V_rated: V DC', 'I_rated: A DC', 'P_dc: W'],
+      variables: ['V_rated (rated DC voltage)', 'I_rated (rated DC current)'],
+    },
+    {
+      name: 'AC Input kVA',
+      equation: acInputFormula,
+      standardRef: 'IEEE 80 / 17-SAMSS-003',
+      assumptions: [
+        'TR efficiency typically 80%',
+        'Rectifier efficiency typically 80%',
+        'Combined efficiency: η_tr × η_rect',
+      ],
+      units: ['P_dc: W', 'η_tr: unitless', 'η_rect: unitless', 'S_ac: kVA'],
+      variables: ['P_dc (DC output power)', 'η_tr (TR efficiency)', 'η_rect (rectifier efficiency)'],
+    },
+  ]
+
+  // Build TR circuit breakdown steps
+  const trBreakdownSteps = []
+  if (r) {
+    trBreakdownSteps.push({ label: 'Groundbed Resistance', symbol: 'R_G', value: r.groundbedResistanceOhm.toFixed(4), unit: 'Ω', source: 'Groundbed Calculation' })
+    trBreakdownSteps.push({ label: 'Total Cable Resistance', symbol: 'R_c', value: r.totalCableResOhm.toFixed(4), unit: 'Ω', source: 'Cable Calculation' })
+    trBreakdownSteps.push({ label: 'Back EMF Resistance', symbol: 'R_emf', value: r.backEMFResistanceOhm.toFixed(4), unit: 'Ω', source: 'Calc: V_emf/I_rated (SAES-X-600 §5.2.5)' })
+    trBreakdownSteps.push({ label: 'Structure Resistance', symbol: 'R_s', value: (project?.designBasis?.structureResistanceOhm || 0).toFixed(4), unit: 'Ω', source: 'Design Basis' })
+    trBreakdownSteps.push({ label: 'TR Rated Current', symbol: 'I_rated', value: tr.ratedCurrent, unit: 'A DC', source: 'TR Configuration' })
+    trBreakdownSteps.push({ label: 'TR Rated Voltage', symbol: 'V_rated', value: tr.ratedVoltage, unit: 'V DC', source: 'TR Configuration' })
+    trBreakdownSteps.push({ label: 'Back EMF Voltage', symbol: 'V_emf', value: project?.designBasis?.backEmfV || tr.backEMF, unit: 'V', source: 'Design Basis' })
+  }
 
   const isStale = station.status === 'needs_recalculation' || (!r && station.pipelineSegments.length > 0)
 
@@ -50,9 +137,11 @@ export function PageTRSizing() {
               value={tr.ratedVoltage}
               unit="V DC"
               min={0}
+              max={100}
+              hint="SAES-X-500 §6.8.4: Max 100V DC"
               onChange={(v) =>
                 updateStation(station.id, (s) => {
-                  s.tr.ratedVoltage = v
+                  s.tr.ratedVoltage = Math.min(100, v)
                 })
               }
             />
@@ -137,7 +226,7 @@ export function PageTRSizing() {
                 symbol="R_emf"
                 value={r.backEMFResistanceOhm.toFixed(4)}
                 unit="Ω"
-                formula="R_emf = 2 × V_emf / I_rated"
+                formula="R_emf = V_emf / I_rated (SAES-X-600 §5.2.5)"
               />
               <ResultRow
                 label="Structure Resistance"

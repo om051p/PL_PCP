@@ -108,7 +108,7 @@ function makeProject(opts = {}) {
           posMainCableResOhm: 0.1186,
           negMainCableResOhm: 0.08,
           totalCableResOhm: 0.2553,
-          backEMFResistanceOhm: 0.05,
+          backEMFResistanceOhm: 0.02,
           totalCircuitResistanceOhm: 0.5839,
           minTRVoltage: 16.6,
           maxCircuitRes70pct: 0.4,

@@ -144,7 +144,7 @@ export const ANODE_SPECS = {
     consumptionRate: 0.45, // kg / A·year
     lengthM: 2.13,
     diameterM: 0.064,
-    maxCurrentDensity: 10.8, // A/m²
+    maxCurrentDensity: 7.0, // A/m² (SAES-X-400 Table 5; includes utilization factor and end-cap shortening)
     material: 'High-Silicon Cast Iron (14.5% Si)',
   },
   HSCI_TA2: {
@@ -157,21 +157,34 @@ export const ANODE_SPECS = {
     consumptionRate: 0.45,
     lengthM: 1.52,
     diameterM: 0.064,
-    maxCurrentDensity: 10.8,
+    maxCurrentDensity: 7.0, // A/m² (SAES-X-400 Table 5; includes utilization factor and end-cap shortening)
     material: 'High-Silicon Cast Iron (14.5% Si)',
   },
-  MMO_TUBULAR: {
-    id: 'MMO_TUBULAR',
+  MMO_TUBULAR_FRESH: {
+    id: 'MMO_TUBULAR_FRESH',
     type: 'MMO',
-    label: 'Mixed Metal Oxide Tubular',
-    standard: 'NACE TM0108',
+    label: 'Mixed Metal Oxide Tubular (Fresh Water)',
+    standard: 'SAES-X-400',
     weightKg: 8.5,
     outputAmps: 15.0,
     consumptionRate: 0.001, // Virtually non-consumable
     lengthM: 1.0,
     diameterM: 0.025,
-    maxCurrentDensity: 200,
-    material: 'Ti/Ir-Ta MMO',
+    maxCurrentDensity: 7.0, // A/m² (SAES-X-400 Table 5 — fresh water)
+    material: 'Ti/Ir-Ta MMO (fresh water)',
+  },
+  MMO_TUBULAR_SALT: {
+    id: 'MMO_TUBULAR_SALT',
+    type: 'MMO',
+    label: 'Mixed Metal Oxide Tubular (Salt Water)',
+    standard: 'SAES-X-400',
+    weightKg: 8.5,
+    outputAmps: 15.0,
+    consumptionRate: 0.001, // Virtually non-consumable
+    lengthM: 1.0,
+    diameterM: 0.025,
+    maxCurrentDensity: 35.0, // A/m² (SAES-X-400 Table 5 — salt water)
+    material: 'Ti/Ir-Ta MMO (salt water)',
   },
   ZINC_RIBBON: {
     id: 'ZINC_RIBBON',
