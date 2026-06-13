@@ -44,8 +44,9 @@ describe('<ProjectOverviewMap />', () => {
   it('invokes onProjectClick when a card is clicked', () => {
     const onClick = vi.fn()
     render(<ProjectOverviewMap projects={PROJECTS} onProjectClick={onClick} />)
-    const card = screen.getByTestId('project-card-p1')
-    fireEvent.click(card)
+    // Use getAllByTestId because React StrictMode may double-render in test env
+    const cards = screen.getAllByTestId('project-card-p1')
+    fireEvent.click(cards[0])
     expect(onClick).toHaveBeenCalled()
     const call = onClick.mock.calls[0][0]
     expect(call.id).toBe('p1')
