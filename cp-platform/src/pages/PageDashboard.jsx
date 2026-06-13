@@ -15,6 +15,7 @@ import { PipelineOverviewCanvas } from '../visualizations/index.js'
 import { KPITrendWidget, extractTrendData } from '../visualizations/KPITrendWidget.jsx'
 import { ProjectOverviewMap } from '../visualizations/ProjectOverviewMap.jsx'
 import { subscribeToActivity } from '../services/activityLogger.js'
+import { DashboardCommandCenter } from '../components/DashboardCommandCenter.jsx'
 import {
   Plus,
   Copy,
@@ -261,6 +262,11 @@ export default function PageDashboard() {
         </div>
       ) : (
         <>
+          {/* Phase 6: Dashboard 3.0 — Engineering Command Center */}
+          {activeProject?.dashboardV3Enabled && (
+            <DashboardCommandCenter project={activeProject} />
+          )}
+
           {/* KPI Top Row */}
           {activeProject && (
             <div className="kpi-row">
