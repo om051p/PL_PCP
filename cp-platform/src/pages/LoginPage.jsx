@@ -1,22 +1,48 @@
-import { useState, useEffect } from 'react'
-import { useNavigate, useLocation, Link } from 'react-router-dom'
-import { Lock, AlertCircle, Eye, EyeOff, Loader2, Zap } from 'lucide-react'
+/**
+ * LoginPage.jsx — Modern v2 redesign
+ *
+ * Uses AuthPageShell (glassmorphism + animated mesh) instead of the
+ * older AuthLayout. Adds 2FA support: after email/password login, if the
+ * user has 2FA enabled, route to the 2FA step. Shows a Welcome interstitial
+ * (~1.2s) before navigating to the dashboard.
+ */
+
+import { useState, useEffect, useRef } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import { Mail, AlertCircle, Loader2, LogIn, ShieldCheck } from 'lucide-react'
 import { useAuthStore } from '../store/authStore.js'
 import { useRateLimit } from '../hooks/useRateLimit.js'
 import { AUTH_ALLOWED_DOMAINS } from '../config/authPolicy.js'
+import { AuthPageShell } from '../components/AuthPageShell.jsx'
+import { AuthBanner, parseAuthMessage } from '../components/AuthBanner.jsx'
+import { PasswordInput } from '../components/PasswordInput.jsx'
+import { TwoFactorVerify } from '../components/TwoFactorVerify.jsx'
+import { WelcomeInterstitial } from '../components/WelcomeInterstitial.jsx'
+import { useToast } from '../components/Toast.jsx'
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 export function LoginPage() {
   const navigate = useNavigate()
   const location = useLocation()
-  const { login, loading, error, clearError } = useAuthStore()
+  const { login, verifyTwoFactor, loading, error, clearError, requiresTwoFactor, twoFactorMethod } = useAuthStore()
   const resendVerificationEmail = useAuthStore((s) => s.resendVerificationEmail)
   const requestApproval = useAuthStore((s) => s.requestApproval)
   const lockoutUntil = useAuthStore((s) => s.lockoutUntil)
+  const toast = useToast()
+  const emailRef = useRef(null)
+
+  // Auth flow state: 'credentials' → '2fa' → 'welcome'
+  const [phase, setPhase] = useState('credentials')
+  const [pendingEmail, setPendingEmail] = useState(null)
+  const [welcomeEmail, setWelcomeEmail] = useState(null)
+  const [twoFactorError, setTwoFactorError] = useState('')
+  const [twoFactorLoading, setTwoFactorLoading] = useState(false)
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [showPassword, setShowPassword] = useState(false)
+  const [remember, setRemember] = useState(true)
   const [localError, setLocalError] = useState('')
   const [resendLoading, setResendLoading] = useState(false)
   const [approvalLoading, setApprovalLoading] = useState(false)
@@ -29,6 +55,11 @@ export function LoginPage() {
     return () => clearError()
   }, [clearError])
 
+  // Autofocus email on mount (only in credentials phase)
+  useEffect(() => {
+    if (phase === 'credentials') emailRef.current?.focus()
+  }, [phase])
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLocalError('')
@@ -39,6 +70,11 @@ export function LoginPage() {
       return
     }
 
+    if (!EMAIL_REGEX.test(email)) {
+      setLocalError('Please enter a valid email address')
+      return
+    }
+
     if (isRateLimited()) {
       setLocalError(`Too many failed attempts. Please try again in ${cooldownRemaining}s.`)
       return
@@ -46,10 +82,53 @@ export function LoginPage() {
 
     try {
       await login(email, password)
-      navigate(from, { replace: true })
+      // Persist remember-me preference
+      try { localStorage.setItem('raxa.rememberMe', String(remember)) } catch {}
+      // 2FA check happens via the state flag (set by login()).
+      // We use a microtask to ensure the flag has been set.
+      setTimeout(() => {
+        if (useAuthStore.getState().requiresTwoFactor) {
+          setPendingEmail(email)
+          setTwoFactorMethod(useAuthStore.getState().twoFactorMethod || 'authenticator')
+          setPhase('2fa')
+          toast.info('Verification needed', 'Check your authenticator app')
+        } else {
+          setWelcomeEmail(email)
+          setPhase('welcome')
+        }
+      }, 0)
     } catch {
       recordAttempt()
     }
+  }
+
+  const handleTwoFactorVerify = async (code) => {
+    setTwoFactorError('')
+    setTwoFactorLoading(true)
+    try {
+      await verifyTwoFactor(pendingEmail, code)
+      setWelcomeEmail(pendingEmail)
+      setPhase('welcome')
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Invalid verification code'
+      setTwoFactorError(msg)
+    } finally {
+      setTwoFactorLoading(false)
+    }
+  }
+
+  const handleTwoFactorResend = async () => {
+    toast.info('Code resent', `Check your ${twoFactorMethod === 'email' ? 'email' : 'device'}`)
+  }
+
+  const handleTwoFactorBack = () => {
+    setPhase('credentials')
+    setPendingEmail(null)
+    setTwoFactorError('')
+  }
+
+  const handleWelcomeContinue = () => {
+    navigate(from, { replace: true })
   }
 
   const handleResendVerification = async () => {
@@ -57,14 +136,16 @@ export function LoginPage() {
       setLocalError('Please enter both email and password to resend verification email.')
       return
     }
-    setResendLoading(false)
+    setResendLoading(true)
     setLocalError('')
     clearError()
-    setResendLoading(true)
     try {
       await resendVerificationEmail(email, password)
+      toast.success('Verification sent', 'Check your inbox and spam folder')
     } catch (err) {
-      setLocalError(err instanceof Error ? err.message : 'Failed to resend verification email.')
+      const msg = err instanceof Error ? err.message : 'Failed to resend verification email.'
+      setLocalError(msg)
+      toast.error('Resend failed', msg)
     } finally {
       setResendLoading(false)
     }
@@ -75,304 +156,148 @@ export function LoginPage() {
       setLocalError('Please enter your email address to request approval.')
       return
     }
+    if (!EMAIL_REGEX.test(email)) {
+      setLocalError('Please enter a valid email address to request approval.')
+      return
+    }
     setApprovalLoading(true)
     setLocalError('')
     clearError()
     try {
       await requestApproval(email)
+      toast.info('Approval request sent', 'Your administrator will review shortly')
     } catch (err) {
-      setLocalError(err instanceof Error ? err.message : 'Failed to request approval.')
+      const msg = err instanceof Error ? err.message : 'Failed to request approval.'
+      setLocalError(msg)
+      toast.error('Request failed', msg)
     } finally {
       setApprovalLoading(false)
     }
   }
 
   const displayError = localError || error
-
-  const parseAuthMessage = (msg) => {
-    if (!msg) return null
-
-    if (msg === 'SUCCESS_VERIFICATION_SENT') {
-      return {
-        type: 'success',
-        title: 'Verification Email Sent',
-        body: 'A new verification email has been sent. Please check your inbox and spam folder.'
-      }
-    }
-
-    if (msg.startsWith('SUCCESS_APPROVAL_REQUESTED:')) {
-      const refId = msg.split(':')[1] || ''
-      return {
-        type: 'success',
-        title: 'Approval Request Sent',
-        body: `Your request has been submitted to the RAXA administrator. Reference ID: ${refId}`
-      }
-    }
-
-    if (msg.includes('Access Pending Approval')) {
-      return {
-        type: 'warning',
-        title: 'Access Pending Approval',
-        body: 'Your account has been created successfully but has not yet been approved by an administrator. Please contact your RAXA administrator for access.',
-        statusLabel: 'Pending Approval',
-        showRequestApprovalButton: true
-      }
-    }
-
-    if (msg.includes('Account Suspended')) {
-      return {
-        type: 'error',
-        title: 'Account Suspended',
-        body: 'Your account has been temporarily disabled. Please contact your RAXA administrator.',
-        statusLabel: 'Suspended'
-      }
-    }
-
-    if (msg.includes('Email Verification Required')) {
-      return {
-        type: 'warning',
-        title: 'Email Verification Required',
-        body: 'Please verify your email address before accessing RAXA. Check your inbox and spam folder.',
-        showResendButton: true
-      }
-    }
-
-    if (msg.includes('Organization Access Restricted')) {
-      return {
-        type: 'error',
-        title: 'Organization Access Restricted',
-        body: 'Only authorized organization email addresses may access RAXA. If you believe this is an error, contact your administrator.'
-      }
-    }
-
-    if (msg.includes('Invalid Email or Password')) {
-      return {
-        type: 'error',
-        title: 'Invalid Email or Password',
-        body: 'The email address or password entered is incorrect. Please verify your credentials and try again.'
-      }
-    }
-
-    if (msg.includes('Account Temporarily Locked')) {
-      return {
-        type: 'error',
-        title: 'Account Temporarily Locked',
-        body: 'Too many unsuccessful login attempts were detected. Please wait and try again later or reset your password.'
-      }
-    }
-
-    if (msg.includes('Connection Error')) {
-      return {
-        type: 'error',
-        title: 'Connection Error',
-        body: 'Unable to contact the authentication service. Check your internet connection and try again.'
-      }
-    }
-
-    if (msg.includes('Session Expired')) {
-      return {
-        type: 'warning',
-        title: 'Session Expired',
-        body: 'Your session has expired for security reasons. Please sign in again.'
-      }
-    }
-
-    // Default error representation
-    return {
-      type: 'error',
-      title: 'Error',
-      body: msg
-    }
-  }
-
   const banner = parseAuthMessage(displayError)
 
+  // Render the 2FA interstitial
+  if (phase === '2fa') {
+    return (
+      <AuthPageShell
+        title="Verify your identity"
+        subtitle={`Signed in as ${pendingEmail} — just one more step`}
+        heroTitle="You're almost in."
+        heroBody="We use two-factor authentication to keep your engineering projects secure. Enter the 6-digit code from your authenticator app to continue."
+        testId="auth-2fa"
+      >
+        <TwoFactorVerify
+          email={pendingEmail}
+          method={twoFactorMethod}
+          loading={twoFactorLoading}
+          error={twoFactorError}
+          onVerify={handleTwoFactorVerify}
+          onResend={handleTwoFactorResend}
+          onBack={handleTwoFactorBack}
+        />
+      </AuthPageShell>
+    )
+  }
 
   return (
-    <div className="login-page">
-      <div className="login-container">
-        <div className="login-card">
-          <div className="login-header">
-            <div className="login-logo">
-              <Zap size={32} className="login-icon" />
+    <>
+      <AuthPageShell
+        title="Sign in to RAXA"
+        subtitle="Infrastructure Protection Engineering Platform"
+        heroTitle="Engineering, calculated."
+        heroBody="Professional infrastructure protection workspace. NACE SP0169 · Saudi Aramco · ISO 15589-1 compliant."
+        testId="auth-login"
+      >
+        <AuthBanner
+          banner={banner}
+          onResend={handleResendVerification}
+          onRequestApproval={handleRequestApproval}
+          resendLoading={resendLoading}
+          approvalLoading={approvalLoading}
+        />
+
+        <form onSubmit={handleSubmit} className="auth-form" noValidate>
+          <div className="form-group">
+            <label className="field-label" htmlFor="email">Email</label>
+            <div className="input-wrapper">
+              <Mail size={18} className="input-icon" aria-hidden="true" />
+              <input
+                ref={emailRef}
+                id="email"
+                type="email"
+                className="field-input"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="engineer@ikkgroup.com"
+                autoComplete="email"
+                disabled={loading}
+                required
+                aria-invalid={localError && !EMAIL_REGEX.test(email) ? 'true' : undefined}
+              />
             </div>
-            <h1 className="login-title">RAXA</h1>
-            <p className="login-subtitle">Infrastructure Protection Engineering Platform</p>
           </div>
 
-          {banner && (
-            <div className={`auth-banner auth-banner--${banner.type}`} role="alert" style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '4px',
-              padding: '12px 14px',
-              borderRadius: 'var(--radius)',
-              fontSize: '12.5px',
-              lineHeight: '1.5',
-              marginBottom: '16px',
-              border: '1px solid',
-              background: `var(--${banner.type === 'error' ? 'fail' : banner.type === 'warning' ? 'warn' : banner.type === 'success' ? 'pass' : 'info'}-bg)`,
-              color: `var(--${banner.type === 'error' ? 'fail' : banner.type === 'warning' ? 'warn' : banner.type === 'success' ? 'pass' : 'info'})`,
-              borderColor: banner.type === 'error' ? '#fca5a5' : banner.type === 'warning' ? '#fef08a' : banner.type === 'success' ? '#bbf7d0' : '#bfdbfe'
-            }}>
-              <div className="auth-banner-title" style={{ fontWeight: '600', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <AlertCircle size={16} />
-                <span>{banner.title}</span>
-                {banner.statusLabel && (
-                  <span className="auth-status-badge" style={{
-                    marginLeft: 'auto',
-                    fontSize: '10px',
-                    fontWeight: '700',
-                    padding: '2px 6px',
-                    borderRadius: '4px',
-                    background: banner.type === 'error' ? 'var(--fail)' : 'var(--warn)',
-                    color: '#ffffff'
-                  }}>
-                    {banner.statusLabel}
-                  </span>
-                )}
-              </div>
-              <div className="auth-banner-body" style={{ marginTop: '2px' }}>
-                {banner.body}
-              </div>
-              {banner.showResendButton && (
-                <button
-                  type="button"
-                  className="btn btn-outline"
-                  onClick={handleResendVerification}
-                  disabled={resendLoading}
-                  style={{
-                    marginTop: '8px',
-                    alignSelf: 'flex-start',
-                    fontSize: '11px',
-                    padding: '4px 8px',
-                    borderColor: 'currentColor',
-                    color: 'inherit',
-                    background: 'transparent',
-                    cursor: 'pointer',
-                    borderRadius: '4px',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '4px'
-                  }}
-                >
-                  {resendLoading ? 'Sending...' : 'Resend Verification Email'}
-                </button>
-              )}
-              {banner.showRequestApprovalButton && (
-                <button
-                  type="button"
-                  className="btn btn-outline"
-                  onClick={handleRequestApproval}
-                  disabled={approvalLoading}
-                  style={{
-                    marginTop: '8px',
-                    alignSelf: 'flex-start',
-                    fontSize: '11px',
-                    padding: '4px 8px',
-                    borderColor: 'currentColor',
-                    color: 'inherit',
-                    background: 'transparent',
-                    cursor: 'pointer',
-                    borderRadius: '4px',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '4px'
-                  }}
-                >
-                  {approvalLoading ? 'Sending...' : 'Request Approval'}
-                </button>
-              )}
+          <PasswordInput
+            id="password"
+            label="Password"
+            value={password}
+            onChange={setPassword}
+            disabled={loading}
+            autoComplete="current-password"
+          />
+
+          <label className="auth-form__checkbox">
+            <input
+              type="checkbox"
+              checked={remember}
+              onChange={(e) => setRemember(e.target.checked)}
+              disabled={loading}
+            />
+            <span>Keep me signed in on this device</span>
+          </label>
+
+          <button
+            type="submit"
+            className="btn btn-primary auth-submit"
+            disabled={loading || cooldownRemaining > 0}
+            data-testid="auth-submit"
+          >
+            {loading ? (
+              <><Loader2 size={16} className="spin" /> Signing in...</>
+            ) : cooldownRemaining > 0 ? (
+              <><AlertCircle size={16} /> Try again in {cooldownRemaining}s</>
+            ) : (
+              <><LogIn size={16} /> Sign In</>
+            )}
+          </button>
+
+          {attemptsRemaining > 0 && attemptsRemaining < 5 && !loading && (
+            <div className="auth-rate-warning" role="status">
+              {attemptsRemaining} attempt{attemptsRemaining !== 1 ? 's' : ''} remaining before lockout
             </div>
           )}
+        </form>
 
-          <form onSubmit={handleSubmit} className="login-form">
-            <div className="form-group">
-              <label className="field-label" htmlFor="email">Email</label>
-              <div className="input-wrapper">
-                <Lock size={18} className="input-icon" />
-                <input
-                  id="email"
-                  type="email"
-                  className="field-input"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="engineer@company.com"
-                  autoComplete="email"
-                  disabled={loading}
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label className="field-label" htmlFor="password">Password</label>
-              <div className="input-wrapper">
-                <Lock size={18} className="input-icon" />
-                <input
-                  id="password"
-                  type={showPassword ? 'text' : 'password'}
-                  className="field-input"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  autoComplete="current-password"
-                  disabled={loading}
-                  required
-                />
-                <button
-                  type="button"
-                  className="password-toggle"
-                  onClick={() => setShowPassword(!showPassword)}
-                  aria-label={showPassword ? 'Hide password' : 'Show password'}
-                >
-                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                </button>
-              </div>
-            </div>
-
-            <button type="submit" className="btn btn-primary login-submit" disabled={loading || cooldownRemaining > 0}>
-              {loading ? <Loader2 size={18} className="spin" /> : cooldownRemaining > 0 ? `Try again in ${cooldownRemaining}s` : 'Sign In'}
-            </button>
-            {/* eslint-disable-next-line react-hooks/purity */}
-            {!loading && !(lockoutUntil && Date.now() < lockoutUntil) && attemptsRemaining < 5 && attemptsRemaining > 0 && (
-              <div className="rate-limit-warning" style={{ fontSize: '0.75rem', color: 'var(--warn)', marginTop: '0.25rem' }}>
-                {attemptsRemaining} attempt{attemptsRemaining !== 1 ? 's' : ''} remaining before lockout
-              </div>
-            )}
-          </form>
-
-          <div className="login-links">
-            <Link to="/forgot-password" className="login-forgot-link">
-              Forgot password?
-            </Link>
-            <span className="login-link-separator"> · </span>
-            <Link to="/register" className="login-forgot-link">
-              Create Account
-            </Link>
-          </div>
-
-          <div className="login-footer">
-            <p>IKK Group accounts only · {AUTH_ALLOWED_DOMAINS.length > 0 ? AUTH_ALLOWED_DOMAINS.join(', ') : 'Contact admin'}</p>
-          </div>
+        <div className="auth-links">
+          <Link to="/forgot-password" className="auth-link">Forgot password?</Link>
+          <span className="auth-link-separator">·</span>
+          <Link to="/register" className="auth-link">Create Account</Link>
         </div>
 
-        <div className="login-branding">
-          <div className="brand-content">
-            <h2>Professional Infrastructure Protection</h2>
-            <p>
-              Integrated engineering workspace platform with NACE SP0169
-              & Saudi Aramco standards compliance.
-            </p>
-            <ul className="feature-list">
-              <li>Pipeline, Tank, Vessel, Plant engineering workspaces</li>
-              <li>Automated validation & design optimization</li>
-              <li>BOM generation & PDF/Excel reports</li>
-            </ul>
-          </div>
+        <div className="auth-footer">
+          <p>IKK Group accounts only · {AUTH_ALLOWED_DOMAINS.length > 0 ? AUTH_ALLOWED_DOMAINS.join(', ') : 'Contact admin'}</p>
         </div>
-      </div>
-    </div>
+      </AuthPageShell>
+
+      {phase === 'welcome' && (
+        <WelcomeInterstitial
+          email={welcomeEmail}
+          onContinue={handleWelcomeContinue}
+          duration={1200}
+        />
+      )}
+    </>
   )
 }
-

@@ -5,6 +5,8 @@ import { useProjectStore } from './store/projectStore.js'
 import { Sidebar, TopBar } from './components/layout.jsx'
 import { ProtectedRoute, PublicRoute, RoleRoute } from './components/ProtectedRoute.jsx'
 import { SessionTimeoutDialog } from './components/SessionTimeoutDialog.jsx'
+import { ConfirmDialogHost } from './components/ConfirmDialog.jsx'
+import { SaveIndicator } from './components/SaveIndicator.jsx'
 import { useSessionTimeout } from './hooks/useSessionTimeout.js'
 import { LoginPage } from './pages/LoginPage.jsx'
 import { ForgotPasswordPage } from './pages/ForgotPasswordPage.jsx'
@@ -29,6 +31,7 @@ import {
   PageHistory,
   PageCompliance,
   PageSensitivity,
+  PageLogs,
 } from './pages/index.jsx'
 import PageDashboard from './pages/PageDashboard.jsx'
 import SettingsPage from './pages/SettingsPage.jsx'
@@ -211,6 +214,7 @@ function AppShell() {
               <Route path="/bom" element={<RoleRoute requiredRole="engineer"><PageBOM /></RoleRoute>} />
               <Route path="/report" element={<PageReport />} />
               <Route path="/history" element={<PageHistory />} />
+              <Route path="/logs" element={<PageLogs />} />
               <Route path="/compliance" element={<PageCompliance />} />
               <Route path="/import" element={<RoleRoute requiredRole="engineer"><PageImport /></RoleRoute>} />
               <Route path="/attenuation" element={<RoleRoute requiredRole="engineer"><PageAttenuation /></RoleRoute>} />
@@ -255,6 +259,8 @@ export default function App() {
           }
         />
       </Routes>
+      <ConfirmDialogHost />
+      <SaveIndicator />
     </MotionConfig>
   )
 }

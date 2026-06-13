@@ -1,6 +1,8 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useAuthStore } from '../store/authStore.js'
 import { USER_ROLES } from '../config/authPolicy.js'
+import { useToast } from '../components/Toast.jsx'
+import { useConfirm } from '../components/ConfirmDialog.jsx'
 import { Users, Shield, AlertCircle, Trash2, Check, X, ShieldAlert, Key, UserCheck, UserMinus, Lock, AlertTriangle, ShieldCheck, List, Search, Activity, Clock, UserX } from 'lucide-react'
 
 function RoleBadge({ role }) {
@@ -80,13 +82,74 @@ export default function UserManagementPage() {
   const today = new Date().toDateString()
   const failedLoginsToday = auditLogs.filter((l) => l.action === 'LOGIN_FAILURE' && new Date(l.timestamp).toDateString() === today).length
 
-  const handleApprove = async (u) => { try { await approveUser(u.uid, u.email); setFormSuccess('User approved.'); setTimeout(() => setFormSuccess(''), 3000) } catch (e) { setFormError(e.message) } }
-  const handleReject = async (u) => { if (window.confirm('Reject ' + u.email + '?')) { try { await rejectUser(u.uid, u.email); setFormSuccess('User rejected.') } catch (e) { setFormError(e.message) } } }
-  const handleRoleChange = async (u, r) => { try { await updateUserRole(u.uid, u.email, r) } catch (e) { alert(e.message) } }
-  const handleSuspend = async (u) => { if (window.confirm('Suspend ' + u.email + '?')) { try { await suspendUser(u.uid, u.email) } catch (e) { alert(e.message) } } }
-  const handleDisable = async (u) => { if (window.confirm('Disable ' + u.email + '?')) { try { await disableUser(u.uid, u.email) } catch (e) { alert(e.message) } } }
-  const handleEnable = async (u) => { try { await enableUser(u.uid, u.email) } catch (e) { alert(e.message) } }
-  const handleResetAccess = async (u) => { try { await resetUserAccess(u.uid, u.email); alert('Password reset sent to ' + u.email) } catch (e) { alert(e.message) } }
+  const toast = useToast()
+  const askConfirm = useConfirm()
+
+  const handleApprove = async (u) => {
+    try {
+      await approveUser(u.uid, u.email)
+      toast.success('User approved', `${u.email} now has active access`)
+    } catch (e) { toast.error('Approval failed', e.message) }
+  }
+  const handleReject = async (u) => {
+    const ok = await askConfirm({
+      title: `Reject ${u.email}?`,
+      message: `${u.email} will not be able to access RAXA. This action can be reversed by re-approving the user.`,
+      variant: 'danger',
+      confirmLabel: 'Reject',
+      destructive: true,
+    })
+    if (!ok) return
+    try {
+      await rejectUser(u.uid, u.email)
+      toast.warning('User rejected', `${u.email} no longer has access`)
+    } catch (e) { toast.error('Rejection failed', e.message) }
+  }
+  const handleRoleChange = async (u, r) => {
+    try {
+      await updateUserRole(u.uid, u.email, r)
+      toast.info('Role updated', `${u.email} is now ${r}`)
+    } catch (e) { toast.error('Role change failed', e.message) }
+  }
+  const handleSuspend = async (u) => {
+    const ok = await askConfirm({
+      title: `Suspend ${u.email}?`,
+      message: `${u.email} will be temporarily blocked from accessing RAXA. They can be re-enabled later.`,
+      variant: 'warning',
+      confirmLabel: 'Suspend',
+    })
+    if (!ok) return
+    try {
+      await suspendUser(u.uid, u.email)
+      toast.warning('User suspended', `${u.email} is now blocked`)
+    } catch (e) { toast.error('Suspend failed', e.message) }
+  }
+  const handleDisable = async (u) => {
+    const ok = await askConfirm({
+      title: `Disable ${u.email}?`,
+      message: `${u.email} will be disabled and unable to access RAXA. This is a stronger action than suspend.`,
+      variant: 'danger',
+      confirmLabel: 'Disable',
+      destructive: true,
+    })
+    if (!ok) return
+    try {
+      await disableUser(u.uid, u.email)
+      toast.warning('User disabled', `${u.email} can no longer sign in`)
+    } catch (e) { toast.error('Disable failed', e.message) }
+  }
+  const handleEnable = async (u) => {
+    try {
+      await enableUser(u.uid, u.email)
+      toast.success('User enabled', `${u.email} can sign in again`)
+    } catch (e) { toast.error('Enable failed', e.message) }
+  }
+  const handleResetAccess = async (u) => {
+    try {
+      await resetUserAccess(u.uid, u.email)
+      toast.success('Password reset sent', `${u.email} will receive reset instructions`)
+    } catch (e) { toast.error('Reset failed', e.message) }
+  }
 
   return (
     <div className="page">
