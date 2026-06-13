@@ -33,6 +33,7 @@ export const SAUDI_ARAMCO = {
     basePotentialMvCSE: -850,
     polarizationShiftMv: 100,
     irDropCorrectionRequired: true,
+    overProtectionLimitMvCSE: -1050,  // Per SAES-X-300 §6.2.2 — max negative limit to prevent HISC/coating disbondment
   },
 
   // ── Current Requirement ──────────────────────────────────────────────────────

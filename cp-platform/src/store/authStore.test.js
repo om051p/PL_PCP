@@ -1,4 +1,20 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, beforeAll } from 'vitest'
+
+// Configure the backend registry with the Firebase provider (uses mocks below)
+import { configureBackend } from '../providers/backend/registry.js'
+import { firebaseAuthProvider } from '../providers/backend/firebase/firebaseAuthProvider.js'
+import { firebaseUserProvider } from '../providers/backend/firebase/firebaseUserProvider.js'
+import { firebaseAuditProvider } from '../providers/backend/firebase/firebaseAuditProvider.js'
+import { localStorageProjectProvider } from '../providers/backend/firebase/firebaseProjectProvider.js'
+
+beforeAll(() => {
+  configureBackend({
+    auth: firebaseAuthProvider,
+    user: firebaseUserProvider,
+    project: localStorageProjectProvider,
+    audit: firebaseAuditProvider,
+  })
+})
 
 // Mock firebase/auth functions
 const mockSignInWithEmailAndPassword = vi.fn()
@@ -99,9 +115,9 @@ describe('authStore', () => {
       const user = await useAuthStore.getState().login('engineer@ikkgroup.com', 'password')
 
       expect(user).toBeDefined()
-      expect(user.uid).toBe('user-123')
+      expect(user.id).toBe('user-123')
       expect(user.role).toBe('engineer')
-      expect(user.approved).toBe(true)
+      expect(user.status).toBe('active')
       expect(useAuthStore.getState().user).toEqual(user)
       expect(useAuthStore.getState().error).toBeNull()
     })
@@ -245,8 +261,8 @@ describe('authStore', () => {
 
       expect(user).toBeDefined()
       expect(user.role).toBe('admin')
-      expect(user.approved).toBe(true)
       expect(user.status).toBe('active')
+      expect(user.isActive).toBe(true)
       expect(mockSetDoc).toHaveBeenCalled()
     })
   })

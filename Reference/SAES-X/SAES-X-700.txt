@@ -1,0 +1,2241 @@
+   Engineering Standard                                                               23 January 2023
+
+
+
+
+   SAES-X-700
+   Cathodic Protection of Onshore Well Casing
+   Document Responsibility: Cathodic Protection Standards Committee
+
+
+
+
+   Previous Revision: 19 July 2020                                          Next Revision: 23 January 2028
+   Contact: (BAKTHABX)                                                                        Page 1 of 44
+Saudi Aramco: Company General Use       © Saudi Arabian Oil Company, 2025
+   Document Responsibility: Cathodic Protection Standards Committee                                                                                             SAES-X-700
+   Issue Date: 23 January 2023                                                                                                   Cathodic Protection of Onshore Well Casing
+   Next Revision: 23 January 2028
+
+   Table of Content
+   SUMMARY OF CHANGES ..................................................................................................................................................... 3
+
+          SCOPE............................................................................................................................................................................. 5
+
+          CONFLICTS AND DEVIATIONS .................................................................................................................................... 6
+
+          REFERENCES .................................................................................................................................................................. 6
+
+          TERMINOLOGY ............................................................................................................................................................. 7
+
+          DESIGN REVIEW AND APPROVAL ............................................................................................................................ 13
+
+          DESIGN TECHNICAL REQUIREMENTS ...................................................................................................................... 15
+
+          INSTALLATION, RECORDS, COMMISSIONING, AND INSPECTION ...................................................................... 27
+
+   APPENDICES ........................................................................................................................................................................ 36
+
+   APPENDIX 1 – DESIGN QUALITY ASSURANCE CHECK LIST ........................................................................................... 36
+
+   APPENDIX 2 – DRILL STEM AND TEST ANODE RESISTANCE MEASUREMENTS ......................................................... 37
+
+   APPENDIX 3 – RECOMMENDED PROCEDURES ............................................................................................................... 40
+
+   DOCUMENT HISTORY ........................................................................................................................................................ 44
+
+
+
+
+                                                                       © Saudi Arabian Oil Company, 2025                                                                     Page 2 of 44
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                       SAES-X-700
+   Issue Date: 23 January 2023                                                             Cathodic Protection of Onshore Well Casing
+   Next Revision: 23 January 2028
+
+   Summary of Changes
+
+                  Paragraph Number
+                                                                 Change Type
+     Previous Revision         Current Revision                                                      Technical Change(s)
+                                                          (Addition, Modification, Deletion,
+            19 July 2020            23 January 2023                    New)
+
+    1.2                       1.2                       Deletion                               Galvanic anode CP for well
+                                                                                               casings
+                                                                                               Install two pre-packaged 27.3
+                                                                                               kg (60 lb) magnesium anodes
+    1.5                       1.5                       Modification
+                                                                                               inside the wellhead cellar for
+                                                                                               both coated and bare casings.
+                                                        Modification                           Max current capacity and
+                                                                                               number of well casings are
+                                                                                               not applicable for well pads
+    4.4                       4.4
+                                                                                               where multiple well casings
+                                                                                               are installed within a same
+                                                                                               well pad
+                                                        Modification                           Bonding requirement for
+    6.4.4                     6.4.4                                                            nearby structures other than
+                                                                                               well casings to 500 m
+                                                        Modification                           Air-cooled and oil-cooled
+                                                                                               rectifiers per 17-SAMSS-004
+                                                                                               are permitted for well casing
+    6.4.4                     6.4.4
+                                                                                               sites and these rectifiers shall
+                                                                                               be suitable for the location of
+                                                                                               installation.
+                                                                                               Separate Current Requirement
+                                                                                               for solar systems deleted and
+    Table 1A, 1B & 1C         Table 1A, 1B & 1C         Deletion
+                                                                                               made same for both T/R and
+                                                                                               solar.
+                                                                                               Requirement for flow lines
+                                                                                               and other pipelines that are
+                                                                                               made of Corrosion Resistance
+    Table 1A, 1B & 1C         Table 1A, 1B & 1C         Addition                               Alloys (CRAs) and or other
+                                                                                               high strength stainless steel
+                                                                                               materials like duplex stainless
+                                                                                               steel added
+                                                                                               Steel casings for the active
+                                                                                               columns of these
+    6.5.3                     6.5.3                     Addition
+                                                                                               unconventional anode beds
+                                                                                               added to improve the anode
+
+
+
+                                                  © Saudi Arabian Oil Company, 2025                                     Page 3 of 44
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                      SAES-X-700
+   Issue Date: 23 January 2023                                                            Cathodic Protection of Onshore Well Casing
+   Next Revision: 23 January 2028
+
+                  Paragraph Number
+                                                                Change Type
+     Previous Revision         Current Revision                                                     Technical Change(s)
+                                                         (Addition, Modification, Deletion,
+            19 July 2020         23 January 2023                      New)
+
+                                                                                              bed performance in loss of
+                                                                                              circulation zones added
+                                                                                              At the design stage only, the
+                                                                                              target commissioning current
+    6.6.4                     6.6.4                    Modification                           shall be achieved at a voltage
+                                                                                              of lower than 70% of the T/R
+                                                                                              rated voltage output.
+                                                                                              Bonding requirement for
+    6.11.2                    6.11.2                   Modification                           nearby structures other than
+                                                                                              well casings to 500 m
+
+
+
+
+                                                © Saudi Arabian Oil Company, 2025                                      Page 4 of 44
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                      SAES-X-700
+   Issue Date: 23 January 2023                                                            Cathodic Protection of Onshore Well Casing
+   Next Revision: 23 January 2028
+
+                  Scope
+                  This standard prescribes the minimum mandatory requirements governing the design and
+                  installation of new cathodic protection (CP) systems protecting new onshore metallic well
+                  casings. It may address existing wells if they are made part of a group containing new wells.
+                  Cathodic protection systems for onshore well casings may be single dedicated, multiple or
+                  bonded ICCP CP systems.
+                  Shared well casings are not allowed except for multiple well casings exceeding the limitations of
+                  multiple well casing CP system capacity (more than 5 wells, requiring higher than 150 Amp TR,
+                  etc.) as detailed in Section 6 below. In overlapping gas/oil fields, if a shared well CP system is not
+                  allowed. Single well casing CP system is not allowed where two wells are separated by less than
+                  500 meters. Drilling islands can have more than 5 wells connected to the same rectifier.
+                  New, existing, carbon steel, stainless steel, coated, bare, onshore oil, gas, unconventional gas,
+                  gas lift, observation, exploration, water injection, and water supply metallic well casings with a
+                  predicted life expectancy greater than five years shall be provided with cathodic protection
+                  within the time period specified in Section 7 of this standard if:
+                      a. The well casing is installed through a corrosive formation, or
+                      b. The well casing is not installed through a corrosive formation, but has a permanent
+                         buried metallic flow-line, in which case, sufficient CP shall be provided to maintain the
+                         flow-line at an acceptable protection level in accordance with SAES-X-400 without
+                         electrical isolation of the well casing from the flow-line.
+                          Notes:
+                          Typically, well casings without flow-lines completed in or above the UER formation do not require
+                          cathodic protection.
+                          Where CP is not needed because the well casing is expected to last less than
+                          5 years, if the proponent requires CP; then, it can be made out of scrap steel anodes.
+                  A metallic well casing that is not installed through a corrosive formation and does not have a
+                  permanent flow-line does NOT require cathodic protection. However, if a foreign impressed
+                  current anode bed is within 500 meters radius of this type of well, electrical bonding shall be
+                  implemented to minimize the probability of downhole interference.
+                  For oil and water wells only, a metallic well casing that is installed within a metallic or non-
+                  metallic cellar and backfilled shall be provided with galvanic magnesium anodes.
+                  Install two pre-packaged 27.3 kg (60 lb) magnesium anodes inside the wellhead cellar.
+                  Alternatively, clamp two 100-lb bare bracelet magnesium anodes within the top one meter of
+                  the well head and connect the cable to the well casing at the cellar zone to provide
+                  supplemental cathodic protection for the landing base area. When upgrading an existing CP
+                  system, depleted magnesium anodes at the cellar area shall also be restored. Measuring the
+                  potential and/or anode current output at the cellar area is not needed to meet any protection
+                  criteria, rather to ensure that the anodes are physically and electrically connected.
+                          Note:
+                          To provide further clarification for the above statement, supplemental galvanic anodes for
+                          permanent protection of the landing base area are not required for well casings that:
+                               •   do not have cellars, or
+                               •   are installed in cellars that are not backfilled, or
+                               •   are FBE coated on the top three joints through the cellar area, or
+                               •   gas well casings.
+                  Replacements or in-kind replacements of existing, depleted or relocated anode beds and/or CP
+                  systems do not need CSD approval except if they are part of a new CP well installation. In such
+
+
+                                                 © Saudi Arabian Oil Company, 2025                                     Page 5 of 44
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                SAES-X-700
+   Issue Date: 23 January 2023                                                      Cathodic Protection of Onshore Well Casing
+   Next Revision: 23 January 2028
+
+                  cases, existing wells do not need compliance with the commissioning requirements specified in
+                  this standard, however minimum monitoring current required shall be achieved as detailed in
+                  SAEP-333.
+                  When a new well casing CP system is made part of a multi-well CP system hosting existing well
+                  casings, then, only if required upgrade the existing CP system to meet the monitoring current
+                  requirements of the existing wells.
+                  Existing well casings without flowlines that lasted more than 30 years with no CP and no
+                  external corrosion leaks do not need a new CP system unless mandated by the proponent
+                  organization. The application of new CP in this case is not recommended as it could have
+                  adverse effects if gases resulting from the application of CP promoted the removal the
+                  corrosion products that prevented casing leaks. Exception is when CP systems are installed
+                  within 500 meters from unprotected structures.
+                  The cathodic protection requirements for offshore well casings are beyond the scope of this
+                  standard and are addressed in SAES-X-300. Onshore well casings with anodes installed offshore
+                  (i.e., Pyramid anode) however are within the scope of this standard.
+                  Cathodic protection as addressed in this standard does not provide corrosion protection for the
+                  inside surface of the well casing, tubing or liner.
+                  Non-metallic (NM) flowline could act as an isolator hindering cathodic protection continuity
+                  between the well casing and trunkline; hence, connect the CP negative cable to the well casing
+                  rather than to the NM flowline. In such a case, only if needed then provide a dedicated CP
+                  system for the trunkline while ensuring adequate protection for all structures.
+                  This standard shall not be attached to, nor made a part of a purchase order.
+                  Conflicts and Deviations
+                  Any conflicts between this document and other applicable Mandatory Saudi Aramco
+                  Engineering Requirements (MSAERs) shall be addressed to the EK&RD Manager.
+                  Any deviation from the requirements herein shall follow internal company procedure SAEP-302.
+                  References
+                  All referenced specifications, standards, codes, drawings, and similar material are considered
+                  part of this Engineering Standard to the extent specified, applying the latest version, unless
+                  otherwise stated.
+                  Saudi Aramco References
+                  Saudi Aramco Engineering Procedures
+                  SAEP-302             Waiver of a Mandatory Saudi Aramco Engineering Requirement
+                  SAEP-332             Cathodic Protection Commissioning
+                  SAEP-333             Cathodic Protection Monitoring
+
+                  Saudi Aramco Materials System Specification
+                  17-SAMSS-004         Conventional Rectifiers for Cathodic Protection
+                  17-SAMSS-006         Galvanic Anodes for Cathodic Protection
+                  17-SAMSS-007         Impressed Current Anodes for Cathodic Protection
+                  17-SAMSS-008         Junction Boxes for Cathodic Protection
+                  17-SAMSS-012         Photovoltaic Power Supply for Cathodic Protection
+                  17-SAMSS-017         Impressed Current Cathodic Protection Cables
+                  17-SAMSS-018         Remote Monitoring Units (RMUs) for Cathodic Protection
+
+
+
+
+                                                © Saudi Arabian Oil Company, 2025                                Page 6 of 44
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                SAES-X-700
+   Issue Date: 23 January 2023                                                      Cathodic Protection of Onshore Well Casing
+   Next Revision: 23 January 2028
+
+                  Saudi Aramco Engineering Standards
+                  SAES-B-062           Onshore Wellsite Safety
+                  SAES-P-104           Wiring Methods and Materials
+                  SAES-X-300           Cathodic Protection of Marine Structures
+                  SAES-X-400           Cathodic Protection of Buried Pipelines
+
+                  Saudi Aramco Best Practices
+                  SABP-X-003           Cathodic Protection Installation Requirements
+
+                  Saudi Aramco Standard Drawings
+                  AA-036385            Cathodic Protection - Deep Anode Bed
+                  AA-036389            Galvanic Anode Details
+                  AD-036785            Symbols for Cathodic Protection
+
+                  Saudi Aramco General Instructions
+                  GI-0002.710          Mechanical Completion and Performance Acceptance of Facilities
+                  Other References
+                  National Fire Protection Association
+                  NFPA 70              National Electrical Code (NEC)
+
+                  The Association for Materials Protection and Performance (AMPP/NACE)
+                  NACE SP0186-         Application of Cathodic Protection for External Surfaces of Steel Well Casings
+                  2007
+
+
+                  Terminology
+                  Acronyms
+                  AOC                        Aramco Overseas Company, The Hague
+                  ASC                        Aramco Services Company, Houston
+                  ANSI                       American National Standards Institute
+                  ASTM                       American Society for Testing and Materials
+                  AWS                        American Welding Society
+                  ASME                       American Society of Mechanical Engineers (USA)
+                  CSA                        Canadian Standard Association
+                  CSD                        The Saudi Aramco Consulting Services Department
+                  FM                         Factory Mutual Research Corp.
+                  GOSP                       Gas and Oil Separation Plant
+                  JEDEC                      Joint Electronic Devices Engineering Council
+
+
+                                                © Saudi Arabian Oil Company, 2025                                Page 7 of 44
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                SAES-X-700
+   Issue Date: 23 January 2023                                                      Cathodic Protection of Onshore Well Casing
+   Next Revision: 23 January 2028
+
+                  MSAER                      Mandatory Saudi Aramco Engineering Requirements
+                  NEC                        National Electrical Code
+                  NEMA                        National Electrical Manufacturers Association (USA)
+                  RSA                        Saudi Aramco Responsible Standardization Agency
+                  SAES                        Saudi Aramco Engineering Standard
+                  SAMSS                       Saudi Aramco Materials System Specification
+                  SI                         International System of Units
+                  SSPC                       Steel Structures Painting Council (USA)
+                  UL                         Underwriter's Laboratories, Inc. (USA)
+
+                  Definitions
+                  The following general list of definitions and abbreviations has been developed specifically for
+                  application with Saudi Aramco cathodic protection standards and specifications:
+                  AA:                          The ANSI cooling class for a dry-type self-cooled transformer or
+                                               reactor that is cooled by the natural circulation of air. Syn.: AN (IEC),
+                                               see definition 3.1 in IEEE C57.12.
+                  Anode:                       An impressed current or a galvanic anode for cathodic protection
+                                               applications.
+                  Anode Cable:                 A cable directly connected to an impressed current or galvanic anode.
+                  ANV:
+                                               The ANSI cooling class for a dry-type non-ventilated self-cooled
+                                               transformer, which is so constructed as to provide no intentional
+                                               circulation of external air through the transformer, and that operates
+                                               at zero gauge pressure. Syn.: ANAN (IEC), see definition 3.15 in IEEE
+                                               C57.12.
+                  Armored Cable:
+                                               Armored cable for cathodic protection is a single core insulated cable
+                                               manufactured with a double layer spiral wound insulated galvanized
+                                               steel sheath to provide mechanical protection, and typically used for
+                                               subsea applications.
+                  Bond Cable:
+                                               A cable installed between two metallic structures to provide electrical
+                                               continuity between the structures for the purpose of cathodic
+                                               protection.
+                  Buyer:
+                                               Saudi Aramco Purchasing Department Representative.
+                  Buyer's
+                  Representative:              The person or persons designated by the Purchasing Department to
+                                               monitor/enforce the contract. Normally, this is the on-site inspector.
+                  Calcined Petroleum
+                  Coke Breeze:                 A carbonaceous backfill used as a conductive backfill media for
+                                               impressed current anodes in soil.
+
+
+
+
+                                                © Saudi Arabian Oil Company, 2025                                Page 8 of 44
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                SAES-X-700
+   Issue Date: 23 January 2023                                                      Cathodic Protection of Onshore Well Casing
+   Next Revision: 23 January 2028
+
+                  Christmas Tree:
+                                               The set of valves, spools and fittings connected to the top of a well to
+                                               direct and control the flow of formation fluids from the well.
+                  Coated Casing:
+                                               The term “coated casing” as used in this engineering standard
+                                               describes a well casing with an external non-conductive coating
+                                               (typically Fusion Bonded Epoxy or FBE). The coating must be applied
+                                               to all sections of the casing in contact with soil or formation, from
+                                               surface to the bottom of the casing or to a depth determined to
+                                               facilitate external corrosion mitigation with cathodic protection
+                                               through the relevant down hole corrosive aquifers. Casings that have
+                                               been coated over the upper two or three joints of casing only are not
+                                               “coated casings”. Coating applied to well casings is not applied as a
+                                               corrosion barrier. It is applied to reduce the total amount of CP
+                                               required or to extend the influence of the applied CP.
+                  CP:
+                                               Cathodic Protection
+                  CP Assessment
+                  Probe:                       A multi-electrode probe custom fabricated for Saudi Aramco that is
+                                               designed to facilitate representative measurements of instant off,
+                                               total polarization, current density, and resistivity.
+                  CP Coupon:
+                                               A cathodic protection coupon used to measure representative
+                                               potentials or current densities on a pipeline or other buried or
+                                               immersed metallic structure.
+                  CP System Operating
+                  Circuit Resistance:          The total resistance seen at the output of a CP power supply or the
+                                               total working resistance in a galvanic anode system.
+                  CP System Operating
+                  Circuit Resistance:          The total resistance seen at the output of a CP power supply or the
+                                               total working resistance in a galvanic anode system.
+                  CP System Rated
+                  Circuit Resistance:          The rated output voltage of a cathodic protection power supply
+                                               divided by the rated output current. For photovoltaic power supplies,
+                                               the rated output current is the design commissioning current.
+                  Cross Country
+                  Pipeline:                    A pipeline between; two plant areas, another cross country pipeline
+                                               and a plant area, or between two cross country pipelines.
+                  Deep Anode Bed:
+                                               Anode or anodes connected to a common CP power supply and
+                                               installed in a vertical hole with a depth exceeding 15 m (50 ft).
+                  Design Agency:
+                                               The organization responsible for the design of the pipeline and
+                                               associated CP system. The Design Agency may be the Design
+                                               Contractor, the Lump Sum Turn Key Contractor or an in house design
+                                               organization of Saudi Aramco.
+                  Flowline:
+                                               A pipeline connected to a well.
+
+
+
+                                                © Saudi Arabian Oil Company, 2025                                Page 9 of 44
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                SAES-X-700
+   Issue Date: 23 January 2023                                                      Cathodic Protection of Onshore Well Casing
+   Next Revision: 23 January 2028
+
+                  Flare Line or Blow
+                  Down Line:                   A line for pumping out of unwanted gas or hydrocarbon
+
+                  Foundry (for anodes):
+                                               An anode foundry is a facility that produces metal castings from
+                                               either ferrous or non-ferrous metals or alloys.
+                  Galvanic Anodes:
+                                               Anodes fabricated from materials such as aluminum, magnesium or
+                                               zinc that are connected directly to the buried structure to provide
+                                               cathodic protection current without the requirement for an external
+                                               cathodic protection power supply. Galvanic anodes are also referred
+                                               to as sacrificial anodes.
+                  Hazardous Areas:
+                                               An area where fire or explosion hazards may exist due to flammable
+                                               gases or vapors, flammable liquids, combustible dust, or ignitable
+                                               fibers or filings (see NEC Article 500).
+                  HDD:
+                                               Horizontal Directional Drilling
+                  ICCP:
+                                               Impressed Current Cathodic Protection
+                  Impressed Current
+                  Anodes:                      Anodes typically fabricated from High Silicon Cast Iron (HSCI), Mixed
+                                               Metal Oxide (MMO) or liner anode, etc. that are connected through a
+                                               DC power supply to the buried or immersed structure to provide
+                                               cathodic protection current.
+                  Kill Line:
+                                               A high-pressure pipe leading from an outlet on the BOP stack to the
+                                               high-pressure rig pumps
+                  Lead Wire (for
+                  anodes):                     A cable directly connected to an anode.
+
+                  Manufacturer:
+                                               The Company that assembles the components for the finished
+                                               product and provides the finished product either through a Vendor
+                                               or directly to Saudi Aramco.
+                  Resistivity Meter
+                  (Megger):                    A meter designed to measure ground resistivity, or can be connected
+                                               to measure resistance in a format that excludes the resistance of the
+                                               test wires.
+                  Multiple Well (Multi-
+                  well) Casing CP              Two or more well casings protected by one common CP rectifier
+                  System:                      system.
+
+
+                  Mill (for anodes):
+                                               An anode mill is a facility that produces anodes such as MMO or
+                                               Platinized Niobium (without lead wires) for cathodic protection
+                                               applications (or any other anode type that does not involve casting).
+                  Negative Cable:
+                                               A cable that is electrically connected (directly or indirectly) to the
+                                               negative output terminal of a cathodic protection power supply or to
+
+
+                                                © Saudi Arabian Oil Company, 2025                               Page 10 of 44
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                SAES-X-700
+   Issue Date: 23 January 2023                                                      Cathodic Protection of Onshore Well Casing
+   Next Revision: 23 January 2028
+
+                                               a galvanic anode. This includes bond cables to a cathodically
+                                               protected structure.
+                  Non-metallic
+                  Flowline:                    A flowline that is made out of non-metallic materials.
+
+                  Non-incendive
+                  Equipment:                   Equipment having electrical/electronic circuitry that is incapable,
+                                               under normal operating conditions, of causing ignition of a specified
+                                               flammable gas-air, vapor-air, or dust-air mixture due to arcing or
+                                               thermal means. (See NEC Article 100)
+                  Off-Plot:
+                                               Off-plot refers to any area outside of the plot limits.
+                  ONAN:
+                                               The ANSI cooling class for a transformer or reactor having its core
+                                               and coils immersed in mineral oil or synthetic insulating liquid with a
+                                               fire point less than or equal to 300°C, the cooling being effected by
+                                               the natural circulation of air over the cooling surface. (ONAN was
+                                               previously termed OA). See definition 3.303 in IEEE C57.12
+                  On-Plot:
+                                               On-plot refers to any area inside the plot limit.
+                  Perimeter Fence:
+                                               The fence which completely surrounds an area designated by Saudi
+                                               Aramco for a distinct function.
+                  Photovoltaic Module:
+                                               A number of solar cells wired and sealed into an environmentally
+                                               protected assembly.
+                  Pipeline:
+                                               The term “pipeline” is used generically to refer to any type of
+                                               pipeline.
+                  Plant Area:
+                                               The area within the plot limits of a process or storage facility.
+                  Plot Limit:
+                                               The plot limit is the boundary around a plant or process facility. The
+                                               plot limit may be physical such as a fence, a wall, the edge of a road
+                                               or pipe rack, chains and posts or a boundary indicated on an
+                                               approved plot plan.
+                  Positive Cable:
+                                               A cable that is electrically connected (directly or indirectly) to the
+                                               positive output terminal of an impressed current cathodic protection
+                                               power supply, including impressed current anode cables.
+                  Process Pipeline:
+                                               A pipeline typically associated with a plant process and typically
+                                               above ground within a plant facility.
+                  Production Pipeline:
+                                               A pipeline transporting oil, gas or water to or from a well.
+                                               These include flowlines, test lines, water injection lines, and
+                                               trunklines.
+                  Pyramid Anode:
+                                               An offshore anode assembly custom manufactured for Saudi Aramco
+                                               that is fabricated with mixed metal oxide anode components and
+
+                                                © Saudi Arabian Oil Company, 2025                                Page 11 of 44
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                SAES-X-700
+   Issue Date: 23 January 2023                                                      Cathodic Protection of Onshore Well Casing
+   Next Revision: 23 January 2028
+
+                                               placed on the sea bed. The pyramid anode derives its name from the
+                                               pyramid shaped concrete base.
+                  Reference Electrode:
+                                               An industry standardized electrode used as a common reference
+                                               potential for cathodic protection measurements. A copper/copper
+                                               sulfate (Cu/CuSO4) reference electrode is typically used for soil
+                                               applications. A silver/silver chloride (Ag/AgCl/0.6M Cl) reference
+                                               electrode is typically used for aqueous applications.
+                  Responsible
+                  Standardization              For CP material, this would usually be the Supervisor of the CSD
+                  Agent (RSA):                 Cathodic Protection Team or the Saudi Aramco CSD cathodic
+                                               protection Subject Matter Expert.
+                  Single Well Casing CP
+                  System:                      One well casing CP system protected by one CP rectifier system.
+
+                  Soil Transition Point:
+                                               The surface location where a pipeline enters or exits the soil, i.e.,
+                                               above grade to below grade transition, or below grade to above
+                                               grade transition.
+                  Subject Matter
+                  Expert (SME):                The SME is the assigned Consulting Services Department cathodic
+                                               protection specialist.
+                  Shared Well Casing
+                  CP System:                   Two or more well casings protected by two or more CP rectifier
+                                               systems that are negatively bonded thru a Dedicated Bonding Facility
+                                               arrangement. Shared well casings are not allowed except for solar
+                                               systems.
+                  Surface Anode Bed:
+                                               Anode or anodes connected to a common CP power supply, installed
+                                               either vertically or horizontally at a depth of less than 15 m (50 ft).
+                  Tension Spring
+                  Anode:                       An offshore anode assembly custom manufactured for Saudi Aramco
+                                               that is fabricated with mixed metal oxide anode components and
+                                               suspended on a wire rope/tension spring assembly beneath an
+                                               offshore platform.
+                  Test Line:
+                                               A pipeline that is used for testing an individual well or group of wells.
+                  Thermite Weld:
+                                               An exothermic process for use in making electrical connections
+                                               between two pieces of copper or between copper and steel.
+                  Transformer/Rectifier
+                  (T/R):                       A CP power supply that transforms and converts AC to DC power,
+                                               often referred to in the cathodic protection industry as a rectifier.
+                  Transmission
+                  Pipeline:                    A cross country pipeline transporting product between GOSPs WIPs
+                                               or other process facilities.
+
+
+
+
+                                                © Saudi Arabian Oil Company, 2025                               Page 12 of 44
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                SAES-X-700
+   Issue Date: 23 January 2023                                                      Cathodic Protection of Onshore Well Casing
+   Next Revision: 23 January 2028
+
+                  Trunkline:
+                                               A pipeline designed to distribute or gather product from two or more
+                                               wells, typically connecting flowlines or injection lines to the
+                                               associated GOSP or WIP.
+                  Utility line:
+                                               A pipeline that delivers a service product (typically water, gas or air).
+                  Unconventional Deep
+                  Anode Bed:                   Anode bed drilled to typical depth of 120 meters thru dry drilling
+                                               using air or foam with a geotextile liner to 120 meters and PVC water
+                                               reservoirs on the top 60 meters.
+                  Vendor:
+                                               A company that receives a purchase order to supply the finished
+                                               product, material or equipment. The Vendor may also be the
+                                               Manufacturer.
+                  Venturi Spool:
+                                               A gas metering spool recording apparatus at gas well sites.
+                  WIP:
+                                               Water Injection Plant
+                  Well Casing:
+                                               Large-diameter pipe lowered into an open hole and cemented in
+                                               place.
+                  Well Head:
+                                               The system of spools, valves, and assorted adapters that provide
+                                               pressure control of a production well.
+
+                  Design Review and Approval
+                  Contractor/Designer Qualifications
+   5.1.1          Cathodic protection designs shall be completed by CSD approved local design offices with a
+                  minimum of five years verifiable cathodic protection design experience and a minimum industry
+                  qualification of NACE CP Level 4 and BS degree. Indicate the NACE CP level, certification
+                  number, name of designer and/or his signature/initial in the design package.
+   5.1.2          Field measurements required for the design, survey, installation, walk-through, pre-
+                  commissioning, commissioning, inspection, monitoring, restoration, replacement,
+                  troubleshooting, field-investigation, assessment, drill stem analysis, anode bed installation, etc.
+                  shall be performed by an Engineer or Technician with a minimum industry certification level of
+                  NACE CP Level 2. Indicate the NACE CP level, certification number, name of designer and/or his
+                  signature/initial in the design package.
+                          Note:
+                          PMT may request assistance from CSD for the verification of the qualifications of the Design
+                          Contractor’s engineer responsible for designing the CP systems and to approve new designers.
+                  Design Review
+   5.2.1          DBSP and project proposal does not require conducting a site visit unless that is mandatory to
+                  complete the package. The proposed construction drawings and the related cathodic
+                  protection design information for every design package shall at minimum be submitted to the
+                  CP Proponent organization and to Saudi Aramco’s Consulting Services Department (CSD) or
+                  where applicable to the CSD approved local design office Engineers for review and approval.
+                  The most up to date list of approved design offices is posted on ShareK.
+
+
+
+
+                                                © Saudi Arabian Oil Company, 2025                               Page 13 of 44
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                SAES-X-700
+   Issue Date: 23 January 2023                                                      Cathodic Protection of Onshore Well Casing
+   Next Revision: 23 January 2028
+
+   5.2.2          The Design Agency shall not issue drawings for construction until the design has been reviewed
+                  and approved in writing by CSD or where applicable by the CSD approved local design office
+                  Engineers and the CP Proponent organization.
+                  Design Basis Scoping Paper (DBSP)
+                  Unless specifically requested by PMT, DBSP does not need to be reviewed or approved by CSD
+                  per SAEP-303. The DBSP shall specifically state if cathodic protection is required, or is not
+                  required, as dictated by SAES-X-700. No other design considerations for cathodic protection
+                  are required for the DBSP.
+                  Project Proposal
+   5.4.1          Unless specifically requested by PMT, project proposal does not need to be reviewed or
+                  approved by CSD Project Proposal packages submitted to CSD for review shall provide all
+                  design considerations that can be developed without requiring the measurement of field data
+                  or a site visit.
+   5.4.2          The Project Proposal package shall include a specific statement in the scope of work that clearly
+                  identifies any requirement to provide CP for existing well casings, flow-lines or trunk-lines.
+   5.4.3          The Project Proposal shall provide clear direction on the general design approach with respect
+                  to the following:
+                      a. The CP systems shall be designed as:
+                         ● single well CP systems, or
+                         ● multi-well CP systems
+                      b. The well casings are:
+                         ● coated casings, or
+                         ● bare casings
+                      c. The CP power supply shall be:
+                         ● Photovoltaic, or
+                         ● AC powered
+                         ● air cooled, or
+                         ● oil cooled
+                         ● single phase, or
+                         ● three phase
+   5.4.4          The Project Proposal shall clearly state if remote monitoring equipment will be included per 17-
+                  SAMSS-018 with the CP power supplies and if so it shall provide the following general design
+                  information:
+                      a. Will the CP power supply be provided with:
+                         ● signal transmitters, or
+                         ● a Remote Monitoring Unit (RMU)
+                      b. What operating parameters are going to be monitored (must meet minimum
+                         requirements)
+                      c. What communication system will be used for the remote monitoring system?
+                      d. What software will be supplied for the CP Proponent? If the data is not transmitted to
+                         the area Saudi Aramco PI data base; then, the software shall be provided through the
+                         Project.
+
+
+
+                                                © Saudi Arabian Oil Company, 2025                               Page 14 of 44
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                SAES-X-700
+   Issue Date: 23 January 2023                                                      Cathodic Protection of Onshore Well Casing
+   Next Revision: 23 January 2028
+
+   5.4.5          The Project Proposal shall contain a professionally drafted Index “X” CP layout drawing using
+                  the cathodic protection symbols shown on Standard Drawing AD-036785 “Symbols for Cathodic
+                  Protection”, illustrating:
+                      a. All existing and new well casings, buried/above grade metallic/non-metallic,
+                         shorted/isolated flow-lines, test lines, pipelines, blowdown lines, flare lines, bypass lines
+                         and trunk-lines associated with or affected by the proposed CP system within the 1,000
+                         meter radius of the new well casing.
+                      b. The proposed location of all CP equipment associated with the new CP system with
+                         general details for:
+                           ● the proposed anodes and anode bed(s), location, type (surface, deep conventional,
+                             deep unconventional), depth, number of anodes, anode bed derating, anode to anode
+                             spacing, anode bed to anode bed spacing, anode bed to buried structures spacing
+                           ● output ratings and condition for the existing/proposed CP power supply and available
+                             spare capacity
+                           ● cable locations/route, lengths, number, and sizes
+                           ● underground/above grade, metallic/non-metallic, existing/new junction boxes, splice
+                             boxes, and bond stations and their condition.
+                  Detailed Design
+   5.5.1          Detailed Design packages shall provide all design considerations contained in the Project
+                  Proposal further developed based on the collection of relevant field data including:
+                      a.     Measured soil resistivity for proposed anode beds that will be installed shallower than 15
+                             meters (surface) or deeper than 15 meters (deep)
+                      b.     Site information sufficient to develop a field verified site plan
+                             (CP layout drawing) that clearly illustrates all proposed CP equipment and all buried
+                             structures within 1,000 meter radius of the new well casing(s) location.
+                      c.     Field verified operating data for existing CP equipment within
+                             1,000 meter radius of the new well casing(s) location.
+                      d.     For detailed designs of multi-well CP systems in fields where the casing resistances have
+                             not already been determined, site tests on each relevant type of well casing to determine
+                             the respective resistance-to–ground and structure back emf are required.
+   5.5.2          Detailed Design packages shall contain the original completed and signed by CSD or where
+                  applicable by the company approved local design offices “Well Casing Design Quality Assurance
+                  Check List” attached to the cover letter and/or transmittal sheet for the design package (See
+                  Appendix 1).
+   5.5.3          Detailed Design packages shall contain all calculations and applicable field data required to
+                  verify design compliance with the Saudi Aramco Cathodic Protection Engineering Standards
+                  including an electrical simulation drawing for all multi-well and shared-well CP systems.
+                  Shared well casings are not allowed except as detailed in Section 6 below.
+                  Design Technical Requirements
+                  General
+                  Company approved CP designers are allowed to conduct the following activities in lieu of
+                  specific review by Saudi Aramco:
+
+
+
+                                                © Saudi Arabian Oil Company, 2025                               Page 15 of 44
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                SAES-X-700
+   Issue Date: 23 January 2023                                                      Cathodic Protection of Onshore Well Casing
+   Next Revision: 23 January 2028
+
+                    1)   Develop the 90% detailed design CP package and IFC for single and multiple well casings.
+                         While single & Single with pipeline bonding shall go to construction without Saudi
+                         Aramco review or approval, multiple still requires Saudi Aramco approval.
+                    2)   Analyze the drill stem and test anode resistances and provide anode installation
+                         recommendations.
+                    3)   Evaluate and approve the pre-commissioning report for single oil and water well casings.
+   6.1.1          Shared well casings are not allowed except for solar systems especially bare and for multiple
+                  well casings exceeding the limitations of multiple well casing CP system capacity (more than 5
+                  wells and/or requiring higher than 150 Amp TR, etc.). In overlapping gas/oil fields a shared well
+                  casing is not allowed and thus it is a clear violation of this standard.
+                  If a shared well CP system is installed (although not allowed by this standard), then it will not be
+                  approved but rather becomes the sole and full responsibility of the proponent organization who
+                  approved/requested that, including the risk for well casing leak due to possible CP interference.
+                  Shared well casings are only allowed in the following conditions provided they are pre-
+                  approved by the proponent organization(s) in case of overlapping gas/oil fields:
+                    1)   more than 5 wells within 500 meters from each other or from the most recent well
+                    2)   current requirement is larger than 150 Amps
+                    3)   when the power source is solar especially for bare well casings
+                    4)   when the two CP systems are solar.
+                  In overlapping fields that involve oil & gas wells with multiple well CP system, the responsibility
+                  for the CP system is that of proponent of most recently installed well. That is if the most recently
+                  installed well is gas then, gas proponent is responsible for the CP system monitoring &
+                  maintenance. Likewise, if oil is the most recently well then, the oil proponent is the responsible
+                  organization.
+                  The proponent organization is responsible for connecting the CP system after drilling and
+                  workover completed their drilling or wire line operations.
+   6.1.2          The design shall facilitate an integrated CP system for all associated buried metallic structures,
+                  and shall comply with all spacing and access restrictions detailed in SAES-B-062.
+   6.1.3          CP power sources for an existing CP system shall not be utilized or be made part of a multiple
+                  system to protect a new well casing within 500 meters radius without a prior approval from the
+                  CP Proponent organization for the existing CP system. PMT is simultaneously responsible to
+                  upgrade the existing CP system to meet the commissioning requirements of the new well(s) and
+                  the monitoring requirements of the existing well(s) and to meet the monitoring potentials of all
+                  affected pipelines/flowlines within 1,000 meters from the new well casing. At gas/oil
+                  overlapping fields, PMT is responsible to obtain a prior approval from both CP Proponent
+                  organizations of the overlapping fields about the plan to use single, multiple CP system (shared
+                  is not allowed).
+   6.1.4          Permanent stainless steel, carbon steel, bare, coated buried flare lines and blow down lines on a
+                  well pad do not need a dedicated CP system, but rather they shall be made permanently
+                  electrically continuous with the well casing or the negative circuit of the well casing CP system
+                  to ensure their adequate protection. If must be isolated, then protect them with galvanic anode
+                  system. Bond across Venturi spools with a metallic strap at gas wells to ensure electrical
+                  continuity with the CP system and to minimize the possibility of CP interference. Where non-
+                  metallic pipelines are used (spools, flowlines, test lines and truck lines) bonding across using a
+                  dedicated bond box is required. If isolation is a must, then provide adequate CP for all metallic
+                  parts.
+
+
+                                                © Saudi Arabian Oil Company, 2025                               Page 16 of 44
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                  SAES-X-700
+   Issue Date: 23 January 2023                                                        Cathodic Protection of Onshore Well Casing
+   Next Revision: 23 January 2028
+
+   6.1.5          The use of a photovoltaic CP power supply shall be assessed by PMT from an economic
+                  perspective for cathodic protection of new wells or new fields considering the nearest 4.16 kV or
+                  13.8 kV power line.
+                          Notes:
+                          The economic assessment shall include comparative costs for operations and maintenance between
+                          the systems being considered. During the DBSP review, the proponent organization can then verify
+                          stipulated versus actual costs, and may consider other cost related factors like future expansion and
+                          theft/vandalism issues.
+                          For designs where photovoltaic power supplies are determined to be the most cost effective
+                          alternative, consideration should be given by PMT to place a request with the Saudi Aramco Drilling
+                          Dept. to have the well casings externally coated to reduce the CP current requirement. Photovoltaic
+                          CP for a coated well casing typically has a notable cost advantage over a bare well casing.
+   6.1.6          When demonstrated by the simulation program with calculated resistance and current
+                  requirements, a dedicated CP power source shall be provided for each well when the surface
+                  facilities for the two most distant wells involved are separated by more than 500 meters.
+                  Otherwise, use multiple design if the distance is within or less than 500 meters.
+                          Notes:
+                          In areas where theft and vandalism of a solar powered CP system and cables is a concern to the CP
+                          Proponent, then to avoid theft of long runs of buried cable, the cable shall be installed with
+                          approved below grade and/or non-metallic junction boxes buried concrete anchors at each cable
+                          end, and with minimal use of above grade cable identification markers.
+   6.1.7          Well casings separated by less than 500 meters shall utilize a multiple CP power source,
+                  provided the design protection criteria for each well as stated in Tables 1A, 1B, and 1C of this
+                  standard are met without the use of electrical resistors at the design stage. Electrical resistors
+                  maybe used at the commissioning and/or operating stages provided that they are intrinsically
+                  safe and are not installed in hazardous zones.
+                          Exception:
+                          If during commissioning of multi-well CP system, adequate current distribution is not achieved, then
+                          resistors may be used. Resistors shall be welded tap adjustable or fixed (non-adjustable) and shall
+                          be 0.15 ohms or less.
+                          Note:
+                          Coated well casings with normally above grade flowlines may use the flowline for negative cable
+                          connection and hence do not require a dedicated negative cable to each well but are still restricted
+                          by the 500 meter separation imposed on CP systems with multiple well casings and shall meet all
+                          well casing and flowline protection requirements.
+   6.1.8          At sites where one CP power source is used to protect multiple well casings, each uncoated well
+                  shall have a dedicated negative cable connection. The negative cables shall be terminated in a
+                  negative junction box located to optimize the current distribution between casings.
+   6.1.9          Approved underground junction box may be used for an anode bed junction box, bond box,
+                  splice box, or a negative cable junction box.
+                          Note:
+                          Underground junction boxes restrict the ability to measure current distribution to the anodes or the
+                          structures and are only recommended for use in areas where known repetitive cable theft and
+                          vandalism or other operating conditions prohibit the use of above ground junction boxes.
+                  Field Data
+                  Field data and site verification of existing equipment that may affect or be affected by the
+                  proposed CP system are required for the detailed design.
+
+                                                © Saudi Arabian Oil Company, 2025                                 Page 17 of 44
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                SAES-X-700
+   Issue Date: 23 January 2023                                                      Cathodic Protection of Onshore Well Casing
+   Next Revision: 23 January 2028
+
+                  The following field investigation and data collection shall be completed and the results included
+                  with all detailed design packages submitted for approval.
+   6.2.1          Existing Well Casings and Buried Pipelines
+                  Verification and documentation (illustrate on the CP layout drawing) of all buried pipelines and
+                  well casings, or other buried metallic structures within 500 meters from the new well casing and
+                  the location of the proposed CP power supply, anode bed, junction box, fence, rectifier,
+                  pipeline, flow line or well casing.
+   6.2.2          Existing CP Systems
+                  Measurement of all relevant cathodic protection currents in cables, junction boxes, anode beds,
+                  grounding systems and flow-lines, plus all relevant power supply voltages and currents, and all
+                  relevant structure potentials. PMT is required to measure the well casing current at the well
+                  head below the negative cable connection point especially for gas wells using a clamp on
+                  ammeter. In addition, use the clamp to re-confirm the well casing net current by measuring the
+                  current at the flowline, kill line, test line, blowdown line, annulus line, trunk line, flare line,
+                  grounding and all other connection points to the well head. Measurement point on the
+                  wellhead P&ID and grounding drawings shall be used to identify all underground grounding
+                  components, the type of grounding, the way it is connected to the CP system and or site
+                  structures, whether isolated or shorted in order to account for the grounding current
+                  requirement at the design stage. Designs that neglect grounding shall be rejected. Installations
+                  that do not meet all commissioning requirements shall be re-sent to the design office for a re-
+                  design and simulation if required. Saudi Aramco can be consulted to resolve non-routine and
+                  complex issues, especially for multiple well casings. All CP pre-commissioning requirements for
+                  new wells and flowlines shall be met and all monitoring requirements for existing wells and
+                  flowlines shall also be met.
+   6.2.3          Soil Resistivity Measurement
+                  Soil resistivity measurements are mandatory for all types of new and existing anode beds;
+                  assumed or back calculated resistivities are not allowed.
+                  Shallow (Surface) Remote Anode Beds
+                      a. Even after conducting surface resistivity measurements, the preference is to use deep
+                         anode beds unless the site conditions permit the use of surface anode beds, i.e., Subkha
+                         soils. Install a watering system in very dry soil or use a deep anode bed. Surface soil
+                         resistivity or soil conductivity measurements shall be taken at 10 meter intervals.
+                         Soil conductivities maybe measured using the four-pin, three-pin or non-contact
+                         electromagnetic tools.
+                      b. Measurements shall be taken for at least two soil layers (typically 3 and 6 meter depths)
+                         down to the target installation depth of the anode bed. Calculate the layer resistivity to
+                         be used in the design.
+                      c. Measurements shall be taken in parallel and perpendicular orientations over the full
+                         length of the proposed shallow anode bed location.
+                      d. If the soil resistivities within a proposed shallow anode bed vary by more than 100%,
+                         either additional anodes shall be provided or, anodes of the same composition with a
+                         higher current capacity can be placed in the low resistivity areas so that no anode
+                         exceeds the maximum commission current (Table 3).
+                      e. The four-pin Wenner method or a non-contact electromagnetic soil
+                         resistivity/conductivity instrument shall be used as appropriate for the location where
+                         soil resistivity is measured. Type of measurement and the equipment used shall be based
+                         on the effectiveness and reliability of the selected method and equipment capability.
+                      f.   The proposed location for the shallow anode bed shall be clearly marked with wooden or
+                           metal stakes at each end. Show the location on the CP layout drawing.
+
+
+                                                © Saudi Arabian Oil Company, 2025                               Page 18 of 44
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                SAES-X-700
+   Issue Date: 23 January 2023                                                      Cathodic Protection of Onshore Well Casing
+   Next Revision: 23 January 2028
+
+                  Deep Remote Anode Beds
+                      a. Unless mandated and approved by the proponent, the max deep anode bed depth is
+                         120 meters, max no. of anodes per hole is 20 anodes, anode to anode spacing shall be
+                         between 3 and ½ a meter, anode hole to anode hole spacing shall be within 10 to 20
+                         meters and use of slotted/non-slotted PVC or metallic casing is not allowed, except for
+                         un-conventional deep anode bed design.
+                      b. Use un-conventional deep anode bed systems in areas where the measured soil
+                         resistivity is extremely high (typically higher than 50,000 ohm-cm) and/or the strata is
+                         known to have cracks, voids, gaps or multiple loss circulation zones. Soil resistivity or
+                         soil conductivity measurements for both conventional and un-conventional deep anode
+                         beds are mandatory for new/existing well casing sites and/or new CP system upgrades.
+                      c. Only use Saudi Aramco recommended/approved drilling contractors for drilling anode
+                         beds. Record drill stem and test anode resistance measurements on the form contained
+                         in Appendix 2 and submit for review and analysis to Saudi Aramco or to approved local
+                         design offices as applicable.
+                         Drill stem and test anode measurements are not required for unconventional deep
+                         anode holes. The drill stem and test anode measurements shall be taken in accordance
+                         with the requirements detailed in Standard Drawing
+                         AA-036385. Saudi Aramco or approved local design offices as applicable shall determine
+                         the final acceptable borehole depth, number of anodes, anode to anode spacing,
+                         number of anode beds, separation between anode beds, size of the rectifier, use of
+                         resistors and anode distribution.
+                         Water level in the anode hole must be at the top of the casing before taking each
+                         measurement.
+                      d. Where a conventional deep anode bed was used but did not meet the requirements due
+                         to high resistance, drill the new anode beds as unconventional with a prior approval
+                         from the proponent.
+                      e. The proposed location for the deep anode bed shall be clearly marked with a wooden or
+                         metal stake. Show the location on the CP layout drawing.
+                      f.   While drilling, PMT shall hold the job if any of the following is encountered: high anode
+                           cable resistances, loose connection to resistance meter or loss of fluid circulation during
+                           drilling, coke breeze pouring, or anode installation.
+                      g. If commissioning could not be met due to facing high anode bed resistance, then it
+                         could be due to missing drilling procedures, wrong equipment or consumables,
+                         extremely high resistivity soils, improper installation practice, backfill settlement, air gaps,
+                         anode-cable contact issues, dry backfill, loss of circulation fluid, cavities, missing
+                         intermittent check/hold points. Possible solutions include, to prepare a clear procedure
+                         for anode bed installation with check and hold points, verify anode to cable resistance
+                         before lowering the anodes, verify during backfilling withhold points. Water volume,
+                         calcined petroleum coke volume required shall be calculated in advance and full
+                         calculated quantity must be filled and recorded. Qualify and approve the drilling
+                         contractors to meet to the procedure. Sample calcined petroleum coke to be lab tested
+                         for its quality. Investigate foam drilling/steel casings for loss of water areas.
+                      h. When facing erratic drill stem and test anode data then that is probably due to poor
+                         contacts, incorrect measurement practices or dry measurements. Potential solutions
+                         could be to use qualified persons for measurements, always ensure proper electrolytic
+                         continuity, maintain wet conditions, check water levels, and if necessary add water, be
+                         able to check and re-measure if required before sending the data for further processing,
+                         temporary power up the anode bed following anode installation for current distribution
+                         check.
+
+
+
+                                                © Saudi Arabian Oil Company, 2025                               Page 19 of 44
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                 SAES-X-700
+   Issue Date: 23 January 2023                                                       Cathodic Protection of Onshore Well Casing
+   Next Revision: 23 January 2028
+
+                  Distributed Anode Beds
+                  Distributed anodes are not used for well casing CP.
+                  Galvanic Anode Locations
+                      a. Galvanic anodes are not used for well casing protection. Galvanic anodes when used for
+                         protection of flowlines or other nearby pipelines, soil resistivity measurements are. Soil
+                         resistivity measurements are not required for galvanic anodes used for supplemental
+                         cathodic protection of associated pipelines.
+                      b. Soil resistivity measurements taken by the design agent, and ground water resistivity
+                         data supplied by the Saudi Aramco Groundwater Protection organization, shall be used
+                         for the design of galvanic anode systems for pipelines.
+                  Design Life
+   6.3.1          Size ICCP anode beds to discharge the CP power source rated current at the anode
+                  consumption rate detailed in Table 2, for a minimum of 20 years for HSCI anodes. MMO
+                  anodes shall be designed for 25 years.
+                                            Total Weight of all Anodes (kgs.)                 
+                             Anode Consumption Rate x CP Power Source Design Current Capacity  ≥ 20 Years
+                                                                                              
+   6.3.2          For flowlines, galvanic anode systems used for temporary or supplemental CP shall be designed
+                  to provide a minimum life of 10 years. Galvanic anode systems used for permanent CP shall be
+                  designed to provide a minimum life of 20 years for flowline CP.
+   6.3.3          New Well Added to a CP System Less than 10 Years Old within 500 meters:
+                  Use multiple CP systems for the addition of a new well within 500 meters from an existing
+                  well(s), up to 5 wells and up to 150 Amp rectifier rating. Otherwise PMT after securing the
+                  proponent approval may use a shared CP system when in compliance with the exceptions for
+                  permitting the use of shared CP systems as detailed in Section 6 above. Upgrade the rectifier to
+                  a higher level if needed and ensure that all new and existing well casings within 500 m and
+                  flowlines within 1,000 are adequately protected. While new structures shall meet the
+                  commissioning requirement, existing structures shall meet the monitoring requirements.
+                  Where a new well is being added to a CP system commissioned within the previous 10 years, an
+                  anode bed upgrade is NOT required if the existing T/R and anode bed are capable of providing
+                  the required current at an output voltage not greater than 90% (±10%) of the power supply full
+                  rated voltage. If the required current for the existing wells and the new well(s) cannot be
+                  achieved at 90% (±10%) or less of full rated voltage, an anode bed upgrade shall be designed
+                  to comply on a prorated basis (see 6.3.4). Upgrade the rectifier to a higher level if needed.
+   6.3.4          New Well Added to a CP System more than 10 Years Old within 500 meters
+                  If requested by the proponent, evaluate replacing the rectifier, junction box, bond box and
+                  splice box if more than 20 years old. Where a new well is being added to a CP system that is
+                  more than 10 years old, the contribution of the existing anode bed to the overall anode bed life
+                  and current capacity for the upgraded CP system shall be calculated on a prorated basis using
+                  10 years at full rated output as full life. The existing anode bed shall be bonded to the new
+                  anode bed if cost-optimal and in compliance with this standard. Use of the existing anode beds
+                  should also be evaluated economically and practically as they could be too far away and thus
+                  might be cost prohibiting or impractical to utilize. Upgrade the rectifier to a higher level when
+                  needed. Use of existing facilities requires the proponent’s approval.
+                          Notes:
+                          Example: 12 TA-4 anodes operating for 5 years at 23 amps would be given a prorated remaining
+                          life contribution calculated as follows:
+
+
+                                                © Saudi Arabian Oil Company, 2025                                Page 20 of 44
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                SAES-X-700
+   Issue Date: 23 January 2023                                                      Cathodic Protection of Onshore Well Casing
+   Next Revision: 23 January 2028
+
+                               •   1 TA-4 anode has a capacity of 4.45 Amps x 10 year = 44.5 Amp-yr
+                               •   12 TA-4 have a 10 year capacity of 44.5 x 12 = 534 Amp-yr
+                               •   12 TA-4 at 23 Amps for 5 years have consumed 5 x 23 = 115 Amp-yr
+                               •   Prorated percent consumed = 115/534 x 100 = 21.5%
+                               •   Remaining prorated capacity = 78.5% x 12 anodes = 9.4 = 9 anodes
+                  Design Current Criteria
+   6.4.1          Use externally coated casings for all new, onshore, oil, gas, unconventional gas, gas lift,
+                  observation, exploration, water injection, and water supply metallic wells regardless of the well
+                  depth. This will minimize the CP current requirement, allow use of multiple well casings, reduce
+                  AC consumption and permit deployment of solar systems at remote areas. If a bare well casing
+                  is used, then it shall be pre-approved by the proponent and shall not be violating the general
+                  decision chart of coating in Appendix A3.3 of this standard. The cathodic protection system
+                  design shall provide the minimum design currents detailed in Tables 1A, 1B, and 1C of this
+                  standard.
+   6.4.2          The CP requirements for well casings in fields specifically covered by Tables 1A, 1B, or 1C have
+                  resulted from actual Corrosion Protection Evaluation Tool (CPET) logging. Other fields were not
+                  logged and thus should be determined by future logging or extrapolation. Rectifier sizes in
+                  Tables 1A, 1B, or 1C may be used as a guideline while alternative cost-optimum sizes are also
+                  allowed. Upgrade the rectifier to a higher level whenever needed. A list of recommended CP
+                  rectifier rating is provided in Table-6 for reference.
+   6.4.3          The protection criteria for commissioning and monitoring are detailed in Tables 1A, 1B, and 1C
+                  of this standard. Tolerance values of ±10% on commissioning values during commissioning
+                  and on monitoring values listed in Tables 1A, 1B, and 1C of this standard shall be implemented
+                  where needed.
+   6.4.4          Multi-well (multiple) CP systems for new well(s) located within 500 meters from the nearest
+                  well shall be designed with one CP power supply sized with a minimum rated output current
+                  equivalent to the sum of the commissioning current requirement plus the estimated flow-line,
+                  test line, kill line, flare line, blow down line and grounding system current requirement plus a
+                  design surplus of 20%. Tolerance of ±10% may be considered when sizing the rectifier to select
+                  a standard rectifier rating or to use the existing CP system. Max rectifier size shall be 150 Amp,
+                  max rectifier voltage shall be 100 V and max number of well casings per rectifier shall be 5 wells
+                  (Max current capacity and number of well casings are not applicable for well pads where
+                  multiple well casings are installed within a same well pad). The 20% surplus current is not
+                  required for single well CP system. Upgrade the rectifier to a higher level whenever needed.
+                  Ensure adequate protection for all buried pipelines and flowlines that belong to the new well or
+                  to other facilities if they fall within 500 meters from the new well casing. Carryout field survey
+                  and provide a dedicated bonding with a bond box when required to ensure protection of these
+                  nearby facilities within 500 meters of the new well casing. If the well casing is connected to a
+                  non-metallic flowline, then bond all metallic pipelines, flowlines and trunklines that fall within
+                  the 500 meters of the new well to the well and together to ensure electrical continuity. Both air-
+                  cooled and oil-cooled rectifiers per 17-SAMSS-004 are permitted for well casing sites and these
+                  rectifiers shall be suitable for the location of installation.
+                  Anodes and Anode Beds
+   6.5.1          Impressed current and galvanic anodes shall be manufactured in accordance with 17-SAMSS-
+                  007 and 17-SAMSS-006 respectively.
+                          Note:
+                          Nominal dimensional and weight data as specified in 17-SAMSS-007 for HSCI anodes are contained
+                          in Table 3 of this standard for ease of reference.
+
+
+
+
+                                                © Saudi Arabian Oil Company, 2025                               Page 21 of 44
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                    SAES-X-700
+   Issue Date: 23 January 2023                                                          Cathodic Protection of Onshore Well Casing
+   Next Revision: 23 January 2028
+
+   6.5.2          Anodes to be installed onshore deeper than 15 meters are classified as “deep” anode beds and
+                  as such require the drilling depth to be pre-approved in writing by the Saudi Aramco
+                  Groundwater Division, Reservoir Characterization Department. PMT shall obtain this approval.
+   6.5.3          Deep anode beds shall be installed in accordance with the latest revision of Saudi Aramco
+                  Standard Drawing AA-036385 “Cathodic Protection Deep Anode Bed”.
+                          Exception:
+                          Where electrolyte resistivities or bore hole conditions are not suited to the conventional installation
+                          detailed on AA-036385, alternative material and installation configurations (unconventional deep
+                          anode bed) may be used. Add steel casings for the active columns of these unconventional anode
+                          beds to improve the anode bed performance in loss of circulation zones and include detailed
+                          calculations for the steel casing consumption.
+   6.5.4          For an anode bed discharging 25 amperes or more, a minimum distance of 150 meters shall be
+                  maintained between the nearest anode and the well casing to establish electrical remoteness.
+                          Exceptions:
+                          Where electrolyte resistivities at the anode bed are below 1,000 ohm-cm,
+                          the distance between the anode bed and the nearest well casing may be less than 150 meters, but
+                          must be far enough from the nearest well casing such that the calculated anodic gradient (∆V) at
+                          the well casing is less than 1.0 volt using the resistivity determined at the anode bed.
+                          For multiple well casing locations, the calculated difference in the anodic gradient between any two
+                          well casings must also be less than 200 mV.
+   6.5.5          For an anode bed discharging less than 25 amperes, a minimum distance of 75 meters shall be
+                  maintained between the nearest anode and the well casing.
+                          Exceptions:
+                          Where electrolyte resistivities at the anode bed are below 1,000 ohm-cm,
+                          the distance between the anode bed and the nearest well casing may be less than 75 meters, but
+                          must be far enough from the nearest well casing such that the calculated anodic gradient (∆V) at
+                          the well casing is less than 1.0 volt using the resistivity determined at the anode bed.
+                          For multiple well casing locations, the calculated difference in the anodic gradient between any two
+                          well casings must also be less than 200 mV.
+   6.5.6          Both mixed metal oxide (MMO) and high silicon cast iron (HSCI) anodes can be used for anode
+                  beds. Procure MMO and HSCI anodes from approved sources as specified by 17-SAMSS-007.
+                  Design parameters for HSCI and MMO impressed current anodes shall be as detailed in Table
+                  2A and 17-SAMSS-007. Procure galvanic anodes from approved sources as specified by 17-
+                  SAMSS-006. The design parameters for galvanic anodes shall be as detailed in Table 2B, 17-
+                  SAMSS-006, and Saudi Aramco Standard Drawing AA-036389.
+   6.5.7          The HSCI impressed current anodes most commonly used by Saudi Aramco are listed in Table 3.
+   6.5.8          The ICCP current capacity of an ICCP anode bed shall be equal to or greater than the design
+                  current for the associated CP power source and shall be calculated as follows:
+                                             SA AB x Iφ ≥ Iθ
+
+                            Where:
+                                  SA AB = The total surface area of all the anodes in the anode bed
+                                  I φ = Anode material current density per Table 2A
+                                  I θ = CP power source rated current output
+
+
+
+                                                © Saudi Arabian Oil Company, 2025                                    Page 22 of 44
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                  SAES-X-700
+   Issue Date: 23 January 2023                                                        Cathodic Protection of Onshore Well Casing
+   Next Revision: 23 January 2028
+
+   6.5.9          Adjacent ICCP anode beds powered from separate CP power sources shall be separated by a
+                  minimum distance of 50 meters. Adjacent ICCP anode beds powered from the same CP power
+                  source shall be separated by a minimum distance of 10.
+   6.5.10         Impressed current anodes shall be designed to maintain the minimum clearance detailed in
+                  Table 4 from any other cathodically protected structure.
+   6.5.11         Adjacent deep anode beds can be treated as individual anode beds if the separation between
+                  the anode beds meets or exceeds the minimum distances detailed in Table 4. Use actual
+                  measured soil resistivities if available.
+                          Example:
+                          Two 50 amp deep anode beds placed 75 meters apart in 2,500 ohm-cm soil can be installed 75
+                          meters away from a buried pipeline.
+                  Circuit Resistance
+   6.6.1          For a T/R, the CP system rated circuit resistance shall be defined as the T/R rated voltage,
+                  divided by the T/R rated current. Rated voltages and currents are as detailed on the
+                  manufacturer's data sheet/plate.
+                  Example, 1 ohm is the rated resistance for a 50V/50A rectifier.
+   6.6.2          For a photovoltaic CP system, the rated circuit resistance shall be defined as the photovoltaic
+                  system rated output voltage divided by the CP power source minimum required rated current
+                  from Tables 1A, 1B, and 1C.
+   6.6.3          The CP system operating circuit resistance for an ICCP system shall be defined as the total
+                  effective resistance seen by the output terminals of the respective ICCP power supply, and for
+                  calculation purposes shall include:
+                      a. Anode bed resistance-to-ground.
+                      b. Positive cable resistance from CP power source to anodes.
+                      c. Negative cable resistance from CP power source to structure(s).
+                      d. Resistance of the casing to remote earth. This shall be as shown in Table 5 unless site
+                         testing is completed to verify a more accurate value.
+                      e. Effective resistance caused by +0.8 volts anode bed back emf (for HSCI/MMO in coke
+                         breeze) plus the structure back emf per Table 5 (example: + 0.8 volts anode bed back
+                         emf -1.2 volts casing back emf = 2.0 volts total between the anode with coke breeze
+                         backfill and a coated steel casing).
+                          Remf = (+0.8V for anode bed back emf + structure back emf per Table 5) / Irated
+                                       Irated   =CP power supply “rated” current
+                          Exception:
+                          A back emf of +1.0 volts (Cu/CuSO4) shall be used for MMO/HSCI anodes in seawater, Subkha, or
+                          comparable high salinity wet applications without coke breeze. This does not include the back emf
+                          associated with the polarized potential of the structure.
+                                  Note:
+                                          When using Remf to calculate the maximum allowable anode bed resistance to
+                                          provide 70% of Rrated, the value of Remf must be multiplied by 0.7 (70%).
+                                  Example: Ranodebed maximum = (0.7 x (Rrated - Remf)) - Rcables - Rstructure.
+                                  For a 50 V / 50 Amp rectifier,
+
+
+                                                © Saudi Arabian Oil Company, 2025                                 Page 23 of 44
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                 SAES-X-700
+   Issue Date: 23 January 2023                                                       Cathodic Protection of Onshore Well Casing
+   Next Revision: 23 January 2028
+
+                                   Ranodebed maximum = (0.7 x (50/50 – (+0.8+1.2)/50)) - Rcables - Rstructure
+   6.6.4          ICCP system designs shall take into consideration the calculated operating resistance and shall
+                  size the positive and negative cables and voltage rating of the T/R such that the “calculated”
+                  operating output of the T/R complies with all of the following:
+                      a. At the design stage only, the target commissioning current shall be achieved at a voltage
+                         of lower than 70% of the T/R rated voltage output. A pre-commissioning report is
+                         approved if the well casing(s) is receiving the pre-commissioning current in the tables 1A,
+                         1B, and 1C, rectifier is not exceeding 90% (±10%) voltage, anodes are not exceeding the
+                         pre-commissioning current and the rectifier current is compatible with the anodes while
+                         the system resistance does not exceed 90% and flowlines potential is meeting the criteria,
+                         otherwise send back to the design for a re-design and re-modeling.
+                      b. The normal operating output current shall be achieved with the voltage adjustment set
+                         at more than 10% of the available (rated) T/R voltage output.
+                      c. This is a mandatory design requirement but is not a mandatory requirement for
+                         commissioning acceptance.
+   6.6.5          The CP system “operating” circuit resistance measured during commissioning of a new CP
+                  system shall not be greater than 90% of the CP power supply “rated” circuit resistance unless all
+                  of the following are met:
+                      a. If the CP system power supply is a tap adjustable T/R, it shall have at least two fine tap
+                         setting increments remaining.
+                      b. Each anode current, for the required minimum number of anodes is at or below the
+                         maximum commissioning current rating (Table 3 of SAES-X-700).
+                          Exception:
+                          The system can discharge the minimum current required for commissioning listed in tables 1A, 1B,
+                          and 1C of SAES-X-700.
+   6.6.6          If during commissioning the flowline is measuring more than 5 Amps of current, then investigate if
+                  this is a bare flow lines and/or sacrificial anode drain, stray current drain, excessive grounding,
+                  large flowline network, major unknown changes to previous mechanical/electrical
+                  arrangements. Possible solutions include, to use only coated pipelines, identify changes to
+                  grounding and piping, verify P&ID drawings, include grounding to be part of CP design and
+                  simulation, isolate spools and consider resistance bonding, increase CP system rating to higher
+                  current (i.e., 100 amps instead of 50 amps) or carryout field investigation/study by PMT.
+   6.6.7          During commissioning, the compatibility of the anodes and rectifier rating is not mandatory if
+                  the commissioning current can be achieved.
+   6.6.8          The drilling contractor is held accountable for the functioning of the anode bed, must meet
+                  qualification requirements, either should have a NACE CP 2 qualified technician onboard or
+                  subcontract this service, prepare a clear procedure for anode bed installation with check and
+                  hold points and to be qualified by Saudi Aramco.
+                  DC Power Supply
+   6.7.1          Cathodic protection rectifiers and photovoltaic systems shall be manufactured in accordance
+                  with 17-SAMSS-004 and 17-SAMSS-012 respectively.
+   6.7.2          The maximum allowed output rating for a DC power supply is 100 volts.
+   6.7.3          For hazardous areas (maximum Class 1 Zone 2), the design agency shall select a cathodic
+                  protection DC power supply (and other CP system equipment) that complies with the
+
+
+                                                © Saudi Arabian Oil Company, 2025                                Page 24 of 44
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                SAES-X-700
+   Issue Date: 23 January 2023                                                      Cathodic Protection of Onshore Well Casing
+   Next Revision: 23 January 2028
+
+                  requirements of NEC Articles 500 to 504 for hazardous (classified) areas. CP equipment shall
+                  not be placed in Class 1 Zone 1 areas.
+   6.7.4          Rectifiers with NEMA Class 3R enclosures shall NOT be used inside hydrocarbon plant areas,
+                  within 30 meters of the plant perimeter fencing (outside), or within 1 km of a coastline.
+                  Junction Boxes
+   6.8.1          Junction boxes shall be manufactured in accordance with 17-SAMSS-008.
+   6.8.2          Anode junction boxes used with DC power supplies with a rated output greater than 50 volts
+                  and a rated load resistance equal to or greater than
+                  10 ohms shall utilize one of the following alternatives:
+                      a. Shall use a non-metallic anode junction box, or
+                      b. Shall have a protective clear plastic plate mounted in front of the shunts, with holes
+                         drilled to facilitate measurement of the current through each shunt.
+   6.8.3          Transformer/Rectifiers and junction boxes shall be permanently and systematically labeled in
+                  line with the well site electrical devices and equipment labeling system. Use T/R for
+                  transformer/rectifier and J/B for junction box.
+                  DC Cables
+   6.9.1          Cathodic protection DC cables shall be manufactured in accordance with 17-SAMSS-017.
+   6.9.2          DC cables connected to a CP power supply either directly or through a junction box shall be
+                  shall be #6 (16 mm²) or larger. Cables larger than
+                  16 mm2 shall be optimized in size to compliment the current capacity and resistance
+                  requirements of the respective CP system.
+   6.9.3          DC cables shall comply with the most recent edition of the National Fire Protection Association
+                  NFPA 70, National Electric Code (NEC).
+   6.9.4          Unless otherwise specified by the cable manufacturer, the allowable ampacity of High Molecular
+                  Weight Polyethylene (HMWPE) cables manufactured in accordance with 17-SAMSS-017 shall be
+                  rated for ampacity under the column for insulation rated for 90°C in the NFPA 70, NEC
+                  Handbook. Correction shall be made to an operating conductor temperature of 40°C.
+                  Monitoring
+   6.10.1         The column titled “Monitor” in tables 1A, 1B, and 1C of this standard shall be used as a
+                  guideline for adjusting the output of cathodic protection systems to the optimum current
+                  output.
+   6.10.2         Remote monitoring
+                  Where a remote monitoring system (RMS) is used, the design details as stated below for the
+                  RMS shall be submitted to the CP Proponent organization to review and confirm acceptance of
+                  the proposed RMS and their compatibility with the existing CP RMS.
+                      a. A description of the existing CP RMS used by the respective CP Proponent in the
+                         respective area (if applicable). The description shall detail existing RMS hardware,
+                         software, communication connectivity and protocols.
+                      b. Confirmation of proposed hardware and software compatibility with the existing CP RMS
+                         (if applicable), or written authorization by the CP Proponent organization to use a non-
+                         compatible RMS.
+                      c. A data flowchart that illustrates the data path from the CP power supply to the CP
+                         Proponent’s desktop including connectivity details with software requirements and
+                         communication protocols.
+
+
+                                                © Saudi Arabian Oil Company, 2025                               Page 25 of 44
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                 SAES-X-700
+   Issue Date: 23 January 2023                                                       Cathodic Protection of Onshore Well Casing
+   Next Revision: 23 January 2028
+
+                  Remote monitoring systems for well casing cathodic protection power supplies shall be
+                  designed and installed at all new CP system installations where an RTU is located within 500
+                  meters of the CP power supply.
+                      a. The CP RMS shall at minimum use signal transmitters for DC output voltage and current
+                         and a circuit breaker status switch.
+                      b. The data collected and stored by the CP remote monitoring system shall be accessible by
+                         the CP Proponent organization directly from their desktop computer.
+                  At locations where an existing useable RTU is not within 500 meters of the CP power supply or
+                  there is no RTU or there is no possibility of using the RTU, then a dedicated Remote Monitoring
+                  Unit shall be provided.
+                  Remote Monitoring Units (RMUs) for cathodic protection power supplies shall comply with the
+                  requirements of 17-SAMSS-018.
+                  Cables and field wiring used for the remote monitoring systems shall comply with SAES-P-104.
+                  Signal Transmitter Requirements for CP Remote Monitoring Systems are as follows:
+                      a. CP remote monitoring systems using signal transmitters shall utilize two (preferably loop
+                         powered) 4-20 mA signal transmitters to monitor the DC voltage and current. A third
+                         channel (digital) shall be used to monitor the CP power supply AC circuit breaker status.
+                      b. The CP power supply shall be supplied with a circuit breaker containing a factory built-in
+                         auxiliary status switch to facilitate monitoring the CP power supply AC circuit breaker
+                         status. This type of circuit breaker must be clearly and specifically identified as a
+                         requirement on the Material Purchase Order.
+                      c. The wiring between the circuit breaker auxiliary switch, signal transmitters, and the RTU
+                         must be sized such that the resistance is within the maximum load tolerance of the signal
+                         transmitter (typically 600 ohms maximum).
+                  Bonding
+   6.11.1         Well casings shall be electrically continuous with their associated piping. Resistance bonding is
+                  not allowed during the design stage except to balance the current during commissioning as
+                  detailed below.
+                          Exception:
+                          If adequate current distribution is not achieved during commissioning or operation of a multi-well
+                          or shared cathodic protection system, the use of electrical isolation devices accompanied by a bond
+                          station may be added if approved by the CP Proponent organization. If resistors are necessary, they
+                          shall be welded tap adjustable or fixed (non-adjustable) resistors and shall be 0.15 ohms or less.
+   6.11.2         Electrically isolated flanged piping sections (spool pieces, i.e., Venturi spool) installed in a flow-
+                  line or trunk-line for use with instrumentation or other applications shall be bonded around
+                  using a metal bond strap fabricated to facilitate a reliable bond around the isolated equipment
+                  and ease of installation and removal, i.e., bolted.
+                  Where a non-metallic pipeline or flowline is used, bond across to ensure the electrical continuity
+                  to all metallic spools, test lines, trunk lines using a dedicated bonding facility.
+                  Bond all flowlines, test lines, trunk lines and pipelines through a dedicated bonding facility if
+                  they fall within 500 meters from a new well. Bond all crossing pipelines that fall within the 500
+                  meters. For others farther away, bond at the closest pipelines crossing. If existing bonding is
+                  already present then no additional dedicated bonding is required. The proponent is responsible
+                  to monitor and restore the bonding stations and to upgrade the CP system to ensure adequate
+                  protection on all affected pipelines within the 1,000 meters. The bonding requirement stated
+
+
+                                                © Saudi Arabian Oil Company, 2025                                Page 26 of 44
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                       SAES-X-700
+   Issue Date: 23 January 2023                                                             Cathodic Protection of Onshore Well Casing
+   Next Revision: 23 January 2028
+
+                  here is to ensure that there is no stray current interference. Interference test shall be conducted
+                  during commissioning for all facilities that fall within 1000 meters to confirm that no stray
+                  current interference is present. Stray current interference if found shall be mitigated.
+                  Electrical Isolation
+                  Electrical isolation shall not be installed between a well casing and the associated flow-line.
+                          Exceptions:
+                          If adequate current distribution is not achieved during commissioning of a multi-well cathodic
+                          protection system, the use of electrical isolation devices accompanied by a bond station may be
+                          added after concurrence from the Supervisor of the CP Proponent organization and the design
+                          updated for further review & approval If resistors are necessary, they shall be welded tap adjustable
+                          or fixed (non-adjustable) resistors and shall be 0.15 ohms or less.
+                          Where an electrical isolating gasket is used to isolate between two flange faces,
+                          it shall be installed at a location where the pipe is in a vertical orientation if practical.
+                  Installation, Records, Commissioning, and Inspection
+                  Where cathodic protection is required as specified in this standard, it shall be installed and pre-
+                  commissioned within one year after the drilling completion date of the well in all areas. If a rig
+                  works on an existing well; then, re-connection of the CP systems after well completion or drilling
+                  and workover work shall be done within 14 days from completing the work.
+                    Exceptions:
+                    1)   Installation and pre-commissioning of cathodic protection may be delayed until the flow-line has
+                         been installed at well casing locations where the well casing meets all of the following criteria:
+                         a.   The well casing has not been externally coated or is a coated well drilled with a total vertical
+                              depth greater than 8,000 feet.
+                         b.   AC power of distribution voltage is more than 5 km away.
+                         c.   Soil or shallow aquifer (within 100 meter depth) resistivities are greater than
+                              500 ohm-cm and not conducive to achieving full CP with galvanic anodes.
+                    2)   Installation of cathodic protection may be delayed for up to 2 years in Uthmaniyah and 3 years
+                         elsewhere for well casings where the associated flow-line or trunk-line has been installed and meets
+                         all of the following criteria:
+                         a.   The trunk-line or flow-line has electrical continuity with the well casing through mechanical
+                              connection, or electrical bonding.
+                         b.   The trunk-line is adequately cathodically protected.
+                         c.   The flow-line or trunk-line is adequately protected at a measurement point
+                              1 km away from the well casing.
+                         d.   AC power of distribution voltage is more than 5 km away.
+                  All pre-commissioning and commissioning shall be done according to
+                  Tables 1A, 1B, and 1C of SAES-X-700, GI-0002.710, and SAEP-332.
+                  Refer to Saudi Aramco Best Practice SABP-X-003 for detailed Installation, Records, and
+                  Inspection requirements. SABP-X-003 shall be deemed a mandatory document for this
+                  standard.
+                  Refer to Saudi Aramco Engineering Procedure SAEP-332 for commissioning requirements. The
+                  criteria listed in this standard for commissioning are directly applicable to all pre-commissioning
+                  requirements.
+
+
+
+                                                 © Saudi Arabian Oil Company, 2025                                        Page 27 of 44
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                     SAES-X-700
+   Issue Date: 23 January 2023                                                           Cathodic Protection of Onshore Well Casing
+   Next Revision: 23 January 2028
+
+                                                      Table 1: Table Title
+                             Table 1A – CP Current Requirement for Gas Well Casings (6)
+
+                                                 Gas Well Casings
+                              Cathodic Protection Current Requirements – Single Well
+
+                                                Bare Casing                                      Coated Casing
+                                                        Com-                                               Com-
+                                      Design                          Monitor        Design                            Monitor
+                                                       mission                                            mission
+                                         Current                            Current
+     Field Designation         Minimum                    Optimum Minimum                    Optimum
+                                        Included Minimum                   Included Minimum
+                               CP Power                    Casing CP Power                    Casing
+                                           for    Casing                      for    Casing
+                                Supply                    Operating Supply                   Operating
+                                        Flow-line Current                  Flow-line Current
+                                Rating                     Current  Rating                    Current
+                                         (amps)   (amps)                    (amps)   (amps)
+                                (amps)     (1,2)           (amps)   (amps)    (1,2)           (amps)
+
+ Abu Jifan, Fazran,
+ Khurais, Mazalij,
+ Midyan, Nuayyim,                   25          3          20          15-20        10            3           2          1.5-5
+ Shaybah, Dilam
+ Ghazal, Jufayn, Kassab,
+ Manjurah, Sahba,
+ Shaden, Tinat, Waqr,
+ (ZMLH), (AWTD),                    50          3          40          35-40        10            3           2          1.5-5
+ (WDYH)
+ Haradh, Hawiyah,
+ Harmaliyah, Midrikah,
+ Nujayman, Shedgum,
+ Uthmaniyah, (ANDR),
+ (DAMM), (KRSN),                    75          3          40          35-40        75            3          35          30-35
+ Jafurah
+
+
+
+
+                                                © Saudi Arabian Oil Company, 2025                                    Page 28 of 44
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                SAES-X-700
+   Issue Date: 23 January 2023                                                      Cathodic Protection of Onshore Well Casing
+   Next Revision: 23 January 2028
+
+                  Table 1B – CP Current Requirement for Water Injection and Oil Well Casings (6)
+
+                                   Oil Production and Water Injection Well Casings
+                               Cathodic Protection Current Requirements – Single Well
+
+                                                   Bare Casing                                  Coated Casing
+                                                             Com-                                         Com-
+                                          Design                       Monitor            Design                 Monitor
+                                                            mission                                      mission
+                                                                                  Current
+     Field Designation           Minimum Current                Optimum Minimum                    Optimum
+                                                       Minimum                   Included Minimum
+                                 CP Power Included               Casing CP Power                    Casing
+                                                        Casing                      For    Casing
+                                  Supply     For                Operating Supply                   Operating
+                                                        Current                  Flow-line Current
+                                  Rating  Flow-line              Current  Rating                    Current
+                                                        (amps)                    (amps) (amps)
+                                  (amps) (amps)  (1,2)
+                                                                 (amps)   (amps)    (1,2)           (amps)
+
+ Uthmaniyah
+                                     50            3           35        30-35       15            3         7          5-7
+
+ Abqaiq, Abu Ali, Abu
+ Hadriyah, AinDar,
+ Berri, Dammam,
+ Fadhili, Fazran,
+ Hawiyah, Khursaniyah,
+ Manifa, Qatif,                      35            3           25        20-25       10            3         3          2-4
+ Safaniyah, Shedgum
+ Ginah, Haradh,
+ Hawtah, Harmaliyah,
+ Midyan, Nuayyim,                    25            3           15        12-15       10            3         2          1-3
+ Shaybah, (ABMK),
+ (Umjurf), (Hazmiyah),
+ (Nislah), (Burmah),
+ RGHB (Rughib), KHZM
+ (Khuzama)
+ Abu Jifan, Khurais,
+ Mazalij                             10            3            4         2-5         5            3         1         0.5-5
+
+
+
+
+                                                © Saudi Arabian Oil Company, 2025                                Page 29 of 44
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                   SAES-X-700
+   Issue Date: 23 January 2023                                                         Cathodic Protection of Onshore Well Casing
+   Next Revision: 23 January 2028
+
+                       Table 1C – CP Current Requirement for Water Supply Well Casings (3,4,5,6)
+
+                          Water Supply Well Casings Deeper than the UER Formation
+                           Cathodic Protection Current Requirements – Single Well
+
+                                            Bare Casing                                     Coated Casing
+                                                       Com-                                            Com-
+                                   Design                     Monitor                Design                   Monitor
+                                                      mission                                         mission
+                                                                            Current
+  Field Designation       Minimum    Current              Optimum Minimum                    Optimum
+                                                 Minimum                   Included Minimum
+                          CP Power Included                Casing CP Power                    Casing
+                                                  Casing                      For    Casing
+                           Supply      For                Operating Supply                   Operating
+                                                  Current                  Flow-line Current
+                           Rating   Flow-line              Current  Rating                    Current
+                                                  (amps)                    (amps)   (amps)
+                           (amps)  (amps)  (1,2)
+                                                           (amps)   (amps)    (1,2)           (amps)
+
+ Abu Jifan,
+ Khurais, Mazalij,            10             3            2           1-3         10          3          0.5       0.2-0.5
+ All Other Fields
+                              10             3            6           5-7         10          3           1         0.5-1
+
+      General Notes:
+          •   The following general notes are intended to address issues relating to tables 1A, 1B, and 1C.
+          •   Fields indicated between two parentheses did not result from actual CPET logging, rather they are extrapolated
+              based on their geological location
+          •   Bare well casings are not recommended unless mandated by the proponent provided bare casings are allowed
+              per the coating chart
+          •   A tolerance of ±10% may be considered in the power source size in all tables 1A, 1B, and 1C current values
+          •   Use 3 Amp of current for all flowlines at the design stage. Flowline current stated are for protection and not
+              current drain on the flow lines. Appropriate current drain as required for flowlines and earthing shall be
+              considered in the design as per field survey data.
+          •   Verify the actual commissioning and monitoring currents using a clamp-on ammeter around the well casing
+          •   PMT shall coordinate with Drilling and Workover to conduct CPET logging for new fields while inviting CSD to
+              witness
+          •   If the flowline is not constructed yet, then the pre-commissioning will be rejected unless a temporary cable is
+              used to replicate the flowline.
+          •   Flow lines and other pipelines that are not made of carbon steels, such as stainless steel, duplex stainless steel,
+              etc., will require less negative CP potentials than that of the carbon steel pipelines in accordance with ISO-
+              15589-1 & ISO-15589-2. As the protection criteria required for these pipelines are different from that of carbon
+              steel pipelines, proper cathodic protection design consideration shall be made for the same to provide necessary
+              protection whilst limiting the CP potentials to avoid hydrogen induced damages particularly for high strength
+              materials.
+          •   A pre-commissioning report is approved if the well casing(s) is receiving the pre-commissioning current in the
+              tables, rectifier is not exceeding 90% (±10%) voltage, anodes are not exceeding the pre-commissioning current
+              and the rectifier current is compatible with the anodes while the system resistance does not exceed 90% and
+              flowlines potential is meeting the criteria, otherwise send back to the design for a re-design and re-modeling.
+
+
+
+
+                                                 © Saudi Arabian Oil Company, 2025                                  Page 30 of 44
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                         SAES-X-700
+   Issue Date: 23 January 2023                                                               Cathodic Protection of Onshore Well Casing
+   Next Revision: 23 January 2028
+
+             •   It has been field demonstrated that a few gas fields such as UTMN, HWYH, SDGM and HRDH measured higher
+                 than normal current thru the F/L; therefore, a plan B shall be considered at the design stage to be prepared for
+                 a rectifier upgrade in case needed to satisfy the commissioning requirements.
+         Table Notes:
+   (1)
+           Flow line current stated are for protection and not current drain on the flow lines. CP current requirements for the flow-
+          lines and trunk-lines of gas well casings shall be determined on a site specific basis. If additional current is necessary it
+          shall be added to the current specified in tables 1A, 1B, and 1C. Include additional current for the grounding system.
+   (2)
+          The current required for the flow-lines and trunk-lines is included in the “CP Power Supply Rating (amps)”. If the flow-
+          line or trunk-line is greater than 15 km long, additional current capacity requirements shall be determined through
+          calculations completed in accordance with SAES-X-400. (3)Table 1C applies to water supply wells that extend through
+          the wet UER formation such as typical Wasia water supply wells. Wells that do not extend below the UER (or other
+          known corrosive formation), do not require CP. Wasia water wells drilled in areas where the UER is dry, do not require
+          cathodic protection unless mandated by the proponent
+   (4)
+          Regardless of the water well type, associated buried flow-lines must be cathodically protected in accordance with SAES-X-
+          400.
+   (5)
+          Water wells without cathodic protection, and within 500 meters of an impressed current CP system anode bed, or
+          cathodically protected well casing must be bonded to the negative circuit of the CP system and supplied with sufficient
+          CP current to ensure down-hole interference does not create an external corrosion problem.
+   (6)
+          In this regard, the ∆V measured between the water well and the other protected structure within 500 meters should be
+          less than 200 mV measured with extended lead wires, well head to protected structure.
+
+
+
+
+                                                    © Saudi Arabian Oil Company, 2025                                     Page 31 of 44
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                  SAES-X-700
+   Issue Date: 23 January 2023                                                        Cathodic Protection of Onshore Well Casing
+   Next Revision: 23 January 2028
+
+                                       Table 2A – Impressed Current Anode
+                             Consumption Rates and Maximum Design Current Densities
+
+                                                           Consumption Rate            Anode Current
+                                  Anode Material
+                                                              (kg/amp-y)              Density (mA/cm²)
+                                High Silicon Cast
+                                                                      0.45                      0.7
+                                Iron
+                                                           Not applicable (see
+                                                             manufacturer’s
+                                Mixed Metal Oxide          specification for 25                 7.0
+                                                                year life)
+
+
+                          Commentary Note:
+                          The consumption rates detailed in Table 2A include efficiency and the utilization factor for a HSCI
+                          tubular anode. Shortening of the effective anode length due to an end cap on the anode shall be
+                          neglected in the theoretical calculation of anode current capacity. Polymeric anodes can be used
+                          for flowlines or trunklines protection if conventional anodes have not been successful.
+
+                                               Table 2B – Galvanic Anode
+                                       Consumption Rates and Open Circuit Potential
+
+                                                                                        Open Circuit
+                                                           Consumption Rate
+                                  Anode Material                                          Potential
+                                                              (kg/Amp-y)
+                                                                                      (mV vs Cu/CuSO4)
+                                Aluminum                               3.8                   -1,100
+                                Magnesium                             10.95                  -1,700
+                                Zinc                                  11.8                    -1,100
+                          Note:
+                          The consumption rates detailed in Table 2B include efficiency; include 0.85 utilization factor in
+                          the calculation.
+
+
+
+
+                                                © Saudi Arabian Oil Company, 2025                                 Page 32 of 44
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                    SAES-X-700
+   Issue Date: 23 January 2023                                                          Cathodic Protection of Onshore Well Casing
+   Next Revision: 23 January 2028
+
+
+
+                                        Table 3 – Impressed Current HSCI Anode Data
+
+                                                                                  Maximum            Maximum
+                                               Dimensions          Weight
+                                 Type                                              Design           Commission
+                                                (nominal)         (minimu
+                                                                                   Current            Current
+                                                                    m)
+                                                                                  Per Anode
+                                 TA-2      56 mm x 2133 mm         20.5 kg         2.63 amps           4.0 amps
+                                 TA-4      95 mm x 2133 mm         38.5 kg         4.45 amps           7.0 amps
+                                 TA-5A       121 mm x 2133         79.0 kg         5.67 amps          10.0 amps
+                                                  mm
+
+                              Note:
+                                      The maximum acceptable current during commissioning is based on manufacturer's ratings
+                                      and shall not be used for design. This number shall only be used when determining
+                                      commissioning acceptance. Anodes with output less than 1 Amp during commissioning
+                                      should not be considered as acceptable. Tolerance values of ±10% during commissioning
+                                      on the current is permitted in Table 3 above.
+
+
+
+                     Table 4 – Minimum Distance to Nearest Cathodically Protected Structure
+
+                         Anode Bed                        Minimum Distance in Meters
+                           Rated             as a Function of Average Soil Resistivity at Anode Bed
+                          Output                          500 Ω-cm      1,000 Ω-cm
+                          Current         ρ < 500 Ω-cm      ≤ρ≤             <ρ≤         ρ > 3,000 Ω-cm
+                          (Amps)                         1,000 Ω-cm     3,000 Ω-cm
+                             0 – 35          20 meters       25 meters         50 meters            75 meters
+                          36 – 50            30 meters       35 meters         75 meters           150 meters
+                          51 – 100           65 meters       75 meters         150 meters          250 meters
+                         101 – 150          100 meters      125 meters         225 meters          350 meters
+                                           Calculate the required distance to achieve an anodic gradient
+                             150+          to remote earth of less than 1.8 volts using the soil resistivity
+                                           measured at the anode bed.
+
+                    Exception:
+                          The separation distance between an existing anode bed and a new buried structure shall be
+                          acceptable if field measurements on the buried structure at the nearest point to the anode bed
+                          demonstrate that the polarized (instant-off) potential is less than -1.20 volts (w.r.t. Cu/CuSO4).
+                          Tolerance values of ±10% on all values are permitted in Table 4 above.
+                    Notes:
+                    1)    The distances detailed in Table 4 are provided to limit the structure polarized (instant-off) potential
+                          to less than -1.20 volts and to minimize the interference effects on other independent cathodically
+
+
+                                                  © Saudi Arabian Oil Company, 2025                                  Page 33 of 44
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                   SAES-X-700
+   Issue Date: 23 January 2023                                                         Cathodic Protection of Onshore Well Casing
+   Next Revision: 23 January 2028
+
+                          protected structures. Polarized potentials may be measured using a CP Assessment Probe or a CP
+                          potential coupon, as detailed in SAEP-333 Appendix A-2.
+                    2)    For a new ICCP system, the “Anode Bed Output Current” value for Table 4 is the rated current
+                          output of the new CP power supply.
+
+
+
+                     Table 5 – Resistance of Casing-to-Remote Earth and Back EMF of Casings
+
+                                              Bare      Coated               Flow-line /
+                                           Production Production Bare Water Trunk-line Well Site
+       Characteristic           Area        or Water   or Water    Supply     Network Grounding
+                                            Injection  Injection Well Casing             Network(2)
+                                             Casing     Casing
+        Resistance of           Qatif         0.015           0.07          0.05          0.055           0.20
+          Casing-to
+       Remote-Earth            Khurais         0.10           0.30          0.15           0.20           0.70
+          (ohms) (1)
+       Structure Back
+                              All Areas        1.17            1.2          1.15           1.2            1.0
+       EMF (volts) (1)
+     Note 1: The values contained in Table 5 are applicable to wells in the listed area. Areas with similar surface formation
+             and casing completion characteristics can be assumed to be similar for design purposes.
+             Otherwise, field testing is required in other areas to determine the appropriate design parameters for back emf
+             and resistance to ground of the relevant structures. Field testing and/or modeling to determine the
+             flowline/trunkline data in areas not listed above is required. For listed areas, field verification and/or
+             modeling is recommended.
+     Note 2: Consideration of the well site grounding network especially gas sites is required where an extensive grounding
+             network affects the current distribution at a well site such as would typically occur where down hole pumps are
+             used, or where the field has been constructed with metallic power poles with an interconnected ground system.
+
+
+
+
+                                                © Saudi Arabian Oil Company, 2025                                  Page 34 of 44
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                   SAES-X-700
+   Issue Date: 23 January 2023                                                         Cathodic Protection of Onshore Well Casing
+   Next Revision: 23 January 2028
+
+                                       Table 6 - Recommended CP Rectifier Rating
+                                            Output DCV                   Output DCA
+                                          30/50/75/100 V                      5A
+                                          30/50/75/100 V                      10 A
+                                          30/50/75/100 V
+                                                                              15 A
+                                          30/50/75/100 V                      25 A
+                                          30/50/75/100 V
+                                                                              35 A
+                                          30/50/75/100 V                      50 A
+                                          30/50/75/100 V
+                                                                              75 A
+                                          30/50/75/100 V                     100 A
+                                          30/50/75/100 V
+                                                                             150 A
+
+                    Note:
+
+                    For the purpose of well casing cathodic protection, rectifier ratings be selected from the recommended list
+                    above.
+
+
+
+
+                                                © Saudi Arabian Oil Company, 2025                                  Page 35 of 44
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                SAES-X-700
+   Issue Date: 23 January 2023                                                      Cathodic Protection of Onshore Well Casing
+   Next Revision: 23 January 2028
+
+   Appendices
+                                   Appendix 1 – Design Quality Assurance Check List
+
+    BI-                 JO-                      Well Number
+     Item Done N/A       Details for the Proposed Anode Bed shown on CP Layout Dwg.
+       1                 The number and type of anodes (TA-2, TA-4, or TA-5)
+       2                 Proposed installation configuration, i.e., shallow or deep, and
+       3                 if deep then confirmation of acceptable depth from Groundwater Protection Division
+       4                 Diameter, depth, and number of holes and,
+       5                 if more than one hole, the spacing of the holes
+       6                 The distance between the oil/gas/water well and the proposed anode bed
+       7                 The location of any buried pipeline within 200 meters of the proposed anode bed.
+                         If there are no buried pipelines (flow-line or other lines) within 200 meters of the proposed
+                         anode bed, please state this in the notes section of the drawing
+     Item Done N/A       Details for Existing CP equipment shown on CP Layout Dwg.
+       8                 The age of existing anode bed and the number and type of anodes
+       9                 The current distribution to existing wells for a multi-well system
+     10                  Existing CP power supply operating output, or the measured operating resistance to verify
+                         correct current balance between new and existing
+     Item Done N/A       Details for Proposed DC Power Supply shown on CP Layout Dwg.
+     11                  Rated DC volts and amps
+     12                  Remote monitoring equipment details or a statement saying, “no remote monitoring”
+     13                  The size and length of all DC cables for the proposed CP system
+     14                  The CP junction boxes and their placement
+     Item Done N/A       Calculations for Anode Beds (on CP Layout Dwg or on separate page)
+     15                  Maximum allowable CP system resistance
+     16                  Maximum allowable anode bed resistance
+     17                  Calculated anode bed resistance based on soil resistivity measurements taken at site
+     Item Done N/A Miscellaneous Requirements (on CP Layout Dwg or on separate page)
+     18            Simulation sketch showing satisfactory current distribution to each well and associated flow
+                   lines & grounding
+     19            Verification statement that “ALL” buried ground cables on the site are insulated (jacketed)
+     Please provide remarks below for any item from above that is applicable but not done:
+     Item ___
+     Item ___
+
+    Designer’s Name (Print)                                 Signature and Date
+
+    Designer’s NACE Cert #                                  PMT Engineer Name (Print)
+
+
+
+
+                                                © Saudi Arabian Oil Company, 2025                               Page 36 of 44
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                                    SAES-X-700
+   Issue Date: 23 January 2023                                                                          Cathodic Protection of Onshore Well Casing
+   Next Revision: 23 January 2028
+
+
+
+                            Appendix 2 – Drill Stem and Test Anode Resistance Measurements
+    Well
+                            ___________________                    Submitted By:               __________           Date: _______
+    Designation:
+
+          New CP System Data                   Place an X in the box if no new CP power supply or anodes
+     CP Power Supply                                  Anode Hole(s)                                                 Anodes
+                                                      Target    Maximum             Max.                         What Type
+    DC Volts     DC Amps                                                                             Quantity                      Other
+                              Hole____ of ____      Resistance  Resistance        Depth(m)                       TA-2, 4 or 5
+
+
+    Existing CP System Data                    Place an X in the box if no existing CP power supply or anodes
+           Existing CP Power Supply
+                                                             Existing Anode Hole(s)                             Existing Anodes
+      Rated Volts____ Rated Amps____
+    Operating    Operating  Manufacture            Shallow      Number     Measured Resistance                    What Type      Installation
+                                                                                                     Quantity
+    DC Volts     DC Amps       Date               or Deep?      of Holes   to Well Casing (Note 2)               TA-2, 4, or 5       Year
+
+
+                                                 Measurement Equipment Data:
+                     Resistance Measurements                           Length (meters)          Size (AWG or mm2)      Resistance (ohms)
+                                                                             25                 Two wire #14AWG
+    Resistance of the Test Wires and Connection (Note1)
+                                                                        200 (or more)           Two wire #14AWG
+    Resistance of the Cable on the Test Anode (Note3)                        100                      16 mm2
+
+    Drill Stem and Test Anode Resistance Measurement Data (Report directly as read from meter)
+                         Drill Stem(Note2)     Test Anode(Note2)
+       Depth (m)                                                        Soil Type                        Remarks
+                        Resistance (ohms)     Resistance (ohms)
+    Water level in the anode hole must be at the top of the casing before taking each measurement!!!!!!!
+           6
+           9
+          12
+          15
+          18
+          21
+          24
+          27
+          30
+          33
+          36
+          39
+          42
+          45
+          48
+          51
+          54
+          57
+          60
+          63
+          66
+          69
+          72
+          75
+    Continued on next page.
+
+
+
+
+                                                          © Saudi Arabian Oil Company, 2025                                             Page 37 of 44
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                          SAES-X-700
+   Issue Date: 23 January 2023                                                                Cathodic Protection of Onshore Well Casing
+   Next Revision: 23 January 2028
+
+
+                  Appendix 2 – Drill Stem and Test Anode Resistance Measurements (continued)
+
+
+                                Drill Stem         Test Anode
+        Depth (m)                                                    Soil Type                       Remarks
+                            Resistance (ohms)   Resistance (ohms)
+           78
+           81
+           84
+           87
+           90
+           93
+           96
+           99
+           102
+           105
+           108
+           111
+           114
+           117
+           120
+
+
+  Notes:
+   1.   Procedure to measure the resistance of the “test wires and connections”:
+        •   Unspool 25 meters of #14 AWG wire. Connect one end to terminal C1 on the Megger.
+        •   Unspool another 25 meters of #14 AWG wire. Connect one end to terminal P1 on the Meter.
+        •   Tightly twist the open ends of the two 25 meter wires together and clamp to a bolt or flange on the well head (use vice grips
+            or a “C” clamp – do not use alligator clip, spring clip or spring clamp).
+        •   Unspool 200 meters (typical) of #14 AWG. Connect one end to terminal C2 on the Meter.
+        •   Unspool another 200 meters (typical) of #14 AWG wire. Connect one end to terminal P2 on the Meter.
+        •   Tightly twist the open ends of the two 200 meter wires together and clamp to the same bolt or flange on the wellhead (use
+            vice grips or a “C” clamp – do not use alligator clip, spring type clamp).
+        •   Measure the resistance with the Meter. Record the resistance measured as shown on the meter. It will typically be less
+            than 0.01 ohms.
+                                                                                                                  Production
+                                                                                                                  Well Casing
+
+              Meter
+
+
+                  C1
+                       P1
+                            P2
+                                 C2
+
+                 Do NOT place a direct
+                 short between any of
+                 the terminals!
+
+
+
+
+                                                       © Saudi Arabian Oil Company, 2025                                    Page 38 of 44
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                                  SAES-X-700
+   Issue Date: 23 January 2023                                                                        Cathodic Protection of Onshore Well Casing
+   Next Revision: 23 January 2028
+
+   2.   Procedure to measure the resistance of the drill stem, or test anode, or anode bed:
+        •   Unspool 25 meters of #14 AWG wire. Connect one end to terminal C1 on the Meter.
+        •   Unspool another 25 meters of #14 AWG wire. Connect one end to terminal P1 on the Meter.
+        •   For Drill Stem , twist the open ends of the two 25 meter wires together and clamp to the frame of the drill truck (use vice
+            grips or a “C” clamp – do not use alligator clip, spring clip or spring clamp).
+             For test anode resistance measurement, clamp these two wires to the end of the test anode cable instead of the drill
+                truck.
+             For anode bed resistance measurement, clamp these two wires to the bus bar in the anode junction box instead of the
+                drill truck.
+        •   Unspool 200 meters (typical) of #14 AWG wire. Connect one end to terminal C2 on the Meter.
+        •   Unspool another 200 meters (typical) of #14 AWG wire. Connect one end to terminal P2 on the Meter.
+        •   Twist the open ends of the two 200 meter wires together and clamp to a bolt or flange on the wellhead (use vice grips or a
+            “C” clamp – do not use alligator clip, spring clip or spring clamp)
+        •   Record the resistance shown on the Meter.
+                                                                                                                             Wellhead
+
+
+
+
+                                                    Meter Connections
+
+                                                                                                          Well Casing
+                                                        C1
+                                                             P1
+                                                                  P2
+                                                                       C2
+                                                                  Do NOT place a direct short
+                                                                  between any of the terminals!
+
+
+   3.   Procedure to measure the resistance of the test anode cable:
+        •   Unspool 25 meters of #14 AWG wire. Connect one end to terminal C1 on the Meter.
+        •   Unspool 25 meters of #14 AWG wire. Connect one end to terminal P1 on the Meter.
+        •   Twist the open ends of the two 25 meter wires together and clamp to one end of the anode (use vice grips or a “C” clamp –
+            do not use alligator clip, spring clip or spring clamp).
+        •   Uncoil the test anode cable and loop the cable end back towards the meter in a single loop.
+        •   Short terminals C2 and P2 of the Meter (use a short strand of wire to connect terminal C2 to terminal P2).
+        •   Connect the cable from the test anode to the P2 terminal.
+
+
+
+               Meter Connections
+
+                                                                        Test Anode
+                           C1
+                                P1
+                                     P2
+                                          C2
+
+
+
+
+                Place a direct short                                                              Test Anode Cable
+                between Terminals C2
+                and P2 for this test only
+
+
+
+
+                                                    © Saudi Arabian Oil Company, 2025                                             Page 39 of 44
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                SAES-X-700
+   Issue Date: 23 January 2023                                                      Cathodic Protection of Onshore Well Casing
+   Next Revision: 23 January 2028
+
+
+
+                                         Appendix 3 – Recommended Procedures
+
+
+               A3.1 Minimizing Casing Corrosion near Surface
+               To minimize corrosion of the well casings inside cellars, in the landing base area, or near surface,
+               the following procedures should be implemented:
+               •    Use an external FBE coating on the top two joints of all casings that extend to surface.
+               •    Drilling operations should ensure that all cement is removed from the base of the cellar after
+                    each cement job to prevent the formation of a cement floor.
+               •    Fill all annuli near surface with cement to displace air or water in the annuli.
+               •    Seal the annular space between casings in the landing base area by seal welding the casings at
+                    surface (including the surface casing or conductor casing) to stop the ingress of air into the
+                    annular space between the casings.
+               •    Seal (weld closed) any windows cut in the casings for top jobs, etc.
+               A3.2 External Coating on Well Casings
+               A3.2.1     The application of FBE to the external side of well casings may be used to effectively
+                          reduce the current requirement to approximately 10% of the cathodic protection current
+                          required for a similar non-coated casing.
+               A3.2.2     The application of FBE to the external side of well casings may be used to effectively
+                          increase the depth of influence of a cathodic protection system. Nominal attenuation
+                          characteristics for 16 mils (400 microns) of FBE coating applied to the external side of the
+                          well casing to a depth of 6,000 to 8,000 feet will typically extend adequate cathodic
+                          protection by 3,000 to 4,000 feet further into the bare casing section.
+               A3.2.3     The application of FBE to the external side of well casing tubulars should be restricted to
+                          a maximum thickness of 25 mils (625 microns).
+                          Additional thickness creates problems due to the tight closing tolerances of the casing
+                          installation equipment.
+               A3.2.4     Casing with collar can be FBE coated effectively without removal of the collar if a preheat
+                          is completed on the collar before running the casing section through the assembly line
+                          induction oven, and by manually back spraying into the casing/collar crevice
+                          immediately before the collar enters the spray chamber.
+
+
+
+
+                                                © Saudi Arabian Oil Company, 2025                               Page 40 of 44
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                 SAES-X-700
+   Issue Date: 23 January 2023                                                       Cathodic Protection of Onshore Well Casing
+   Next Revision: 23 January 2028
+
+
+               A3.3 General Decision Chart for Coating “Onshore” Well Casings
+
+
+                 Does the casing pass through the UER, Wasia,
+                                                                               Yes
+                 or Jilh, at a MD greater than 5000’?
+
+
+                                         No
+
+
+
+                 Does the casing pass through the Arab-C
+                 formation in an area where the Arab-C is over                 Yes
+                 pressured, i.e., Uthmaniyah?
+
+
+
+                                         No
+
+
+                 Will the well location be provided with                       No
+                 permanent AC power?
+
+
+                                        Yes
+
+
+                 Will there be more than two wells on this drill               Yes
+                 pad/island?
+
+
+                                         No
+
+
+                 Is primary CP achieved on the well by current
+                 through the flow-line/trunk-line system,                      Yes
+                 i.e., Khurais?
+
+
+                                         No
+
+
+
+                 Apply FBE (max 25 mils) to the external side         Apply FBE (max 25 mils) to the casing surfaces
+                 of all casings, including the conductor, to at       in contact with the formation from surface to
+                 least 50’ below surface. No other coating on         at least 500’ below the deepest corrosive
+                 the casing is recommended.                           formation to a maximum TVD of 8000’.
+
+
+
+
+                                                © Saudi Arabian Oil Company, 2025                                Page 41 of 44
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                SAES-X-700
+   Issue Date: 23 January 2023                                                      Cathodic Protection of Onshore Well Casing
+   Next Revision: 23 January 2028
+
+
+               A3.4 Determination of Well Casing Current Requirement
+               A3.4.1     Well casing corrosion in the Arabian Gulf area is typically caused by long line corrosion
+                          currents that are generated between two or more down-hole formations. The shallowest
+                          of the formations with an anodic response are typically more than 1000 feet deep and the
+                          area experiencing corrosion typically doesn’t affect more than one or two lengths of
+                          casing.
+               A3.4.2     Corrosion can typically be attributed to poor quality cement in the casing/bore-hole
+                          annulus often amplified by the presence of flowing formation conditions or acid gases.
+                          Downhole corrosion cannot be detected by surface measurement techniques such as “E
+                          Log I”, and cannot be reliably modeled using only formation resistivities and casing data.
+               A3.4.3     The most reliable method (and arguably the only reliable method) of determining the
+                          amount of CP current required to mitigate long line corrosion in a downhole formation is
+                          to run a CP evaluation log.
+                          (Note: CP evaluation logs are not effective for localized corrosion cells). Cathodic
+                          protection evaluation logs have been run by Saudi Aramco in the following fields;
+                          Abqaiq, Abu Ali, Ain Dar, Haradh, Hawiyah, Hawtah, Marjan, Nuayyim, Qatif,
+                          Safaniyah, Shaybah, Shedgum, and Uthmaniyah.
+               A3.4.4     Before CP is turned on; a cathodic protection evaluation log can be run to identify
+                          corrosive formations. However, due to the time delay for polarization of the casing, a log
+                          that is run to identify corrosion currents cannot reliably be immediately followed by a
+                          second log to determine the quantity of CP current required to overcome the corrosion
+                          currents.
+               A3.4.5     A CP evaluation log can be run to determine the amount of CP required to mitigate long
+                          line corrosion currents but a nominal amount of cathodic protection should be applied
+                          two weeks or more prior to running the log.
+                          •   When running the log, the actual amount of current going to the casing must be
+                              measured with a current clamp placed around the casing.
+                              It would be misleading to use the output current of the CP power supply because the
+                              flow-line and surface facilities associated with the rig will also take some of the current.
+                          •   The flow-line for the well will typically be physically disconnected during the
+                              logging procedures and must be bonded to the well head for the logging to accurately
+                              simulate actual operating conditions.
+                              This bond should be in place immediately after the flow-line is disconnected from the
+                              well head. If the bond is not installed, interference currents from nearby CP systems
+                              that would not occur when the flow-line is connected may occur when the flow-line is
+                              disconnected and in such cases would distort conclusions drawn from the logging
+                              information.
+                          •   For best results, the CP evaluation logging tool should be run at a maximum pull rate of
+                              1,500 feet per hour and station stops should be made every 5 feet in areas where higher
+                              resolution is desirable, and every 10 feet in areas where lower resolution is acceptable.
+                          •   For best results, the cathodic protection logging tool should be left stationary at the
+                              lowest depth of the log for a period of 15 to
+
+
+
+                                                © Saudi Arabian Oil Company, 2025                               Page 42 of 44
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                SAES-X-700
+   Issue Date: 23 January 2023                                                      Cathodic Protection of Onshore Well Casing
+   Next Revision: 23 January 2028
+
+                              30 minutes before beginning the calibration part of the log. This delay is required to
+                              facilitate temperature stabilization of the tool.
+                          •   The cathodic protection evaluation logging tool should be provided with new blades
+                              at the beginning of each casing investigation, and should be provided with dielectric
+                              or electrically isolated stand-offs / centralizers. These are of particular importance for
+                              logging non-vertical casing segments.
+                          •   The use of the surface reference electrode (often termed “fish” by the logging vendor)
+                              is not required.
+               A3.5 Drilling Deep Anode Holes
+               A3.5.1     Drilling Equipment
+                          Drill deep anode holes with rotary type drilling equipment that circulates the cuttings to
+                          surface by water (or water/mud mixture) through the hollow center of the drill pipe. Do
+                          NOT use equipment that drills a dry hole, or does not circulate drilling fluid to remove
+                          cuttings unless the formation characteristics dictate the use of a dry drilling technique
+                          such as is required in Khurais.
+               A3.5.2     Use of Casing
+                          •   Case the top 3 to 6 meters as required to maintain hole integrity through poorly
+                              consolidated surface soils.
+                          •   Do not install anodes inside any cased section of the hole.
+                          •   Use cement plugs to seal lost circulation areas, or bentonite if necessary. Do not use
+                              casing in areas where anodes will be placed (the casing will later corrode and the
+                              backfill dissipate into the formation leaving the anodes without complete backfill).
+                          •   If a water table is reached, casing can be installed to the top of the water table, but all
+                              anodes should be installed below the top of the water table to facilitate equalized
+                              current loading on the anodes.
+
+
+
+
+                                                © Saudi Arabian Oil Company, 2025                               Page 43 of 44
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                   SAES-X-700
+   Issue Date: 23 January 2023                                                         Cathodic Protection of Onshore Well Casing
+   Next Revision: 23 January 2028
+
+   Document History
+    23 January 2023          Major                                    Major periodical revision
+    19 November 2020         Editorial                                Editorial revision to comply with SAEP-301 and SAEP-
+                                                                      302
+    19 July 2020             Editorial                                Editorial revision to change the contact name; to
+                                                                      change the revision cycle from 3years to five years
+                                                                      and to comply with SAEP-301 format
+    27 December 2017         Major                                    Major periodical revision
+    7 November 2013          Minor                                    Added clarification sketches to Appendix 2 (Drill Stem
+                                                                      and Test Anode Analysis Procedure).
+    5 December 2012          Major                                    Major periodical revision
+
+
+
+
+                                                © Saudi Arabian Oil Company, 2025                                  Page 44 of 44
+
+Saudi Aramco: Company General Use
+

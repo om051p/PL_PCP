@@ -4,18 +4,10 @@ import { immer } from 'zustand/middleware/immer'
 import { authRepository } from '../repositories/authRepository.js'
 import { userRepository } from '../repositories/userRepository.js'
 import { validateUserDomain, DOMAIN_RESTRICTION_MESSAGE, DEFAULT_ROLE, DEACTIVATION_MESSAGE } from '../config/authPolicy.js'
+import { ANONYMOUS_USER } from '../providers/backend/normalizedUser.js'
 
 /**
- * @typedef {Object} User
- * @property {string} uid
- * @property {string | null} email
- * @property {string | null} displayName
- * @property {string | null} photoURL
- * @property {string} role - User role: 'admin', 'manager', 'engineer', 'reviewer', or 'viewer'
- * @property {boolean} isActive - Whether user account is active
- * @property {boolean} approved - Whether user account is approved
- * @property {string} status - User status: 'pending', 'active', 'suspended', 'disabled', 'rejected'
- * @property {string} organizationId - Tenant organization ID
+ * @typedef {import('../providers/backend/normalizedUser.js').NormalizedUser} NormalizedUser
  */
 
 /**
@@ -29,25 +21,30 @@ export async function logAuditEvent(action, targetUser, performedBy, details = {
   }
 }
 
-function mapFirebaseUser(firebaseUser, role = DEFAULT_ROLE, isActive = true, name = '', approved = false, status = 'pending', organizationId = 'ikk') {
-  /** @type {User} */
+/**
+ * Merge profile data into a NormalizedUser to produce the final session user.
+ * The authRepository provides the base NormalizedUser (from the auth provider).
+ * The userRepository provides the profile (role, status, org, etc.).
+ *
+ * @param {NormalizedUser} baseUser  — From auth provider (has id, email, emailVerified)
+ * @param {object} profile           — From user repository (has role, status, displayName, etc.)
+ * @returns {NormalizedUser}
+ */
+function mergeProfile(baseUser, profile) {
   return {
-    uid: firebaseUser.uid,
-    email: firebaseUser.email,
-    displayName: name || firebaseUser.displayName || firebaseUser.email?.split('@')[0],
-    photoURL: firebaseUser.photoURL,
-    role,
-    isActive,
-    approved,
-    status,
-    organizationId,
+    ...baseUser,
+    displayName: profile.displayName || profile.name || baseUser.displayName,
+    role: profile.role || baseUser.role,
+    isActive: profile.status === 'active' || profile.active === true,
+    status: profile.status || 'pending',
+    organizationId: profile.organizationId || baseUser.organizationId,
   }
 }
 
 export const useAuthStore = create()(
   persist(
     immer((set, get) => ({
-      /** @type {User | null} */
+      /** @type {NormalizedUser | null} */
       user: null,
       loading: true,
       /** @type {string | null} */
@@ -75,11 +72,10 @@ export const useAuthStore = create()(
             throw new Error(errMessage)
           }
 
-          const userCredential = await authRepository.signIn(email, password)
-          const firebaseUser = userCredential.user
+          const normalizedUser = await authRepository.signIn(email, password)
 
           // Validation 1: Email Verified?
-          if (!firebaseUser.emailVerified) {
+          if (!normalizedUser.emailVerified) {
             try { await authRepository.signOut() } catch { /* ignore */ }
             const errMessage = 'Email Verification Required\n\nPlease verify your email address before accessing RAXA.\n\nCheck your inbox and spam folder.'
             set((state) => {
@@ -92,8 +88,7 @@ export const useAuthStore = create()(
           }
 
           // Verify email domain is allowed
-          const tempUser = mapFirebaseUser(firebaseUser)
-          const { allowed } = validateUserDomain(tempUser)
+          const { allowed } = validateUserDomain(normalizedUser)
           if (!allowed) {
             try { await authRepository.signOut() } catch { /* ignore */ }
             const errMessage = 'Organization Access Restricted\n\nOnly authorized organization email addresses may access RAXA.\n\nIf you believe this is an error, contact your administrator.'
@@ -107,7 +102,7 @@ export const useAuthStore = create()(
           }
 
           // Fetch user profile from UserRepository
-          const profile = await userRepository.fetchUserProfile(firebaseUser.uid, firebaseUser.email)
+          const profile = await userRepository.fetchUserProfile(normalizedUser.id, normalizedUser.email)
 
           // Validation 2: User Record Exists?
           if (!profile) {
@@ -122,8 +117,8 @@ export const useAuthStore = create()(
             throw new Error(errMessage)
           }
 
-          // Validation 3: Approved?
-          if (!profile.approved) {
+          // Validation 3: Approved? (NormalizedUser uses status instead of approved flag)
+          if (profile.status === 'pending' || profile.status === 'rejected') {
             const errMessage = 'Access Pending Approval\n\nYour account has been created successfully but has not yet been approved by an administrator.\n\nPlease contact your RAXA administrator for access.'
             set((state) => {
               state.user = null
@@ -148,15 +143,7 @@ export const useAuthStore = create()(
             throw new Error(errMessage)
           }
 
-          const user = mapFirebaseUser(
-            firebaseUser,
-            profile.role,
-            isActive,
-            profile.displayName || profile.name,
-            profile.approved,
-            profile.status,
-            profile.organizationId || 'ikk'
-          )
+          const user = mergeProfile(normalizedUser, profile)
 
           set((state) => {
             state.failedAttempts = []
@@ -191,7 +178,7 @@ export const useAuthStore = create()(
           console.info(`✉️ [New Login Notification] Send to ${email}:\nNew Login Detected\n\nA new login to your RAXA account was detected.\n\nIf this was not you, contact your administrator immediately.`)
 
           try {
-            await userRepository.updateUserLastLogin(firebaseUser.uid)
+            await userRepository.updateUserLastLogin(normalizedUser.id)
           } catch (lastLoginErr) {
             console.warn('[Auth] Failed to update last login timestamp:', lastLoginErr.message)
           }
@@ -271,15 +258,14 @@ export const useAuthStore = create()(
             throw new Error(errMessage)
           }
 
-          // Create Firebase account via AuthRepository (sends verification automatically)
-          const userCredential = await authRepository.signUp(emailTrimmed, password)
-          const firebaseUser = userCredential.user
+          // Create account via AuthRepository (sends verification automatically)
+          const { user: newUser } = await authRepository.signUp(emailTrimmed, password)
 
           // Save pending profile in UserRepository
           try {
-            await userRepository.createUserProfile(firebaseUser.uid, emailTrimmed)
-          } catch (firestoreErr) {
-            console.warn('[Auth] Could not create user profile in Firestore:', firestoreErr.message)
+            await userRepository.createUserProfile(newUser.id, emailTrimmed)
+          } catch (profileErr) {
+            console.warn('[Auth] Could not create user profile:', profileErr.message)
           }
 
           // Write audit log
@@ -360,9 +346,8 @@ export const useAuthStore = create()(
         })
         try {
           const emailTrimmed = email.trim().toLowerCase()
-          const userCredential = await authRepository.signIn(emailTrimmed, password)
-          const firebaseUser = userCredential.user
-          await authRepository.sendVerification(firebaseUser)
+          const normalizedUser = await authRepository.signIn(emailTrimmed, password)
+          await authRepository.sendVerification(normalizedUser)
           await authRepository.signOut()
           
           set((state) => {
@@ -530,18 +515,20 @@ export const useAuthStore = create()(
       initialize: () => {
         if (get().initialized) return () => {}
 
-        // Add support for E2E testing mock auth
-        if (localStorage.getItem('e2e-mock-auth') === 'true') {
+        // E2E testing mock auth — DEVELOPMENT ONLY (tree-shaken in production)
+        // eslint-disable-next-line no-undef
+        if (import.meta.env.DEV && localStorage.getItem('e2e-mock-auth') === 'true') {
           set((state) => {
             state.user = {
-              uid: 'mock-e2e-engineer',
+              id: 'mock-e2e-engineer',
               email: 'engineer@cpdesigner.com',
               displayName: 'E2E Test Engineer',
               role: 'engineer',
-              approved: true,
               isActive: true,
+              emailVerified: true,
               status: 'active',
-              organizationId: 'ikk'
+              organizationId: 'ikk',
+              avatarUrl: null,
             }
             state.initialized = true
             state.loading = false
@@ -559,9 +546,10 @@ export const useAuthStore = create()(
           }
         }, 3000)
 
-        const unsubscribe = authRepository.onAuthStateChanged(async (firebaseUser) => {
+        const unsubscribe = authRepository.onAuthStateChanged(async (normalizedUser) => {
           clearTimeout(timeoutId)
-          if (firebaseUser) {
+          // Check for ANONYMOUS_USER sentinel (signed out)
+          if (normalizedUser && normalizedUser.id) {
             // Max session check: 12 hours
             const sessionStart = get().sessionStart
             if (sessionStart && Date.now() - sessionStart >= 12 * 60 * 60 * 1000) {
@@ -576,7 +564,7 @@ export const useAuthStore = create()(
             }
 
             // Validation 1: Email Verified?
-            if (!firebaseUser.emailVerified) {
+            if (!normalizedUser.emailVerified) {
               try { await authRepository.signOut() } catch { /* ignore */ }
               set((state) => {
                 state.user = null
@@ -586,8 +574,7 @@ export const useAuthStore = create()(
               return
             }
 
-            const tempUser = mapFirebaseUser(firebaseUser)
-            const { allowed } = validateUserDomain(tempUser)
+            const { allowed } = validateUserDomain(normalizedUser)
             if (!allowed) {
               try { await authRepository.signOut() } catch { /* ignore */ }
               set((state) => {
@@ -598,7 +585,7 @@ export const useAuthStore = create()(
               return
             }
 
-            const profile = await userRepository.fetchUserProfile(firebaseUser.uid, firebaseUser.email)
+            const profile = await userRepository.fetchUserProfile(normalizedUser.id, normalizedUser.email)
             if (!profile) {
               try { await authRepository.signOut() } catch { /* ignore */ }
               set((state) => {
@@ -609,7 +596,7 @@ export const useAuthStore = create()(
               return
             }
 
-            if (!profile.approved) {
+            if (profile.status === 'pending' || profile.status === 'rejected') {
               try { await authRepository.signOut() } catch { /* ignore */ }
               set((state) => {
                 state.user = null
@@ -619,7 +606,7 @@ export const useAuthStore = create()(
               return
             }
 
-            const isActive = profile.status === 'active' || profile.active === true
+            const isActive = profile.status === 'active'
             if (!isActive) {
               try { await authRepository.signOut() } catch { /* ignore */ }
               set((state) => {
@@ -630,15 +617,7 @@ export const useAuthStore = create()(
               return
             }
 
-            get().setUser(mapFirebaseUser(
-              firebaseUser,
-              profile.role,
-              isActive,
-              profile.displayName || profile.name,
-              profile.approved,
-              profile.status,
-              profile.organizationId || 'ikk'
-            ))
+            get().setUser(mergeProfile(normalizedUser, profile))
           } else {
             get().setUser(null)
           }
