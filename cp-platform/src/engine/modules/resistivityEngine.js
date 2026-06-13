@@ -645,8 +645,19 @@ export function calculateMinimumTRVoltage(
 /**
  * Calculates maximum allowable groundbed resistance.
  *
- * Formula (from spreadsheet cell F171):
- *   RG_max = 0.7 × [(Vr - EMF) / I] - Rc - Rs
+ * Formula (from spreadsheet cell F178):
+ *   R_G_max = (V_rated / I_rated) × 0.7 − R_cable − R_structure
+ *
+ * This is the **maximum allowable** groundbed resistance — i.e. the remaining
+ * voltage budget for the groundbed given the TR's voltage, cable losses and
+ * structure resistance. It is the inverse budget check, NOT the effective
+ * back-EMF resistance used in the total circuit R_T.
+ *
+ * It does NOT conflict with the SAES-X-600 §5.2.5 R_emf formula
+ * (R_emf = V_backEMF / I_rated) used in calcTRCircuit. The two formulas
+ * answer different questions:
+ *   - R_emf:     "How much of the total R_T is contributed by back EMF?"
+ *   - R_G_max:   "What is the maximum R_G we can tolerate and still meet V_min?"
  *
  * @param {number} trVoltageRatingV           - TR rated voltage (V)
  * @param {number} trCurrentRatingA           - TR rated current (A)
@@ -669,9 +680,6 @@ export function calculateMaxAllowableGroundbedResistance(
 
 /**
  * Calculates maximum allowable total circuit resistance.
- *
- * Formula (from spreadsheet cell F178):
- *   RT_max = (Vrated / Irated) × 0.7
  *
  * @param {number} trVoltageRatingV  - TR rated voltage (V)
  * @param {number} trCurrentRatingA  - TR rated current (A)

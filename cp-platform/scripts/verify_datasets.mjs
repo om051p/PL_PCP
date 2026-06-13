@@ -8,8 +8,10 @@ import { runStationCalculations } from '../src/engine/modules/calculations.js'
 
 const THRESHOLDS = {
   SPARE_FACTOR: 1.3,
-  TEMP_CORRECTION_FACTOR: 0.025,
-  BASE_TEMP_C: 25,
+  // Match engine default (Saudi Aramco): exponential with baseTemp=30
+  TEMP_CORRECTION_BASE_TEMP_C: 30,
+  TEMP_CORRECTION_FACTOR: 1.25, // 1.25 per 10°C (exponential)
+  ANODE_UTILIZATION_FACTOR: 0.85, // NACE SP0169 default
 }
 
 const CABLE_SPECS = {
@@ -26,7 +28,9 @@ function handSurfaceArea(odInches, lengthM) {
 }
 
 function handITemp(baseCD, tempC) {
-  return baseCD * (1 + (tempC - THRESHOLDS.BASE_TEMP_C) * THRESHOLDS.TEMP_CORRECTION_FACTOR)
+  // Match engine: Saudi Aramco exponential, baseTemp=30
+  // i_T = baseCD × 1.25^((T − 30) / 10)
+  return baseCD * Math.pow(THRESHOLDS.TEMP_CORRECTION_FACTOR, (tempC - THRESHOLDS.TEMP_CORRECTION_BASE_TEMP_C) / 10)
 }
 
 function handCurrentRequirement(segments) {
@@ -35,9 +39,9 @@ function handCurrentRequirement(segments) {
   for (const seg of segments) {
     const area = handSurfaceArea(seg.od, seg.lengthM)
     const iTemp = handITemp(seg.currentDensityBase, seg.opTempC)
-    const ce = seg.coatingEfficiency ?? 1
+    // Engine no longer applies coatingEfficiency per DEF-001 (Saudi Aramco bare-pipe equivalent)
     totalArea += area
-    totalCurrent += (area * ce * iTemp) / 1000
+    totalCurrent += (area * iTemp) / 1000
   }
   return { totalArea, requiredA: totalCurrent, designA: totalCurrent * THRESHOLDS.SPARE_FACTOR }
 }
@@ -81,8 +85,9 @@ function handCableResistance(lenM, sizeMm2) {
 }
 
 function handDesignLife(N, W, C, I) {
+  // Match engine: Y = (N × W × U_f) / (C × I)
   if (C <= 0 || I <= 0) return 0
-  return (N * W) / (C * I)
+  return (N * W * THRESHOLDS.ANODE_UTILIZATION_FACTOR) / (C * I)
 }
 
 function handTRCircuit(Rg, Rcable, backEMF, Rs, trRatedCurrent) {
