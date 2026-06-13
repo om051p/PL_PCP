@@ -5,13 +5,16 @@
  * recent activity, and project management.
  */
 
+import { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useProjectStore } from '../store/projectStore.js'
+import { useAuthStore } from '../store/authStore.js'
 import { StatusBadge } from '../components/ui.jsx'
 import { getActiveStandard } from '../constants/index.js'
 import { PipelineOverviewCanvas } from '../visualizations/index.js'
 import { KPITrendWidget, extractTrendData } from '../visualizations/KPITrendWidget.jsx'
 import { ProjectOverviewMap } from '../visualizations/ProjectOverviewMap.jsx'
+import { subscribeToActivity } from '../services/activityLogger.js'
 import {
   Plus,
   Copy,
@@ -194,13 +197,24 @@ export default function PageDashboard() {
   // TR units count
   const trCount = stations.filter((s) => s.tr).length
 
-  // Build recent activity
-  const recentActivity = stations
+  // Real activity feed (Firestore subscription) — replaces the derived feed
+  const [realActivity, setRealActivity] = useState([])
+  useEffect(() => {
+    if (!activeProject?.id) {
+      setRealActivity([])
+      return undefined
+    }
+    const unsub = subscribeToActivity(activeProject.id, (entries) => setRealActivity(entries), 10)
+    return () => { if (typeof unsub === 'function') unsub() }
+  }, [activeProject?.id])
+
+  // Fall back to the derived feed if no real activity yet (so the section isn't empty on first load)
+  const activityToShow = realActivity.length > 0 ? null : stations
     .flatMap((s) => {
       const events = []
-      if (s.lastCalcResult?.calculatedAt) events.push({ station: s.name, kind: 'calc', text: 'Calculation run', ts: s.lastCalcResult.calculatedAt })
-      if (s.status === 'approved' || s.status === 'issued_for_construction') events.push({ station: s.name, kind: 'approval', text: 'Station approved', ts: s.updatedAt || new Date().toISOString() })
-      if (s.status === 'engineering_review') events.push({ station: s.name, kind: 'revision', text: 'In engineering review', ts: s.updatedAt || new Date().toISOString() })
+      if (s.lastCalcResult?.calculatedAt) events.push({ id: `calc-${s.id}`, station: s.name, kind: 'calc', text: 'Calculation run', ts: s.lastCalcResult.calculatedAt })
+      if (s.status === 'approved' || s.status === 'issued_for_construction') events.push({ id: `app-${s.id}`, station: s.name, kind: 'approval', text: 'Station approved', ts: s.updatedAt || new Date().toISOString() })
+      if (s.status === 'engineering_review') events.push({ id: `rev-${s.id}`, station: s.name, kind: 'revision', text: 'In engineering review', ts: s.updatedAt || new Date().toISOString() })
       return events
     })
     .sort((a, b) => new Date(b.ts) - new Date(a.ts))
@@ -405,21 +419,25 @@ export default function PageDashboard() {
             </>
           )}
 
-          {/* Recent Activity */}
-          {activeProject && recentActivity.length > 0 && (
+          {/* Recent Activity — real (Firestore) or derived fallback */}
+          {activeProject && (realActivity.length > 0 || activityToShow?.length > 0) && (
             <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', padding: '12px 14px', boxShadow: 'var(--shadow-sm)' }}>
               <h3 style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text-tertiary)', marginBottom: 8 }}>
-                Recent Activity
+                Recent Activity {realActivity.length > 0 ? <span style={{ fontSize: 9, color: 'var(--pass)', fontWeight: 400, marginLeft: 6 }}>● live</span> : null}
               </h3>
               <div className="activity-feed">
-                {recentActivity.map((ev, i) => (
-                  <div key={i} className="activity-feed__item">
-                    <div className={`activity-feed__dot activity-feed__dot--${ev.kind}`} />
+                {(realActivity.length > 0 ? realActivity : activityToShow).map((ev, i) => (
+                  <div key={ev.id || i} className="activity-feed__item">
+                    <div className={`activity-feed__dot activity-feed__dot--${ev.kind || 'info'}`} />
                     <span className="activity-feed__label">
-                      <strong>{ev.station}</strong> · {ev.text}
+                      {realActivity.length > 0 ? (
+                        <><strong>{ev.userEmail}</strong> · <em>{ev.action}</em>{ev.details ? ` — ${ev.details}` : ''}</>
+                      ) : (
+                        <><strong>{ev.station}</strong> · {ev.text}</>
+                      )}
                     </span>
                     <span className="activity-feed__time">
-                      {new Date(ev.ts).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                      {new Date(ev.timestamp || ev.ts).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
                     </span>
                   </div>
                 ))}
