@@ -1,13 +1,19 @@
-import { firestoreUserApi } from '../api/firestoreUserApi.js'
+/**
+ * USER REPOSITORY
+ *
+ * Manages user profiles and audit logging through configured providers.
+ * All provider calls go through the registry — no direct SDK imports.
+ *
+ * Architecture rule:
+ *   Stores → userRepository → registry.getUserProvider() / getAuditProvider()
+ */
+
+import { getUserProvider, getAuditProvider } from '../providers/backend/registry.js'
 import { localStorageApi } from '../api/localStorageApi.js'
 
 const AUDIT_QUEUE_KEY = 'cp-platform-failed-audit-logs'
 
-/**
- * Execute a promise with a timeout
- * @param {Promise} promise
- * @param {number} timeoutMs
- */
+/** @param {Promise} promise @param {number} timeoutMs */
 function withTimeout(promise, timeoutMs) {
   return Promise.race([
     promise,
@@ -17,12 +23,7 @@ function withTimeout(promise, timeoutMs) {
   ])
 }
 
-/**
- * Helper to run async task with exponential backoff retries
- * @param {function} fn - Returns a promise
- * @param {number} retries - Maximum retries
- * @param {number} delay - Base delay in ms
- */
+/** @param {function} fn @param {number} retries @param {number} delay */
 async function retryWithBackoff(fn, retries = 3, delay = 1000) {
   try {
     return await fn()
@@ -36,29 +37,27 @@ async function retryWithBackoff(fn, retries = 3, delay = 1000) {
 
 export const userRepository = {
   /**
-   * Fetch a user profile with timeout and admin bootstrap logic
-   * @param {string} uid
+   * Fetch a user profile with timeout and admin bootstrap logic.
+   * @param {string} userId
    * @param {string|null} email
    * @returns {Promise<object|null>}
    */
-  async fetchUserProfile(uid, email = null) {
-    if (!uid) return null
+  async fetchUserProfile(userId, email = null) {
+    if (!userId) return null
 
     try {
-      // Fetch with a 2-second timeout
-      const userDoc = await withTimeout(firestoreUserApi.getUserProfile(uid), 2000)
-      if (userDoc.exists()) {
-        return userDoc.data()
-      }
+      const userProvider = getUserProvider()
+      const profile = await withTimeout(userProvider.fetchProfile(userId), 2000)
+      if (profile) return profile
     } catch (err) {
-      console.warn('[UserRepository] Firestore profile fetch timed out or failed:', err.message)
+      console.warn('[UserRepository] Profile fetch timed out or failed:', err.message)
     }
 
     // Admin Bootstrap Account for rahul.panchel@ikkgroup.com
     if (email && email.toLowerCase() === 'rahul.panchel@ikkgroup.com') {
       try {
         const bootstrapData = {
-          uid,
+          id: userId,
           email: 'rahul.panchel@ikkgroup.com',
           displayName: 'Rahul Panchal',
           organizationId: 'ikk',
@@ -70,7 +69,8 @@ export const userRepository = {
           approvedBy: 'system_bootstrap',
           approvedAt: new Date().toISOString(),
         }
-        await firestoreUserApi.setUserProfile(uid, bootstrapData)
+        const userProvider = getUserProvider()
+        await userProvider.createProfile(userId, bootstrapData)
         await this.logAuditEvent('USER_APPROVED', 'rahul.panchel@ikkgroup.com', 'system_bootstrap', { reason: 'bootstrap' })
         return bootstrapData
       } catch (bootstrapErr) {
@@ -82,13 +82,13 @@ export const userRepository = {
   },
 
   /**
-   * Create pending profile for self-registered user
-   * @param {string} uid
+   * Create pending profile for self-registered user.
+   * @param {string} userId
    * @param {string} email
    */
-  async createUserProfile(uid, email) {
-    const profile = {
-      uid,
+  async createUserProfile(userId, email) {
+    const userProvider = getUserProvider()
+    return userProvider.createProfile(userId, {
       email: email.trim().toLowerCase(),
       displayName: email.split('@')[0],
       organizationId: 'ikk',
@@ -97,105 +97,73 @@ export const userRepository = {
       status: 'pending',
       active: false,
       createdAt: new Date().toISOString(),
-    }
-    return firestoreUserApi.setUserProfile(uid, profile)
+    })
   },
 
   /**
-   * Fetch all users
+   * Fetch all users in an organization.
    * @param {string} organizationId
+   * @returns {Promise<Array>}
    */
   async fetchUsersList(organizationId = 'ikk') {
-    const querySnapshot = await firestoreUserApi.getAllUsers(organizationId)
-    const list = []
-    querySnapshot.forEach((doc) => {
-      list.push(doc.data())
-    })
-    return list
+    const userProvider = getUserProvider()
+    return userProvider.listUsers(organizationId)
   },
 
-  /**
-   * Approve pending user
-   */
   async approveUser(uid, email, adminEmail) {
-    await firestoreUserApi.setUserProfile(uid, {
+    const userProvider = getUserProvider()
+    await userProvider.updateProfile(uid, {
       approved: true,
       status: 'active',
       active: true,
       approvedBy: adminEmail,
       approvedAt: new Date().toISOString(),
-    }, { merge: true })
-    
+    })
     await this.logAuditEvent('USER_APPROVED', email, adminEmail)
   },
 
-  /**
-   * Reject pending user
-   */
   async rejectUser(uid, email, adminEmail) {
-    await firestoreUserApi.setUserProfile(uid, {
+    const userProvider = getUserProvider()
+    await userProvider.updateProfile(uid, {
       approved: false,
       status: 'rejected',
       active: false,
-    }, { merge: true })
-    
+    })
     await this.logAuditEvent('USER_REJECTED', email, adminEmail)
   },
 
-  /**
-   * Update user role
-   */
   async updateUserRole(uid, email, role, adminEmail) {
-    await firestoreUserApi.setUserProfile(uid, { role }, { merge: true })
+    const userProvider = getUserProvider()
+    await userProvider.updateProfile(uid, { role })
     await this.logAuditEvent('ROLE_CHANGED', email, adminEmail, { newRole: role })
   },
 
-  /**
-   * Suspend user account
-   */
   async suspendUser(uid, email, adminEmail) {
-    await firestoreUserApi.setUserProfile(uid, {
-      status: 'suspended',
-      active: false,
-    }, { merge: true })
-    
+    const userProvider = getUserProvider()
+    await userProvider.updateProfile(uid, { status: 'suspended', active: false })
     await this.logAuditEvent('USER_SUSPENDED', email, adminEmail)
   },
 
-  /**
-   * Disable user account
-   */
   async disableUser(uid, email, adminEmail) {
-    await firestoreUserApi.setUserProfile(uid, {
-      status: 'disabled',
-      active: false,
-    }, { merge: true })
-    
+    const userProvider = getUserProvider()
+    await userProvider.updateProfile(uid, { status: 'disabled', active: false })
     await this.logAuditEvent('USER_DISABLED', email, adminEmail)
   },
 
-  /**
-   * Enable user account
-   */
   async enableUser(uid, email, adminEmail) {
-    await firestoreUserApi.setUserProfile(uid, {
+    const userProvider = getUserProvider()
+    await userProvider.updateProfile(uid, {
       status: 'active',
       active: true,
       approved: true,
-    }, { merge: true })
-    
+    })
     await this.logAuditEvent('USER_ENABLED', email, adminEmail)
   },
 
   /**
-   * Log an audit event with exponential backoff and localstorage fallback queueing
-   * @param {string} action
-   * @param {string} targetUser
-   * @param {string} performedBy
-   * @param {object} [details]
+   * Log an audit event with exponential backoff and localStorage fallback queue.
    */
   async logAuditEvent(action, targetUser, performedBy, details = {}) {
-    const logId = `log-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`
     const logData = {
       timestamp: new Date().toISOString(),
       email: targetUser || '',
@@ -207,34 +175,23 @@ export const userRepository = {
       organizationId: 'ikk',
     }
 
-    const writeFn = () => firestoreUserApi.createAuditLog(logId, logData)
-
     try {
-      // Try writing log with 3 retries (1s, 2s, 4s delay)
+      const auditProvider = getAuditProvider()
+      const writeFn = () => auditProvider.write(logData)
       await retryWithBackoff(writeFn, 3, 1000)
-      
-      // Successfully wrote log. Now trigger processing of any previously queued logs.
       await this.processQueue()
     } catch (err) {
       console.warn('[UserRepository] Failed to write audit log after retries. Queueing offline:', err.message)
-      this.queueOffline(logId, logData)
+      this.queueOffline(logData)
     }
   },
 
-  /**
-   * Save failed log to local queue
-   * @param {string} logId
-   * @param {object} logData
-   */
-  queueOffline(logId, logData) {
+  queueOffline(logData) {
     const queue = localStorageApi.getJSON(AUDIT_QUEUE_KEY) || []
-    queue.push({ logId, logData })
+    queue.push({ logData })
     localStorageApi.setJSON(AUDIT_QUEUE_KEY, queue)
   },
 
-  /**
-   * Process and flush locally queued logs
-   */
   async processQueue() {
     const queue = localStorageApi.getJSON(AUDIT_QUEUE_KEY)
     if (!queue || queue.length === 0) return
@@ -244,10 +201,11 @@ export const userRepository = {
 
     for (const item of queue) {
       try {
-        await firestoreUserApi.createAuditLog(item.logId, item.logData)
+        const auditProvider = getAuditProvider()
+        await auditProvider.write(item.logData)
       } catch (err) {
-        console.warn(`[UserRepository] Queue sync failed for log ${item.logId}:`, err.message)
-        remaining.push(item) // Re-queue on failure
+        console.warn(`[UserRepository] Queue sync failed:`, err.message)
+        remaining.push(item)
       }
     }
 
@@ -260,26 +218,19 @@ export const userRepository = {
   },
 
   /**
-   * Fetch all audit logs
-   * @returns {Promise<Array>}
+   * Fetch all audit logs, sorted newest-first.
    */
   async fetchAuditLogs() {
-    const querySnapshot = await firestoreUserApi.getAuditLogs()
-    const list = []
-    querySnapshot.forEach((doc) => {
-      list.push(doc.data())
-    })
-    // Sort descending by timestamp
+    const auditProvider = getAuditProvider()
+    const list = await auditProvider.fetchAll()
     return list.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
   },
 
   /**
-   * Update a user's last login timestamp
-   * @param {string} uid
+   * Touch the user's last login timestamp (fire-and-forget).
    */
-  async updateUserLastLogin(uid) {
-    return firestoreUserApi.setUserProfile(uid, {
-      lastLogin: new Date().toISOString()
-    }, { merge: true })
+  async updateUserLastLogin(userId) {
+    const userProvider = getUserProvider()
+    return userProvider.updateLastLogin(userId)
   },
 }

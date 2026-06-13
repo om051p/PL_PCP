@@ -19,6 +19,9 @@ import {
 } from '../components/ui.jsx'
 import { ANODE_SPECS, STANDARD_OPTIONS } from '../constants/index.js'
 import { Building2, Cpu, Layers, Plus, Trash2, Settings } from 'lucide-react'
+import { InputLinkView } from '../components/InputLinkView.jsx'
+import { INPUT_LINKS as AUDIT_INPUT_LINKS } from '../engine/inputLinkRegistry.js'
+import { useState as useReactState } from 'react'
 
 export function PageProjectSetup() {
   const project = useProjectStore((s) => s.getProject())
@@ -42,6 +45,7 @@ export function PageProjectSetup() {
   }, [confirmDeleteId, removeStation])
 
   const designBasis = project?.designBasis || {}
+  const [selectedField, setSelectedField] = useReactState('soilResistivityOhmCm')
 
   return (
     <div className="page">
@@ -255,6 +259,31 @@ export function PageProjectSetup() {
               )}
             </div>
           ))}
+        </div>
+      </SectionCard>
+
+      <SectionCard title="Input Dependencies" sub="Trace every designBasis field to its downstream consumers and validation rules.">
+        <div style={{ display: 'grid', gridTemplateColumns: '220px 1fr', gap: 12, alignItems: 'start' }}>
+          <div>
+            <div style={{ fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--text-tertiary)', fontWeight: 600, marginBottom: 4 }}>
+              Select Input
+            </div>
+            <select
+              value={selectedField}
+              onChange={(e) => setSelectedField(e.target.value)}
+              style={{ width: '100%', padding: '4px 6px', fontSize: 11, fontFamily: 'var(--font-mono)', background: 'var(--surface)', color: 'var(--text-primary)', border: '1px solid var(--border)', borderRadius: 'var(--radius)' }}
+            >
+              {Object.keys(AUDIT_INPUT_LINKS).map((k) => (
+                <option key={k} value={k}>{k}</option>
+              ))}
+            </select>
+            <div style={{ fontSize: 10, color: 'var(--text-tertiary)', marginTop: 6 }}>
+              Pick a field to see every consumer module, exact field path, and the calculation it affects.
+            </div>
+          </div>
+          <div>
+            <InputLinkView fieldName={selectedField} mode="field" />
+          </div>
         </div>
       </SectionCard>
 

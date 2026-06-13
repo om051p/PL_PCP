@@ -1,14 +1,20 @@
 /**
  * PageDashboard.jsx
  *
- * Project Dashboard — overview of all projects.
- * Shows recent/active projects, archived projects, and quick actions.
+ * Enterprise Project Dashboard — KPIs, pipeline overview, workflow modules,
+ * recent activity, and project management.
  */
 
+import { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useProjectStore } from '../store/projectStore.js'
+import { useAuthStore } from '../store/authStore.js'
 import { StatusBadge } from '../components/ui.jsx'
 import { getActiveStandard } from '../constants/index.js'
+import { PipelineOverviewCanvas } from '../visualizations/index.js'
+import { KPITrendWidget, extractTrendData } from '../visualizations/KPITrendWidget.jsx'
+import { ProjectOverviewMap } from '../visualizations/ProjectOverviewMap.jsx'
+import { subscribeToActivity } from '../services/activityLogger.js'
 import {
   Plus,
   Copy,
@@ -19,6 +25,15 @@ import {
   Clock,
   Layers,
   Bookmark,
+  LayoutDashboard,
+  Zap,
+  Cable,
+  Cpu,
+  Signal,
+  ClipboardCheck,
+  CheckCircle,
+  Activity,
+  Route,
 } from 'lucide-react'
 
 function formatDate(isoString) {
@@ -53,14 +68,8 @@ function ProjectCard({ project, isActive, onSwitch, onDuplicate, onArchive, onUn
     navigate('/project')
   }
 
-  // Engineering Flow Checks
   const hasStations = totalStations > 0
   const isCalculated = hasStations && project.stations.every((s) => s.lastCalcResult)
-
-  const designBasisDone = !!(project.projectName && project.clientName)
-  const currentReqDone = isCalculated
-  const groundbedDone = isCalculated
-  const trSizingDone = isCalculated
 
   let validationStatus = '—'
   let allChecksPassed = true
@@ -72,107 +81,71 @@ function ProjectCard({ project, isActive, onSwitch, onDuplicate, onArchive, onUn
     allChecksPassed = !hasFailures
   }
 
-  // Calculate Progress Percentage
-  let progress = 20 // Design Basis starts at 20%
-  if (currentReqDone) progress += 15
-  if (groundbedDone) progress += 15
-  if (trSizingDone) progress += 15
+  let progress = 20
+  if (isCalculated) progress += 15
+  if (isCalculated) progress += 15
+  if (isCalculated) progress += 15
   if (isCalculated) {
     progress += allChecksPassed ? 15 : 5
   }
 
   return (
     <div
-      className={`dashboard-project-card ${isActive ? 'active' : ''}`}
+      className={`dashboard-project-card ${isActive ? 'dashboard-project-card--active' : ''}`}
       onClick={handleClick}
-      style={{ display: 'flex', flexDirection: 'column', minHeight: '340px' }}
     >
-      <div className="dashboard-card-header">
-        <div className="dashboard-card-number">{project.projectNumber}</div>
+      <div className="dashboard-project-header">
+        <div className="dashboard-project-number">{project.projectNumber}</div>
         <StatusBadge status={project.status} />
         {project.archived && <span className="dashboard-archived-badge">Archived</span>}
       </div>
-      <div className="dashboard-card-name" style={{ fontWeight: '500', fontSize: '14px', marginBottom: '2px' }}>{project.projectName}</div>
-      <div className="dashboard-card-client" style={{ fontSize: '12.5px', color: 'var(--text-secondary)', marginBottom: '8px' }}>{project.clientName}</div>
-
-      <div style={{ fontSize: '11px', color: 'var(--brand-mid)', fontWeight: '600', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+      <div className="dashboard-project-name">{project.projectName}</div>
+      <div style={{ fontSize: '12px', color: 'var(--text-tertiary)', marginTop: 2 }}>
+        {project.clientName || '—'}
+      </div>
+      <div style={{ fontSize: '10.5px', color: 'var(--brand-mid)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', marginTop: 6 }}>
         {std?.label || project.designStandard}
       </div>
-
-      {/* Engineering Checklist */}
-      <div className="dashboard-card-checks" style={{ margin: '12px 0', display: 'flex', flexDirection: 'column', gap: '6px', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)', padding: '12px 0' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', alignItems: 'center' }}>
-          <span style={{ color: 'var(--text-secondary)' }}>Design Basis</span>
-          <span style={{ color: designBasisDone ? 'var(--pass)' : 'var(--text-tertiary)', fontWeight: 'bold' }}>✓</span>
-        </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', alignItems: 'center' }}>
-          <span style={{ color: 'var(--text-secondary)' }}>Current Requirement</span>
-          <span style={{ color: currentReqDone ? 'var(--pass)' : 'var(--text-tertiary)', fontWeight: currentReqDone ? 'bold' : 'normal' }}>{currentReqDone ? '✓' : '—'}</span>
-        </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', alignItems: 'center' }}>
-          <span style={{ color: 'var(--text-secondary)' }}>Groundbed Design</span>
-          <span style={{ color: groundbedDone ? 'var(--pass)' : 'var(--text-tertiary)', fontWeight: groundbedDone ? 'bold' : 'normal' }}>{groundbedDone ? '✓' : '—'}</span>
-        </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', alignItems: 'center' }}>
-          <span style={{ color: 'var(--text-secondary)' }}>TR Sizing</span>
-          <span style={{ color: trSizingDone ? 'var(--pass)' : 'var(--text-tertiary)', fontWeight: trSizingDone ? 'bold' : 'normal' }}>{trSizingDone ? '✓' : '—'}</span>
-        </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', alignItems: 'center' }}>
-          <span style={{ color: 'var(--text-secondary)' }}>Validation</span>
-          <span style={{
-            color: validationStatus === '✓' ? 'var(--pass)' : validationStatus === '⚠' ? 'var(--warn)' : 'var(--text-tertiary)',
-            fontWeight: 'bold'
-          }}>{validationStatus}</span>
-        </div>
-      </div>
-
-      {/* Progress Bar */}
-      <div className="dashboard-card-progress-wrapper" style={{ margin: '8px 0 12px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: 'var(--text-tertiary)', marginBottom: '4px' }}>
-          <span>Progress</span>
-          <span style={{ fontWeight: '600', color: 'var(--text-secondary)' }}>{progress}%</span>
-        </div>
-        <div style={{ height: '6px', background: 'var(--surface-hover)', borderRadius: '3px', overflow: 'hidden' }}>
-          <div style={{ width: `${progress}%`, height: '100%', background: progress === 100 ? 'var(--pass)' : 'var(--brand)', borderRadius: '3px', transition: 'width 0.3s ease' }} />
-        </div>
-      </div>
-
-      <div className="dashboard-card-meta" style={{ marginTop: 'auto', borderTop: 'none', paddingTop: 0 }}>
-        <div className="dashboard-card-meta-item">
-          <Layers size={12} />
+      <div className="dashboard-project-meta">
+        <div className="dashboard-meta-item">
+          <Layers size={11} />
           <span>{totalStations} station{totalStations !== 1 ? 's' : ''}</span>
         </div>
-        <div className="dashboard-card-meta-item">
-          <Clock size={12} />
+        <div className="dashboard-meta-item">
+          <Clock size={11} />
           <span>{formatRelative(project.updatedAt)}</span>
         </div>
         {project.currentRevision && (
-          <div className="dashboard-card-meta-item">
-            <span className="dashboard-card-revision">{project.currentRevision}</span>
+          <div className="dashboard-meta-item">
+            <Bookmark size={11} />
+            <span>{project.currentRevision}</span>
           </div>
         )}
       </div>
-
-      <div className="dashboard-card-actions" onClick={(e) => e.stopPropagation()} style={{ marginTop: '12px' }}>
-        <button className="btn btn-sm" onClick={() => onDuplicate(project.id)} title="Duplicate">
-          <Copy size={12} /> Duplicate
+      <div style={{ marginTop: 8 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10px', color: 'var(--text-tertiary)', marginBottom: 4 }}>
+          <span>Progress</span>
+          <span style={{ fontWeight: 600, color: 'var(--text-secondary)' }}>{progress}%</span>
+        </div>
+        <div style={{ height: 4, background: 'var(--surface-hover)', borderRadius: 2, overflow: 'hidden' }}>
+          <div style={{ width: `${progress}%`, height: '100%', background: progress === 100 ? 'var(--pass)' : 'var(--brand)', borderRadius: 2, transition: 'width 0.3s ease' }} />
+        </div>
+      </div>
+      <div className="dashboard-project-footer" onClick={(e) => e.stopPropagation()}>
+        <button className="btn btn-sm" onClick={() => onDuplicate(project.id)}>
+          <Copy size={11} /> Duplicate
         </button>
         {!project.archived ? (
-          <button className="btn btn-sm" onClick={() => onArchive(project.id)} title="Archive">
-            <Archive size={12} /> Archive
+          <button className="btn btn-sm" onClick={() => onArchive(project.id)}>
+            <Archive size={11} /> Archive
           </button>
         ) : (
-          <button className="btn btn-sm" onClick={() => onUnarchive(project.id)} title="Unarchive">
-            <ArchiveRestore size={12} /> Restore
+          <button className="btn btn-sm" onClick={() => onUnarchive(project.id)}>
+            <ArchiveRestore size={11} /> Restore
           </button>
         )}
-        <button
-          className="btn btn-sm"
-          onClick={() => onDelete(project.id)}
-          title="Delete"
-          style={{ color: 'var(--fail)' }}
-        >
-          <Trash2 size={12} />
+        <button className="btn btn-sm" onClick={() => onDelete(project.id)} style={{ color: 'var(--fail)' }}>
+          <Trash2 size={11} />
         </button>
       </div>
     </div>
@@ -192,6 +165,7 @@ export default function PageDashboard() {
 
   const activeProjects = projects.filter((p) => !p.archived)
   const archivedProjects = projects.filter((p) => p.archived)
+  const activeProject = projects.find((p) => p.id === activeProjectId) || null
 
   const handleNew = () => {
     createProject({
@@ -200,14 +174,73 @@ export default function PageDashboard() {
     navigate('/project')
   }
 
+  const stations = activeProject?.stations || []
+  const calculatedStations = stations.filter((s) => s.lastCalcResult)
+  const totalStations = stations.length
+  const hasFailures = calculatedStations.some((s) =>
+    (s.lastCalcResult?.checks || []).some((c) => c.status === 'fail')
+  )
+  const allValidated = calculatedStations.length > 0 && !hasFailures
+  const totalValidationErrors = stations.reduce((acc, s) => acc + (s.validationErrors?.length || 0), 0)
+
+  // Compute total pipeline length
+  const totalPipelineM = stations.reduce((acc, s) => {
+    if (s.pipelineSegments && Array.isArray(s.pipelineSegments)) {
+      return acc + s.pipelineSegments.reduce((sum, seg) => sum + (parseFloat(seg.lengthM) || 0), 0)
+    }
+    return acc
+  }, 0)
+
+  // Total groundbeds
+  const groundbedCount = stations.filter((s) => s.groundbed?.type).length
+
+  // TR units count
+  const trCount = stations.filter((s) => s.tr).length
+
+  // Real activity feed (Firestore subscription) — replaces the derived feed
+  const [realActivity, setRealActivity] = useState([])
+  useEffect(() => {
+    if (!activeProject?.id) {
+      setRealActivity([])
+      return undefined
+    }
+    const unsub = subscribeToActivity(activeProject.id, (entries) => setRealActivity(entries), 10)
+    return () => { if (typeof unsub === 'function') unsub() }
+  }, [activeProject?.id])
+
+  // Fall back to the derived feed if no real activity yet (so the section isn't empty on first load)
+  const activityToShow = realActivity.length > 0 ? null : stations
+    .flatMap((s) => {
+      const events = []
+      if (s.lastCalcResult?.calculatedAt) events.push({ id: `calc-${s.id}`, station: s.name, kind: 'calc', text: 'Calculation run', ts: s.lastCalcResult.calculatedAt })
+      if (s.status === 'approved' || s.status === 'issued_for_construction') events.push({ id: `app-${s.id}`, station: s.name, kind: 'approval', text: 'Station approved', ts: s.updatedAt || new Date().toISOString() })
+      if (s.status === 'engineering_review') events.push({ id: `rev-${s.id}`, station: s.name, kind: 'revision', text: 'In engineering review', ts: s.updatedAt || new Date().toISOString() })
+      return events
+    })
+    .sort((a, b) => new Date(b.ts) - new Date(a.ts))
+    .slice(0, 10)
+
+  // Workflow module definitions
+  const workflowModules = [
+    { id: 'current', label: 'Current Req.', icon: Zap, path: '/current', status: calculatedStations.length > 0 ? 'done' : 'pending', value: calculatedStations.length > 0 ? `${calculatedStations[0]?.lastCalcResult?.totalCurrentAmps?.toFixed(2) || '—'} A` : null },
+    { id: 'groundbed', label: 'Groundbed', icon: Layers, path: '/groundbed', status: stations.some((s) => s.lastCalcResult?.groundbedResistanceOhm != null) ? 'done' : 'pending', value: null },
+    { id: 'cable', label: 'Cable Resistance', icon: Cable, path: '/cable', status: stations.some((s) => s.lastCalcResult?.totalCableResOhm != null) ? 'done' : 'pending', value: null },
+    { id: 'tr', label: 'TR Sizing', icon: Cpu, path: '/tr', status: stations.some((s) => s.lastCalcResult?.trRatedVoltage != null) ? 'done' : 'pending', value: null },
+    { id: 'attenuation', label: 'Attenuation', icon: Signal, path: '/attenuation', status: stations.some((s) => s.lastCalcResult?.attenuationPercent != null) ? 'done' : 'pending', value: null },
+    { id: 'validation', label: 'Validation', icon: ClipboardCheck, path: '/validation', status: allValidated ? 'done' : totalValidationErrors > 0 ? 'in-progress' : 'pending', value: allValidated ? 'All passed' : totalValidationErrors > 0 ? `${totalValidationErrors} issues` : null },
+    { id: 'optimizer', label: 'Optimizer', icon: Activity, path: '/optimizer', status: 'pending', value: null },
+  ]
+
   return (
-    <div className="page">
-      <div className="dashboard-header">
+    <div className="enterprise-page" style={{ padding: '0' }}>
+      {/* Header row */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
         <div>
-          <h1 style={{ fontSize: 22, fontWeight: 500, margin: 0 }}>Project Dashboard</h1>
-          <p style={{ fontSize: 13, color: 'var(--text-secondary)', margin: '4px 0 0' }}>
+          <h1 style={{ fontSize: 20, fontWeight: 500, margin: 0, color: 'var(--text-primary)' }}>Project Dashboard</h1>
+          <p style={{ fontSize: 12, color: 'var(--text-secondary)', margin: '2px 0 0' }}>
             {activeProjects.length} active project{activeProjects.length !== 1 ? 's' : ''}
             {archivedProjects.length > 0 && ` · ${archivedProjects.length} archived`}
+            {activeProject ? ` · ${activeProject.projectName}` : ''}
           </p>
         </div>
         <button className="btn btn-primary" onClick={handleNew}>
@@ -227,51 +260,270 @@ export default function PageDashboard() {
           </button>
         </div>
       ) : (
-        <div className="dashboard-grid">
-          {activeProjects
-            .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
-            .map((p) => (
-              <ProjectCard
-                key={p.id}
-                project={p}
-                isActive={p.id === activeProjectId}
-                onSwitch={switchProject}
-                onDuplicate={duplicateProject}
-                onArchive={archiveProject}
-                onUnarchive={unarchiveProject}
-                onDelete={(id) => {
-                  if (projects.length <= 1) return
-                  deleteProject(id)
-                }}
-              />
-            ))}
-        </div>
-      )}
-
-      {archivedProjects.length > 0 && (
         <>
-          <h2 style={{ fontSize: 16, fontWeight: 500, marginTop: 24, marginBottom: 12 }}>
-            Archived Projects
-          </h2>
-          <div className="dashboard-grid">
-            {archivedProjects
-              .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
-              .map((p) => (
-                <ProjectCard
-                  key={p.id}
-                  project={p}
-                  isActive={p.id === activeProjectId}
-                  onSwitch={switchProject}
-                  onDuplicate={duplicateProject}
-                  onArchive={archiveProject}
-                  onUnarchive={unarchiveProject}
-                  onDelete={(id) => {
-                    if (projects.length <= 1) return
-                    deleteProject(id)
-                  }}
+          {/* KPI Top Row */}
+          {activeProject && (
+            <div className="kpi-row">
+              <div className={`kpi-card ${allValidated ? 'kpi-card--pass' : hasFailures ? 'kpi-card--fail' : 'kpi-card--brand'}`}>
+                <div className="kpi-card__label">Project Health</div>
+                <div className="kpi-card__value" style={{ color: allValidated ? 'var(--pass)' : hasFailures ? 'var(--fail)' : 'var(--text-tertiary)' }}>
+                  {allValidated ? 'PASS' : hasFailures ? 'ISSUES' : 'PENDING'}
+                </div>
+                <div className="kpi-card__sub">
+                  {calculatedStations.length} of {totalStations} stations calculated
+                </div>
+              </div>
+
+              <div className="kpi-card kpi-card--info">
+                <div className="kpi-card__label">Pipeline Length</div>
+                <div className="kpi-card__value">
+                  {totalPipelineM > 0 ? totalPipelineM.toLocaleString('en-US', { maximumFractionDigits: 1 }) : '—'}
+                </div>
+                <div className="kpi-card__sub">meters · {totalStations} station{totalStations !== 1 ? 's' : ''}</div>
+              </div>
+
+              <div className="kpi-card kpi-card--brand">
+                <div className="kpi-card__label">Groundbeds</div>
+                <div className="kpi-card__value">{groundbedCount || '—'}</div>
+                <div className="kpi-card__sub">
+                  {stations.filter((s) => s.groundbed?.type === 'deepwell').length} deepwell · {stations.filter((s) => s.groundbed?.type === 'shallow').length} shallow
+                </div>
+              </div>
+
+              <div className="kpi-card kpi-card--brand">
+                <div className="kpi-card__label">TR Units</div>
+                <div className="kpi-card__value">{trCount || '—'}</div>
+                <div className="kpi-card__sub">Transformer-Rectifier units</div>
+              </div>
+
+              <div className={`kpi-card ${totalValidationErrors === 0 ? 'kpi-card--pass' : 'kpi-card--warn'}`}>
+                <div className="kpi-card__label">Validation</div>
+                <div className="kpi-card__value" style={{ color: totalValidationErrors === 0 ? 'var(--pass)' : 'var(--warn)' }}>
+                  {totalValidationErrors === 0 ? 'CLEAN' : totalValidationErrors}
+                </div>
+                <div className="kpi-card__sub">
+                  {totalValidationErrors === 0 ? 'All checks passed' : 'open validation issues'}
+                </div>
+              </div>
+
+              <div className="kpi-card kpi-card--info">
+                <div className="kpi-card__label">Design Standard</div>
+                <div className="kpi-card__value" style={{ fontSize: 16, fontWeight: 500, fontFamily: 'var(--font-sans)' }}>
+                  {getActiveStandard(activeProject)?.label || activeProject.designStandard || 'NACE'}
+                </div>
+                <div className="kpi-card__sub">Active engineering standard</div>
+              </div>
+            </div>
+          )}
+
+          {/* KPI Trend Row — 4 mini charts derived from project.revisions */}
+          {activeProject && (activeProject.revisions?.length ?? 0) > 0 && (
+            <div className="section-card" style={{ marginTop: 12 }}>
+              <div className="section-card-header">
+                <span className="section-card-title">KPI Trends</span>
+                <span style={{ fontSize: 10, color: 'var(--text-tertiary)' }}>
+                  Across {activeProject.revisions.length} revision{activeProject.revisions.length !== 1 ? 's' : ''} · derived from project.revisions[].snapshot
+                </span>
+              </div>
+              <div className="section-card-body" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 12 }}>
+                <div>
+                  <KPITrendWidget
+                    data={extractTrendData(activeProject, 'totalStations')}
+                    label="Stations"
+                    unit=""
+                    color="var(--brand-mid)"
+                    height={120}
+                  />
+                </div>
+                <div>
+                  <KPITrendWidget
+                    data={extractTrendData(activeProject, 'totalPipelineM')}
+                    label="Pipeline Length"
+                    unit="m"
+                    color="var(--brand-mid)"
+                    height={120}
+                  />
+                </div>
+                <div>
+                  <KPITrendWidget
+                    data={extractTrendData(activeProject, 'groundbedCount')}
+                    label="Groundbeds"
+                    unit=""
+                    color="var(--brand-mid)"
+                    height={120}
+                  />
+                </div>
+                <div>
+                  <KPITrendWidget
+                    data={extractTrendData(activeProject, 'validationErrors')}
+                    label="Validation Errors"
+                    unit=""
+                    color="var(--warn)"
+                    thresholds={{ warn: 0.5, pass: 0 }}
+                    height={120}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Pipeline Overview Viz — Full Width */}
+          {activeProject && stations.length > 0 && (
+            <div className="viz-fullwidth" style={{ minHeight: 440 }}>
+              <div className="viz-fullwidth__header">
+                <div className="viz-fullwidth__title">
+                  <LayoutDashboard size={14} />
+                  Pipeline Overview
+                </div>
+                <div style={{ fontSize: 11, color: 'var(--text-tertiary)' }}>
+                  {activeProject.projectName} · {totalStations} station{totalStations !== 1 ? 's' : ''} · {totalPipelineM > 0 ? totalPipelineM.toLocaleString('en-US', { maximumFractionDigits: 0 }) + ' m' : ''}
+                </div>
+              </div>
+              <div className="viz-fullwidth__body" style={{ minHeight: 390, padding: 8 }}>
+                <PipelineOverviewCanvas stations={stations} />
+              </div>
+            </div>
+          )}
+
+          {/* Engineering Modules Progress — Workflow Cards */}
+          {activeProject && (
+            <>
+              <h3 style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', margin: '4px 0 0' }}>
+                Engineering Modules
+              </h3>
+              <div className="workflow-grid">
+                {workflowModules.map((mod) => (
+                  <button
+                    key={mod.id}
+                    className="workflow-card"
+                    onClick={() => navigate(mod.path)}
+                    style={{ textAlign: 'left', fontFamily: 'inherit' }}
+                  >
+                    <div className="workflow-card__header">
+                      <div className="workflow-card__icon">
+                        <mod.icon size={15} />
+                      </div>
+                      <div className={`workflow-card__status workflow-card__status--${mod.status}`} />
+                    </div>
+                    <div className="workflow-card__title">{mod.label}</div>
+                    {mod.value ? (
+                      <div className="workflow-card__value">{mod.value}</div>
+                    ) : (
+                      <div className="workflow-card__sub">
+                        {mod.status === 'done' ? 'Complete' : mod.status === 'in-progress' ? 'Needs attention' : 'Not started'}
+                      </div>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
+
+          {/* Recent Activity — real (Firestore) or derived fallback */}
+          {activeProject && (realActivity.length > 0 || activityToShow?.length > 0) && (
+            <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', padding: '12px 14px', boxShadow: 'var(--shadow-sm)' }}>
+              <h3 style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text-tertiary)', marginBottom: 8 }}>
+                Recent Activity {realActivity.length > 0 ? <span style={{ fontSize: 9, color: 'var(--pass)', fontWeight: 400, marginLeft: 6 }}>● live</span> : null}
+              </h3>
+              <div className="activity-feed">
+                {(realActivity.length > 0 ? realActivity : activityToShow).map((ev, i) => (
+                  <div key={ev.id || i} className="activity-feed__item">
+                    <div className={`activity-feed__dot activity-feed__dot--${ev.kind || 'info'}`} />
+                    <span className="activity-feed__label">
+                      {realActivity.length > 0 ? (
+                        <><strong>{ev.userEmail}</strong> · <em>{ev.action}</em>{ev.details ? ` — ${ev.details}` : ''}</>
+                      ) : (
+                        <><strong>{ev.station}</strong> · {ev.text}</>
+                      )}
+                    </span>
+                    <span className="activity-feed__time">
+                      {new Date(ev.timestamp || ev.ts).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Project Map — multi-project rollup (geo or grid view) */}
+          {activeProjects.length > 1 && (
+            <div className="section-card" style={{ marginTop: 12 }}>
+              <div className="section-card-header">
+                <span className="section-card-title">Project Overview</span>
+                <span style={{ fontSize: 10, color: 'var(--text-tertiary)' }}>
+                  {activeProjects.length} active · click to switch
+                </span>
+              </div>
+              <div className="section-card-body">
+                <ProjectOverviewMap
+                  projects={activeProjects.map((p) => ({
+                    id: p.id,
+                    name: p.name,
+                    number: p.number,
+                    client: p.client,
+                    standard: getActiveStandard(p)?.label || p.designStandard,
+                    status: p.status,
+                    location: p.location,
+                  }))}
+                  onProjectClick={(p) => switchProject(p.id)}
+                  height={300}
                 />
-              ))}
+              </div>
+            </div>
+          )}
+
+          {/* Project Cards — for project management */}
+          <div style={{ marginTop: 8 }}>
+            <h3 style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text-tertiary)', marginBottom: 10 }}>
+              {activeProjects.length} Active Project{activeProjects.length !== 1 ? 's' : ''}
+            </h3>
+            <div className="dashboard-project-grid">
+              {activeProjects
+                .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
+                .map((p) => (
+                  <ProjectCard
+                    key={p.id}
+                    project={p}
+                    isActive={p.id === activeProjectId}
+                    onSwitch={switchProject}
+                    onDuplicate={duplicateProject}
+                    onArchive={archiveProject}
+                    onUnarchive={unarchiveProject}
+                    onDelete={(id) => {
+                      if (projects.length <= 1) return
+                      deleteProject(id)
+                    }}
+                  />
+                ))}
+            </div>
           </div>
+
+          {archivedProjects.length > 0 && (
+            <div style={{ marginTop: 20 }}>
+              <h3 style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text-tertiary)', marginBottom: 10 }}>
+                {archivedProjects.length} Archived Project{archivedProjects.length !== 1 ? 's' : ''}
+              </h3>
+              <div className="dashboard-project-grid">
+                {archivedProjects
+                  .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
+                  .map((p) => (
+                    <ProjectCard
+                      key={p.id}
+                      project={p}
+                      isActive={p.id === activeProjectId}
+                      onSwitch={switchProject}
+                      onDuplicate={duplicateProject}
+                      onArchive={archiveProject}
+                      onUnarchive={unarchiveProject}
+                      onDelete={(id) => {
+                        if (projects.length <= 1) return
+                        deleteProject(id)
+                      }}
+                    />
+                  ))}
+              </div>
+            </div>
+          )}
         </>
       )}
     </div>

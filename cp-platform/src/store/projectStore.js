@@ -122,6 +122,9 @@ export function makeDefaultProject(overrides = {}) {
       minRemotenessDistanceM: 20,
       actualRemotenessDistanceM: 56,
       soilResistivityOhmCm: 361,
+      soilResistivitySource: 'standard',
+      soilResistivityLayers: [],
+      soilResistivitySurvey: [],
     },
     tank: {
       diameter: 30,

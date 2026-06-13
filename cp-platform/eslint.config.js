@@ -8,6 +8,7 @@ export default defineConfig([
   globalIgnores([
     'dist',
     'site',
+    'demo-out',
     '.claude',
     '.claude-flow',
     '.gitnexus',

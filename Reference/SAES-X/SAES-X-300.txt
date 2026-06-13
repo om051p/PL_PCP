@@ -1,0 +1,1276 @@
+   Engineering Standard                                                                07 July 2024
+
+
+
+
+   SAES-X-300
+   Cathodic Protection of Marine Structures
+   Document Responsibility: Cathodic Protection Standards Committee
+
+
+
+
+   Previous Revision: 02 May 2019                                           Next Revision: 07 July 2029
+   Contact: (SHAHZAUX)                                                                   Page 1 of 24
+Saudi Aramco: Company General Use       © Saudi Arabian Oil Company, 2024
+   Document Responsibility: Cathodic Protection Standards Committee                                                                                                  SAES-X-300
+   Issue Date: 07 July 2024                                                                                                              Cathodic Protection of Marine Structures
+   Next Revision: 07 July 2029
+
+   Table of Content
+   SUMMARY OF CHANGES ......................................................................................................................................................... 3
+
+          SCOPE ................................................................................................................................................................................. 5
+
+          CONFLICTS AND DEVIATIONS ....................................................................................................................................... 5
+
+          REFERENCES ...................................................................................................................................................................... 5
+
+          TERMINOLOGY ................................................................................................................................................................. 6
+
+          DESIGN REVIEW AND APPROVAL ............................................................................................................................... 11
+
+          GENERAL DESIGN REQUIREMENTS ............................................................................................................................. 12
+
+          INSTALLATION, RECORDS, COMMISSIONING, AND INSPECTION ........................................................................ 19
+
+   APPENDICES ............................................................................................................................................................................ 23
+
+   APPENDIX A - COATING & CP REQUIREMENTS FOR OIL & GAS FIELDS EXPLAINED ................................................. 23
+
+   DOCUMENT HISTORY ............................................................................................................................................................ 24
+
+
+
+
+                                                                        © Saudi Arabian Oil Company, 2024                                                                         Page 2 of 24
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                           SAES-X-300
+   Issue Date: 07 July 2024                                                                       Cathodic Protection of Marine Structures
+   Next Revision: 07 July 2029
+
+   Summary of Changes
+
+                  Paragraph Number
+                                                                    Change Type
+     Previous Revision         Current Revision                                                          Technical Change(s)
+                                                             (Addition, Modification, Deletion,
+            02 May 2019               07 July 2024                        New)
+
+    1.2                       1.2                          Addition                                 Boats and vessels added to
+                                                                                                    Table-1
+                                                           Addition                                 Changes as well as additional
+    3.1                       3.1
+                                                                                                    references included.
+                                                           Addition                                 Changes as well as additional
+    4.2                       4.2
+                                                                                                    items added.
+                                                                                                    Note (2) modified to allow for
+    5.1                       5.1                          Modification
+                                                                                                    multiple meetings.
+                                                                                                    Modified to include 90%
+    5.2                       5.2                          Modification
+                                                                                                    detailed design package
+                                                                                                    Modified to be in line with
+    5.4                       5.4                          Modification                             other SAES and to include
+                                                                                                    more details.
+                                                                                                    Modified to change proposal
+                                                                                                    to detailed design. Detailed
+                                                                                                    design calculations & surface
+    5.5                       5.5                          Modification / Addition                  area spreadsheets to be
+                                                                                                    provided at 90% DD stage.
+                                                                                                    Surface Area to be cross
+                                                                                                    checked by Design Agency.
+                                                                                                    Modified to be in line with
+    6.1.1                     6.1.1                        Modification
+                                                                                                    other SAES.
+                                                                                                    Addressed the overprotection
+                                                                                                    and upper limit of CP
+    -                         6.2.2                        Addition                                 potentials for different
+                                                                                                    structures including carbon
+                                                                                                    steel.
+                                                                                                    Simulation modeling
+    6.2.7/6.7.3               6.2.8/6.7.3                  Modification                             requirements for complex
+                                                                                                    structures specified.
+                                                                                                    Note (3) added.
+    6.3                       6.3                          Addition / Modification                  Note (2) is revised to clarify
+                                                                                                    the requirement.
+
+    -                         6.4.5                        Addition                                 Note added for clarifications.
+
+                                                                                                    Changes made in Table 3 for
+    6.4.6                     6.4.6                        Modification                             current requirement
+                                                                                                    calculations.
+
+
+                                                     © Saudi Arabian Oil Company, 2024                                       Page 3 of 24
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                           SAES-X-300
+   Issue Date: 07 July 2024                                                                       Cathodic Protection of Marine Structures
+   Next Revision: 07 July 2029
+
+                  Paragraph Number
+                                                                    Change Type
+     Previous Revision         Current Revision                                                          Technical Change(s)
+                                                             (Addition, Modification, Deletion,
+            02 May 2019               07 July 2024                        New)
+
+                                                                                                    Reference of 6.2.2 added for
+    6.6.2                     6.6.2                        Modification
+                                                                                                    maximum CP potential values.
+                                                                                                    Section numbering revised to
+                                                                                                    segregate requirement for
+    6.7                       6.7                          Editorial
+                                                                                                    Galvanic and Impressed
+                                                                                                    Anode Design.
+                                                                                                    General requirements added
+    -                         6.7.1.6                      Addition                                 to cover the bracelet anode
+                                                                                                    thickness changes.
+                                                                                                    General design considerations
+    -                         6.7.3                        Addition                                 added for addressing uniform
+                                                                                                    current distribution.
+                                                                                                    Note 2 added in Table 4 for
+    6.7.5                     6.7.1.5                      Addition                                 temperature and burial of
+                                                                                                    pipeline anodes.
+                                                                                                    Revised to be in line with
+    6.8.3 a                   6.8.3 a                      Modification
+                                                                                                    other SAES
+                                                                                                    Revised to limit DC voltage
+                                                                                                    rating for T/R for pyramid
+    6.9.6                     6.9.6                        Modification
+                                                                                                    anode and pile mounted
+                                                                                                    anodes systems.
+                                                                                                    Voltage drop requirement for
+    -                         6.10.4                       Addition
+                                                                                                    DC cables added.
+                                                                                                    All requirements are
+    6.11.4 a and b
+                              -                            Deleted                                  sufficiently addressed in
+    6.11.7
+                                                                                                    6.11.5 & 17-SAMSS-012
+                                                                                                    Note added for bonding
+    6.13.1 a                  6.13.1 a                     Addition                                 requirement to existing
+                                                                                                    structure.
+                                                                                                    Requirement and clarification
+    -                         6.13.1 e                     Addition                                 regarding bonding of support
+                                                                                                    clamps.
+                                                                                                    Requirements added related
+                                                                                                    to installation procedures and
+    7                         7                            Modification
+                                                                                                    necessary liaison for Design
+                                                                                                    Agency.
+
+
+
+
+                                                     © Saudi Arabian Oil Company, 2024                                       Page 4 of 24
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                              SAES-X-300
+   Issue Date: 07 July 2024                                                          Cathodic Protection of Marine Structures
+   Next Revision: 07 July 2029
+
+                  Scope
+                  This standard prescribes the minimum mandatory requirements governing the design and
+                  installation of new cathodic protection systems for submerged new subsea pipelines, offshore
+                  platforms and other nearshore marine structures. The standard applies to both coated and
+                  uncoated structures.
+                  This standard is applicable to but not limited to the marine structures categorized in Table 1
+                  This standard is not applicable to corrosion protection of Splash Zone for any structure (see
+                  Section 6.4.5). This standard is not applicable to retrofits, modifications and repairs made to
+                  existing structures, but can be used as guideline for designing CP system, for existing structures.
+                  Moreover, any HDD installed pipeline with coating system other than CSD approved ARO
+                  system is also not covered by this standard.
+
+                  Conflicts and Deviations
+                  Any conflicts between this document and other applicable Mandatory Saudi Aramco
+                  Engineering Requirements (MSAERs) shall be addressed to the EK&RD Manager.
+                  Any deviation from the requirements herein shall follow internal company procedure SAEP-302.
+
+
+                  References
+                  All referenced specifications, standards, codes, drawings, and similar material are considered
+                  part of this Engineering Standard to the extent specified, applying the latest version, unless
+                  otherwise stated.
+                  Saudi Aramco References
+                  Saudi Aramco Engineering Procedures
+                  SAEP-302            Waiver of a Mandatory Saudi Aramco Engineering Requirement
+                  SAEP-303            Engineering Reviews of Project Documentation
+                  SAEP-332            Cathodic Protection Commissioning
+                  SAEP-333            Cathodic Protection Monitoring
+
+                  Saudi Aramco Materials System Specification
+                  17-SAMSS-004        Conventional (Tap Adjustable) Transformer/Rectifiers for Cathodic Protection
+                  17-SAMSS-006        Galvanic Anodes for Cathodic Protection
+                  17-SAMSS-007        Impressed Current Anodes for Cathodic Protection
+                  17-SAMSS-008        Junction Boxes for Cathodic Protection
+                  17-SAMSS-012        Photovoltaic Power Supply for Cathodic Protection
+                  17-SAMSS-017        Impressed Current Cathodic Protection Cables
+                  17-SAMSS-018        Remote Monitoring Units (RMUs) for Cathodic Protection Applications
+
+                  Saudi Aramco Engineering Standards
+                  SAES-P-104          Wiring Methods and Materials
+                  SAES-X-400          Cathodic Protection of Buried Pipelines
+                  SAES-X-600          Cathodic Protection of External Surfaces of Plant Facilities
+
+
+
+
+                                                © Saudi Arabian Oil Company, 2024                               Page 5 of 24
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                             SAES-X-300
+   Issue Date: 07 July 2024                                                         Cathodic Protection of Marine Structures
+   Next Revision: 07 July 2029
+
+                  Saudi Aramco Best Practice
+                  SABP-X-003          Cathodic Protection Installation Requirements
+
+                  Saudi Aramco Standard Drawings
+                  AA-036108           Offshore Negative Terminal Junction Box
+                  AD-036132           Cathodic Protection Cable Identification Termination Detail
+                  AA-036335           Cathodic Protection, Half Shell Bracelet Type Anode for Pipe Sizes 4-60 Inch
+                  AA-036348           Cathodic Protection, Galvanic and Impressed Anodes on Offshore Structures
+                  AA-036350           Cathodic Protection Bond Box-2 Terminal
+                  AA-036384           Cathodic Protection Offshore Anode Junction Box
+                  AA-036389           Galvanic Anodes Details
+                  AB-036378           Cathodic Protection Onshore Rectifier Installation Details (Sheets 1 & 2)
+                  AB-036907           Cathodic Protection, Test Stations for Buried Pipelines
+                  AD-036785           Symbols for Cathodic Protection
+
+                  Saudi Aramco Library Drawings
+                  DA-950068-001       Bonding for Offshore Structures Installation Details
+
+                  Saudi Aramco General Instructions
+                  GI-0428.001         Cathodic Protection Responsibilities
+
+                  Other References
+                  International Organization for Standardization
+                  ISO 15589-2,        Petroleum, Petrochemical, and Natural Gas Industries - Cathodic Protection
+                  2024                of Pipeline Transportation Systems - Part 2: Offshore Pipelines
+
+                  Det Norske Veritas
+                  RP-B401, 2017       Cathodic Protection Design
+                  RP-F103, 2021       Cathodic protection of submarine pipelines
+
+                  European Standard
+                  EN 12473, 2024      General principles of cathodic protection in seawater
+
+                  National Association of Corrosion Engineers
+                  SP0176, 2022        Corrosion Control of Submerged Areas of Permanently Installed Steel
+                                      Offshore Structures Associated with Petroleum Production
+
+                  National Fire Protection Association
+                  NFPA 70             National Electrical Code (NEC)
+
+                  Terminology
+
+
+                                                © Saudi Arabian Oil Company, 2024                              Page 6 of 24
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                              SAES-X-300
+   Issue Date: 07 July 2024                                                          Cathodic Protection of Marine Structures
+   Next Revision: 07 July 2029
+
+                  Acronyms
+                  GOSP                       Gas and Oil Separation Plant
+                  HAT                        High Astronomical Tide Level
+                  HDD                        Horizontal Directional Drilled
+                  ICCP                       Impressed Current Cathodic Protection
+                  LAT                        Lowest Astronomical Tide Level
+                  MIC                        Microbiological Influenced Corrosion refers to corrosion mechanisms
+                                             attributed to microorganisms and their by-products
+                  MSAER                      Mandatory Saudi Aramco Engineering Requirements
+                  NEMA                       National Electrical Manufacturers Association (USA
+                  PMT                        Project Management Team used as a truncated version of Saudi
+                                             Aramco Project Management Team or SAPMT
+                                             Responsible Standardization Agent - usually the Saudi Aramco CSD
+                  RSA                        cathodic protection Subject Matter Expert or the Supervisor of the CSD
+                                             Cathodic Protection Team
+                  SAES                       Saudi Aramco Engineering Standard
+                  SAMSS                      Saudi Aramco Materials System Specification
+                                             Sulphate reducing bacteria, mainly responsible for MIC
+                  SRB                        (Microbiological influenced corrosion) especially in anaerobic
+                                             conditions
+                  WIP                        Water Injection Plant
+                  Definitions
+                  Anode:                       An impressed current or a galvanic anode for cathodic protection
+                                               applications.
+                  Anode Cable:                 A cable directly connected to an impressed current or galvanic anode.
+                  Armored Cable:               Armored cable for cathodic protection is a single core insulated cable
+                                               manufactured with a double layer spiral wound insulated galvanized
+                                               steel sheath to provide mechanical protection, and typically used for
+                                               subsea applications.
+                  Bond Cable:                  A cable installed between two metallic structures to provide electrical
+                                               continuity between the structures for the purpose of cathodic
+                                               protection.
+                  Calcined Petroleum           A carbonaceous backfill used as a conductive backfill media for
+                  Coke Breeze:                 impressed current anodes in soil.
+                  Coated Casing:               The term “coated casing” as used in this engineering standard
+                                               describes a well casing with an external non-conductive coating
+                                               (typically Fusion Bonded Epoxy or FBE). The coating must be applied
+                                               to all sections of the casing in contact with soil or formation, from
+                                               surface to the bottom of the casing or to a depth determined to
+                                               facilitate external corrosion mitigation with cathodic protection
+                                               through the relevant down hole corrosive aquifers. Casings that have
+                                               been coated over the upper two or three joints of casing only are not
+
+
+                                                © Saudi Arabian Oil Company, 2024                               Page 7 of 24
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                             SAES-X-300
+   Issue Date: 07 July 2024                                                         Cathodic Protection of Marine Structures
+   Next Revision: 07 July 2029
+
+                                        “coated casings”. Coating applied to well casings is not applied as a
+                                        corrosion barrier. It is applied to reduce the total amount of CP
+                                        required or to extend the influence of the applied CP.
+                  CP Assessment         A multi-electrode probe custom fabricated for Saudi Aramco that is
+                  Probe:                designed to facilitate representative measurements of instant off,
+                                        total polarization, current density, and resistivity.
+                  CP Coupon:            A cathodic protection coupon used to measure representative
+                                        potentials or current densities on a pipeline or other buried or
+                                        immersed metallic structure.
+                  CP System Operating The total resistance seen at the output of a CP power supply or the
+                  Circuit Resistance:   total working resistance in a galvanic anode system.
+                  CP System Rated       The rated output voltage of a cathodic protection power supply
+                  Circuit Resistance:   divided by the rated output current. For photovoltaic power supplies,
+                                        the rated output current is the design commissioning current.
+                  Cross Country         A pipeline between; two plant areas, another cross-country pipeline
+                  Pipeline:             and a plant area, or between two cross country pipelines.
+                  Deep Anode Bed:       Anode or anodes connected to a common CP power supply and
+                                        installed in a vertical hole with a depth exceeding 15 m (50 ft).
+                  Design Agency:        The organization responsible for the design of the pipeline and
+                                        associated CP system. The Design Agency may be the Design
+                                        Contractor, the Lump Sum Turn Key Contractor or an in-house design
+                                        organization of Saudi Aramco.
+                  Dielectric Shield     This is an electrical insulator that is placed to avoid short between
+                                        cathode and anode as electric charges do not flow through the
+                                        material because they have no loosely bound, or free, electrons that
+                                        may drift through the material.
+                  Drain Point:          The location on the cathodically protected structure where the
+                                        negative cable from the T/R or negative junction box is fastened to
+                                        the structure.
+                  Electrified /         In terms of CP, all offshore structures especially platforms where
+                  Energized Structure:  either enough AC power currently available or in the immediate
+                                        future (within 3 years from installation to up to maximum of 10 years
+                                        as per project requirements) for the operation of ICCP system.
+                  Foundry (for anodes): An anode foundry is a facility that produces metal castings from
+                                        either ferrous or non-ferrous metals or alloys.
+                  Galvanic Anodes:      Anodes fabricated from materials such as aluminum, magnesium or
+                                        zinc that are connected directly to the buried structure to provide
+                                        cathodic protection current without the requirement for an external
+                                        cathodic protection power supply. Galvanic anodes are also referred
+                                        to as sacrificial anodes.
+                  Hazardous Areas:      An area where fire or explosion hazards may exist due to flammable
+                                        gases or vapors, flammable liquids, combustible dust, or ignitable
+                                        fibers or filings (see NEC Article 500).
+                  HISC:                 Hydrogen-induced stress cracking is a phenomenon caused mainly
+                                        by hydrogen embrittlement in the presence of load. Cause of
+
+
+                                                © Saudi Arabian Oil Company, 2024                              Page 8 of 24
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                SAES-X-300
+   Issue Date: 07 July 2024                                                            Cathodic Protection of Marine Structures
+   Next Revision: 07 July 2029
+
+                                               hydrogen embrittlement is associated with the ingress of hydrogen at
+                                               steel surface due to cathodic polarization.
+                  Impressed Current            Anodes typically fabricated from High Silicon Cast Iron (HSCI), Mixed
+                  Anodes:                      Metal Oxide (MMO) or liner anode, etc. that are connected through a
+                                               DC power supply to the buried or immersed structure to provide
+                                               cathodic protection current.
+                  Manufacturer:                The Company that assembles the components for the finished
+                                               product and provides the finished product either through a Vendor
+                                               or directly to Saudi Aramco.
+                  Mudline:                     The ocean floor at the location of interest.
+                  Nearshore Marine             For the scope of this document (Other) nearshore marine structures
+                  Structures:                  are all offshore structures other than platforms and subsea pipelines.
+                  Negative Cable:              A cable that is electrically connected (directly or indirectly) to the
+                                               negative output terminal of a cathodic protection power supply or to
+                                               a galvanic anode. This includes bond cables to a cathodically
+                                               protected structure.
+                  Non-electrified /            In terms of CP, all offshore structures other than electrified.
+                  Non-energized
+                  Structure:
+                  Off-Plot:                    Off-plot refers to any area outside of the plot limits.
+                  On-Plot:                     On-plot refers to any area inside the plot limit.
+                  Perimeter Fence:             The fence which completely surrounds an area designated by Saudi
+                                               Aramco for a distinct function.
+                  Photovoltaic Module:         A number of solar cells wired and sealed into an environmentally
+                                               protected assembly.
+                  Pipeline:                    The term “pipeline” is used generically to refer to any type of
+                                               pipeline.
+                  Plant Area:                  The area within the plot limits of a process or storage facility.
+                  Platform:                    An offshore structure used to accommodate oil and gas wells, related
+                                               production equipment, pipelines, and living quarter.
+                  Plot Limit:                  The plot limit is the boundary around a plant or process facility. The
+                                               plot limit may be physical such as a fence, a wall, the edge of a road
+                                               or pipe rack, chains and posts or a boundary indicated on an
+                                               approved plot plan.
+                  Positive Cable:              A cable that is electrically connected (directly or indirectly) to the
+                                               positive output terminal of an impressed current cathodic protection
+                                               power supply, including impressed current anode cables.
+                  Process Pipeline:            A pipeline typically associated with a plant process and typically
+                                               above ground within a plant facility.
+                  Production Pipeline:         A pipeline transporting oil, gas or water to or from a well.
+                                               These include flowlines, test lines, water injection lines, and trunk
+                                               lines.
+                  Pyramid Anode:               An offshore anode assembly custom manufactured for Saudi Aramco
+                                               that is fabricated with mixed metal oxide anode components and
+
+
+
+                                                © Saudi Arabian Oil Company, 2024                                 Page 9 of 24
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                               SAES-X-300
+   Issue Date: 07 July 2024                                                           Cathodic Protection of Marine Structures
+   Next Revision: 07 July 2029
+
+                                               placed on the sea bed. The pyramid anode derives its name from the
+                                               pyramid shaped concrete base.
+                  Resistivity Meter:           A four terminal meter designed to measure ground resistivity, or can
+                                               be connected to measure resistance in a format that excludes the
+                                               resistance of the test wires.
+                  Reference Electrode:         An industry standardized electrode used as a common reference
+                                               potential for cathodic protection measurements. A copper/copper
+                                               sulfate (Cu/CuSO4) reference electrode is typically used for soil
+                                               applications. A silver/silver chloride (Ag/AgCl/0.6M Cl) reference
+                                               electrode is typically used for aqueous applications.
+                  Soil Transition Point:       The surface location where a pipeline enters or exits the soil, i.e.,
+                                               above grade to below grade transition, or below grade to above
+                                               grade transition.
+                  Splash Zone (for CP):        Splash Zone is defined as the zone of an offshore structure that is
+                                               alternatively in and out of the water because of waves, tides, winds
+                                               and sea. For details see Section 3.2 of NACE SP0176-2007.
+                  Stray Current:               Current flowing through the unintended circuits/paths.
+                  Subject Matter               For the purposes of this standard, the SME shall be the assigned
+                  Expert (SME):                Consulting Services Department cathodic protection specialist.
+                  Submerged Zone:              Surface Area of the marine structure that is always covered with water
+                                               and extends downwards from the splash zone and includes that
+                                               portion of the structure below the mudline.
+                  Subsea Pipeline:             A submarine pipeline (also known as marine, subsea or offshore
+                                               pipeline) is a pipeline that is laid on the seabed or below it inside a
+                                               trench. In some cases, the pipeline is mostly on-land but in places it
+                                               crosses water expanses, such as small seas, straights, and rivers.
+                  Surface Anode Bed:           Anode or anodes connected to a common CP power supply, installed
+                                               either vertically or horizontally at a depth of less than 15 m (50 ft).
+                  Tension String               An offshore anode assembly custom manufactured for Saudi Aramco
+                  Anode:                       that is fabricated with mixed metal oxide anode components and
+                                               suspended on a wire rope/tension spring assembly beneath an
+                                               offshore platform.
+                  Test Line:                   A pipeline that is used for testing an individual well or group of wells.
+                  Transformer/Rectifier A CP power supply that transforms and converts AC to DC power,
+                  (T/R):                often referred to in the cathodic protection industry as a rectifier.
+                  Transmission          A cross country pipeline transporting product between GOSPs WIPs
+                  Pipeline:             or other process facilities.
+                  Trunk-line:           A pipeline designed to distribute or gather product from two or more
+                                        wells, typically connecting flowlines or injection lines to the
+                                        associated GOSP or WIP.
+                  Uncoated Casing:      The term “uncoated casing” when used in this engineering standard
+                                        describes a well casing that is either bare (no external coating), or
+                                        may have an external coating applied to the shallow sections of
+                                        casing to minimize corrosion in the landing base or surface soils.
+
+
+
+                                                © Saudi Arabian Oil Company, 2024                               Page 10 of 24
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                  SAES-X-300
+   Issue Date: 07 July 2024                                                              Cathodic Protection of Marine Structures
+   Next Revision: 07 July 2029
+
+                  Utilization Factor:          Utilization factor is a constant value, depending upon the shape of
+                                               anode and how it is attached, relates to reduction in anode size due
+                                               to consumption to the minimum size before it ceases to provide the
+                                               required current output.
+                  Utility line:                A pipeline that delivers a service product (typically water, gas or air).
+                  Wellhead Platform            The platform located above the head of a gas or oil well and use to
+                  (WHP):                       drill and operate the well.
+
+
+
+                  Design Review and Approval
+                  The proposed construction drawings and the related cathodic protection design information for
+                  every design package shall be submitted to the CP Proponent organization (as defined by GI-
+                  0428.001) and to Saudi Aramco’s Consulting Services Department (CSD) for review and
+                  approval.
+                               Notes:
+                          (1) As noted in GI-0428.001, PMT may request assistance from CSD for the verification of the
+                              qualifications of the Design Contractor’s engineer responsible for designing the CP systems.
+                          (2) It is recommended that the CP Design Agency hold meeting(s) but not limited to a pre-design
+                              meeting with CSD and the Proponent CP Group to outline and agree to the design approach for
+                              the Project Proposal and Detailed Design.
+
+
+                  The Design Agency shall not issue drawings for construction until the 90% detailed design
+                  package including drawings have been reviewed and approved in writing by CSD and the CP
+                  Proponent organization.
+                  Product hardware and software specifications and relevant design information for all remote
+                  monitoring equipment proposed for cathodic protection systems shall be submitted to the
+                  Supervisor of IT/COD/SCSD (Information Technology/Communication Operations Dept./Satellite
+                  & Communication Support Div.) for review and approval during the Project Proposal and Detail
+                  Design phases of the Project.
+                  The Project Proposal package shall be submitted to CSD’s review if required by PMT. The Project
+                  Proposal package shall provide all general design considerations that can be developed without
+                  requiring measurement of field data. The field data including existing CP system details were
+                  available can be provided as an input by the PMT team by collecting the same from Proponent.
+                  Cathodic protection requirements shall be based on the following consideration which shall be
+                  clearly specified and agreed with the Proponent at the project proposal stage.
+                       the new structure and associated CP equipment to be an independent system.
+                       the new structure as a part of the existing system which considers spare capacity of existing
+                       system, existing protection status and upgradation of existing system
+                  The Project Proposal package shall include:
+                       A scope of work including a specific statement that clearly identifies any additional
+                       requirement to provide CP for any existing structure
+                       Proposed locations of new CP system(s) on an overall CP system layout drawing, including
+                       proposed anode type(s) and estimated output ratings of the proposed cathodic protection
+                       power source (in case of ICCP).
+                       Information on existing cathodic protection system location and spare capacity (from
+                       nearby or related system).
+                       Information on all locations where the proposed structure will be mechanically connected
+                       to other existing structure with clear details of bonding/isolation.
+
+                                                © Saudi Arabian Oil Company, 2024                                  Page 11 of 24
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                  SAES-X-300
+   Issue Date: 07 July 2024                                                              Cathodic Protection of Marine Structures
+   Next Revision: 07 July 2029
+
+                       Proposed anode distribution and installation details.
+                  The 90% detailed design package shall be submitted to the CP Proponent organization and to
+                  Saudi Aramco’s Consulting Services Department (CSD) for review and approval.
+                  The detailed design package shall include all detailed information and documents as per Table-
+                  1 of SAEP-303 and not limited to following:
+                       The detailed scope of work / basis of the CP design with reference to project specifications
+                       and applicable standards.
+                       List all Critical CP Design’s assumptions, limitations and exclusions clearly.
+                       Calculations of surface area of the structure to be protected.
+                               Notes:
+                          (1) Surface area calculations shall be verified by PMT and/or proponent, cross checked by Design
+                              Agency, review and approval of any design packages by CSD is based on verified surface area
+                              values provided in the design package.
+                          (2) Any changes to the surface area after CSD approval of CP design package shall be included in
+                              the revised design CP Design package and this revised design package shall be submitted for
+                              review & approval by CSD.
+
+
+                       All design calculations and applicable field data required to verify design compliance with
+                       Saudi Aramco Cathodic Protection Engineering Standards.
+                       Detailed design calculation spreadsheets (editable) including surface area calculation
+                       spreadsheets.
+                       Professionally drafted full size Index “X” CP drawings that:
+                  •    Detail each CP item by description and stock number if applicable
+                  •    Detail the proposed location for each piece of CP equipment including but not limited to
+                       T/Rs, anodes, junction boxes and test stations
+                  •    Galvanic anode installation details
+                  •    Detail and specifically identify all cathodic protection cables including all anode, structure,
+                       bond, and T/R cables
+                  •    Clearly identify the specific and individual cable routing and termination points within the
+                       respective junction boxes, bond boxes, and T/Rs
+                  •    Detail all cathodic protection equipment using the cathodic protection symbols shown on
+                       Standard Drawing AD-036785 “Symbols for Cathodic Protection”
+                  •    All details for the Remote Monitoring System including details on the hardware, software,
+                       and connectivity
+
+                  General Design Requirements
+                  Contractor/Designer Qualifications
+   6.1.1          Cathodic protection designs shall be carried out by design offices that are approved by Saudi
+                  Aramco. Such design offices must have qualified engineers with a minimum of ten years
+                  verifiable cathodic protection design experience and a minimum industry qualification of NACE
+                  CP Level 4 and BS degree. Indicate the NACE CP level, certification number, name of designer
+                  and/or his signature/initial in the design package.
+
+
+
+                          Note:
+                          For CP designs related to categories A and B of Table 1, design experience shall be related to
+                          relevant structures.
+
+
+                                                © Saudi Arabian Oil Company, 2024                                  Page 12 of 24
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                             SAES-X-300
+   Issue Date: 07 July 2024                                                         Cathodic Protection of Marine Structures
+   Next Revision: 07 July 2029
+
+
+
+   6.1.2          Field measurements required for the design shall be collected by an Engineer or Technician with
+                  a minimum of five years verifiable cathodic protection field experience and industry certification
+                  level of NACE CP Level 2 or higher. Installation supervision of cathodic protection materials shall
+                  be done by Engineer or Technician with a minimum of five years verifiable cathodic protection
+                  field experience and industry certification level of NACE CP Level 2 or higher. All design
+                  calculations and applicable field data required to verify design compliance with Saudi Aramco
+                  Cathodic Protection Engineering Standards.
+                  General
+   6.2.1          For “Limitations of CP” and “Detrimental effects of CP” see sections 5.2 and 5.5 of DNV-RP-B401
+                  (2017). Also see Section 4.6 “Precautionary Notes” of NACE SP0176. CP Designer (Design
+                  Agency) shall consider all relevant limitations and detrimental effect of CP while designing a CP
+                  system and include the same in CP design report.
+   6.2.2          To avoid overprotection and any risk of HISC for structure to be protected, maximum negative
+                  potential mentioned in Table 2 of section 6.2 of EN12473 shall be applicable and for other
+                  materials section 6.3 shall also be applicable as appropriate. For duplex or martensitic stainless
+                  steel as these alloys can be susceptible to HISC and hence potentials more negative than -0.80V
+                  (as per ISO 15589-2) shall be avoided.
+   6.2.3          CP system shall be designed to provide:
+                  • Cathodic protection for all submerged and buried metallic marine structures, equipment
+                      and pipelines using galvanic anode systems or impressed current anode systems (with
+                      galvanic anode as temporary CP).
+                  • Effective current distribution so that the protection criteria is effectively achieved on the
+                      entire surface.
+                  • Design life of CP system equal to or more than the required design life.
+                  • Monitoring facilities to evaluate system’s performance.
+                  • Enough allowance for anticipated changes in requirements with time and environmental
+                      conditions.
+   6.2.4          CP system shall be designed considering the effect of environmental conditions and any
+                  adjacent neighboring structure. Proposed design shall be compatible with existing CP system of
+                  all nearby pipeline and structure to avoid current drain from one system to another.
+   6.2.5          Design the cathodic protection system to include the equipment that is required for monitoring
+                  the protected structures per SAEP-333. Install the equipment in accessible unobstructed
+                  locations.
+   6.2.6          Cathodically protect both submerged sections and buried sections of subsea pipelines that
+                  terminate inside onshore facilities, or up to the isolation flange for the onshore-offshore
+                  transition.
+   6.2.7          Protect the submerged sections of subsea pipelines with bracelet galvanic anodes according to
+                  Standard Drawing AA-036335. Details of different types of galvanic anodes are provided in the
+                  drawing AA-036389. For subsea pipelines, bolted anodes will be required unless bolting
+                  arrangement is not possible due to installation limitations, then “welded anodes” can be used
+                  instead. For onshore sections of subsea pipelines, refer to SAES-X-400 or SAES-X-600, as
+                  applicable.
+   6.2.8          For following complex scenarios, CSD shall be involved right from early stages including pre-
+                  design/conceptual stage. Simulation modeling for CP designs shall be carried out in addition to
+                  specialized monitoring surveys as additional design/commissioning approval requirements:
+                       Extension of existing marine structures.
+                       Designs with hybrid CP Systems for permanent CP (Both Galvanic and ICCP system) or two
+                       different types of anodes (different anode materials or different anode mounting, etc.) for
+
+
+                                                © Saudi Arabian Oil Company, 2024                             Page 13 of 24
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                   SAES-X-300
+   Issue Date: 07 July 2024                                                               Cathodic Protection of Marine Structures
+   Next Revision: 07 July 2029
+
+                       same structure.
+                          Exception:
+                          Subsea structures are usually protected considering Temporary CP system with Galvanic Anodes
+                          and Permanent CP system with ICCP system, this shall not be considered as a requirement for
+                          simulation modelling.
+
+
+                       Designs involving HDD pipelines regardless of the length of pipeline.
+                       Subsea pipelines with ICCP systems.
+   6.2.9          For offshore platforms with well casings, an impressed current cathodic protection (ICCP)
+                  system shall be provided where AC power is available (Electrified / Energized Structures).
+   6.2.10         Galvanic & Impressed Current Anodes arrangements for offshore structures are provided in
+                  reference drawing AA-036348 and for Offshore Anode Junction Box refer to drawing AA-
+                  036384.
+                  Design Life
+                  Minimum design life for the cathodic protection systems shall be 25 years as follows:
+                       Galvanic anodes only: 25 years (preferably for offshore pipelines and non-electrified / non-
+                       energized structures) and
+                       Impressed current anodes: 25 years (preferably for electrified / energized structures)
+                          Notes:
+                          (1) In addition to 25 years of permanent design life, ICCP system shall include galvanic anodes CP
+                              for minimum of 3 years (and maximum of 10 years as per project requirements) as temporary
+                              CP from installation / construction period and/or till ICCP system is turned ON. For further
+                              requirements regarding temporary CP see Note 6 of Table 2.
+                          (2) If for any reason the time for energization (ICCP ON) is more than 10 years or unknown, then
+                              the structure shall be considered as non-electrified / non-energized and CP system shall be
+                              designed accordingly.
+                          (3) When permanent SACP system is designed for any structure, it shall be provided within 90 days
+                              to all sections of structure which become submerged. If for any reason permanent SACP cannot
+                              be installed within this period, temporary CP shall be provided till permanent SACP become
+                              functional. This requirement is applicable for speific structures such as sheet piles in Category C
+                              where construction activity commences in batches and not applicable to other structures
+                              (category A, B & C of Table 1), as these structures are provided with pre-installed anodes before
+                              site construction acitivites.
+
+
+                  Current Density Criteria
+   6.4.1          The CP system design shall provide the minimum current detailed in Table 2 and Table 3.
+   6.4.2          Impressed Current CP systems for offshore platforms shall provide sufficient current for all
+                  submerged surface areas, including the total submerged and buried surface area of the piles,
+                  well casings, conductors, plus all submerged and buried sections of other structures associated
+                  with the platforms.
+   6.4.3          The design for the cathodic protection system for electrified platforms with well casings shall
+                  provide the currents listed in Table 2 for each well casing in addition to the current required for
+                  the surfaces of the platform structure that are submerged and below the mud-line.
+   6.4.4          Galvanic Anode CP systems for offshore platforms shall provide adequate current for all
+                  submerged surface areas, plus:
+                  • The current required for each casing as specified in Table 2,
+
+                                                © Saudi Arabian Oil Company, 2024                                   Page 14 of 24
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                   SAES-X-300
+   Issue Date: 07 July 2024                                                               Cathodic Protection of Marine Structures
+   Next Revision: 07 July 2029
+
+                  •    The buried surface area of the piles and conductors, and
+                  •    All submerged and buried sections of other structures associated with the platform.
+   6.4.5          The submerged structure surface area is defined as the total area extending from the base of
+                  the structure to Lowest Astronomical Tide (LAT) level. For CP calculations, anode requirement
+                  shall be calculated and considered from the base of structure to High Astronomical Tide (HAT)
+                  level (including splash zone). However, cathodic protection is not effective in the splash zone,
+                  corrosion protection in this zone depend on the high quality coating and other appropriate
+                  means.
+                          Note:
+                          Surface Area of any metallic sleeve (i.e. Monel sheathing) shall be considered as bare structure for
+                          calculation of current requirement / anode quantity.
+
+
+   6.4.6          For offshore pipelines, quantity and spacing of bracelet anode requirements as specified in
+                  Table 3 are applicable at ambient temperature and for fluid internal temperature up to 50°C, it
+                  shall be adjusted for fluid temperature more than 50°C.
+   6.4.7          For offshore pipelines, if for any reason the maximum distance between the anodes mentioned
+                  (150 m) in the Standard Drawing AA-036335 is to be increased, then it shall be subject to
+                  proponent’s approval and based on attenuation calculations as per Annex B of ISO 15589-
+                  2:2012. Also refer to Section 6.2.8 for HDD pipelines.
+                  Resistivity
+   6.5.1          For calculation purposes, the resistivity of seawater shall be assumed to be 17 ohm-cm unless
+                  measurements taken at the design location demonstrate a more accurate value.
+   6.5.2          For anode output calculations (resistance) especially in case of anodes laid on seabed a more
+                  conservative resistivity (51 ohm-cm) shall be considered depending upon the location and
+                  estimating self-burial.
+                  Protection Criteria
+   6.6.1          The cathodic protection system shall achieve a minimum structure-to-electrolyte potential of
+                  negative 0.90 volt with reference to a silver/silver chloride electrode. This is also applicable for
+                  buried anaerobic environments and where possibility of SRB activity exist.
+   6.6.2          Maximum limit for structure-to-electrolyte potential shall be considered in as per Section 6.2.1
+                  and 6.2.2
+   6.6.3          For onshore portions of marine structures, it is required to achieve negative structure-to-soil
+                  potentials in compliance with SAES-X-400 and SAES-X-600.
+                  Anode Design
+   6.7.1          Galvanic Anodes
+                  Anode resistance shall be calculated using equations based on the shape of anode selected as
+                  per Section A-8 in Annex A of ISO 15889-2 and Table A-7 of DNV-RP-B401.
+                  Anode utilization factor shall also be selected based on the shape of anode from section 8.4 of
+                  ISO 15889-2 and Table A-8 of DNV-RP-B401.
+                  Final required anode quantity shall be calculated considering section 7.9.1 to 7.9.6 of DNV-RP-
+                  B401 and other design inputs and results shall also be considered from simulation modeling etc.
+                  (see section 6.2.8)
+                  For anode design, section 7.10.3 of DNV-RP-B401 and for distribution of anodes, section 7.11 of
+                  DNV-RP-B401 shall be considered.
+
+
+
+
+                                                © Saudi Arabian Oil Company, 2024                                   Page 15 of 24
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                SAES-X-300
+   Issue Date: 07 July 2024                                                            Cathodic Protection of Marine Structures
+   Next Revision: 07 July 2029
+
+                  Use galvanic anodes that comply with the appropriate sections of 17-SAMSS-006. Table 4
+                  shows the recommended design parameters for galvanic anode materials under normal
+                  condition.
+                  For offshore pipelines, if for any reason the minimum thickness of the anodes mentioned in the
+                  Standard Drawing AA-036335 is to be decreased, then this shall be limited to 40 mm. To
+                  support this, the design agency shall provide justification and alternative design calculations in
+                  the detailed design justifying that the alternative anode dimensions shall:
+                      Meet minimum anode weight required and individual anode current output & design life.
+                      Demonstrate with calculations that reduced thickness will not result in accelerated anode
+                      consumption due to localized corrosion and/or higher utilization, etc.
+   6.7.2          Impressed Current Anodes
+                  Use one of the following impressed current anode materials, according to specification 17-
+                  SAMSS-007:
+                      Mixed Metal Oxide (MMO)
+                      Platinized Niobium (Pt/Nb)
+                      High Silicon Cast Iron (HSCI) for shoreline area only
+                  Refer to Table 5 for the recommended design parameters for the approved impressed current
+                  anode materials.
+                  If various types of impressed current anode material are used on a structure, connect only
+                  anodes of the same material to any one T/R.
+   6.7.3          Regardless of the type of anodes (galvanic or impressed), the anodes shall be distributed to
+                  provide uniform distribution throughout the structure. Where simulation modelling is
+                  considered (see section 6.2.8) the anode distribution shall follow the simulation modelling
+                  results. For others following parameters shall be considered in design:
+                      Geometry of the structure.
+                      Vertical and horizontal structure members.
+                      Anode and structure surface area & correlation between structure current requirement and
+                      anode current output.
+                      Good balance between anode quantity based on current and based on weight for Galvanic
+                      Anode systems
+                          Note:
+                          To achive proper current distribution more number of smaller weight anodes instead of less number
+                          of larger weight anodes shall be considered. This approach shall be considered especially while
+                          designing the temporary CP system.
+
+
+                  Circuit Resistance
+   6.8.1          For a T/R, the CP system rated circuit resistance shall be defined as the T/R rated voltage,
+                  divided by the T/R rated current. Rated voltages and currents are as detailed on the
+                  manufacturer's data sheet/plate.
+   6.8.2          The CP system operating circuit resistance for an ICCP system shall be defined as the total
+                  effective resistance seen by the output terminals of the respective ICCP power supply, and for
+                  calculation purposes shall include:
+                       Anode resistance to water.
+                       Positive cable resistance from CP power source to anodes.
+                       Negative (cable)s resistance from CP power source to structure.
+                       Effective resistance caused by +0.95 volts anode back emf
+                       (for MMO in sea water plus the structure back emf -1.0 volts (example: -1.0 volts casing
+
+
+                                                © Saudi Arabian Oil Company, 2024                                Page 16 of 24
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                   SAES-X-300
+   Issue Date: 07 July 2024                                                               Cathodic Protection of Marine Structures
+   Next Revision: 07 July 2029
+
+                       back emf + 0.95 volts anode bed back
+                       emf = 1.95 volts total between the anodes and structure).
+   6.8.3          ICCP system designs shall take into consideration the calculated operating resistance and shall
+                  size the positive and negative cables and voltage rating of the T/R such that the “calculated”
+                  operating output of the T/R complies with all of the following:
+                       At the design stage only, the target commissioning current shall be achieved at a voltage of
+                       lower than 70% of the T/R rated voltage output.
+                       The normal operating output current shall be achieved with the voltage adjustment set at
+                       more than 10% of the available (rated) T/R voltage output.
+                          Note:
+                          The above section is a mandatory design requirement but is not a mandatory requirement for
+                          commissioning acceptance.
+
+
+   6.8.4          The CP system “operating” circuit resistance measured during commissioning of a new CP
+                  system shall not be greater than 90% of the CP power supply “rated” circuit resistance.
+                  DC Power Source
+   6.9.1          ICCP systems shall be designed with CP power supplies sized with a minimum rated output
+                  current equaling the sum of the current requirement plus a design surplus.
+                          Note:
+                          The design surplus is required to ensure that the ICCP power supplies will not be operated at full
+                          rated current capacity. In most of the cases the spare current is considered in the design and
+                          standard rating of the rectifier will be selected which is more than meeting the required current and
+                          hence has built-in design surplus. However, in rare cases where the standard T/R rating does not
+                          meet the design surplus, then additional allowances to the T/R current rating shall be added.
+
+
+   6.9.2          Cathodic protection rectifiers and photovoltaic systems shall be manufactured in accordance
+                  with 17-SAMSS-004 and 17-SAMSS-012 respectively and shall be equipped with remote
+                  monitoring equipment in accordance with17-SAMSS-018.
+   6.9.3          Install the CP power supplies in accordance with Saudi Aramco Library Drawing DA-950035
+                  sheet 1, or Saudi Aramco Standard Drawing AB-036378 sheets 1 and 2.
+   6.9.4          Use oil immersed T/Rs (Type ONAN) inside hydrocarbon plant areas, for all outdoor marine
+                  environment applications, and for Class I Division 2 (Zone 2) applications.
+   6.9.5          Use air cooled T/Rs (Type AA) for indoor or non-classified, non-marine environment
+                  applications. T/Rs with NEMA Class 3R enclosures shall NOT be used inside hydrocarbon plant
+                  areas or in marine environments unless installed indoors.
+   6.9.6          DC power supplies shall have a maximum rated output voltage of no greater than 50 volts for
+                  offshore including landfill areas. The sizing of the T/R shall be optimized based on the circuit
+                  resistance in accordance with Section 6.8 of this standard.
+                          Note:
+                          It is noted that there are some existing pile mounted anodes and in such cases 30 volts limit is to be
+                          applied.
+
+
+   6.9.7          For hazardous areas (maximum Class I, Zone 2), the design agency shall select a cathodic
+                  protection DC power supply (and other CP system equipment) that complies with the
+                  requirements of NEC Articles 500 to 504 for hazardous (Class I, Zone 2) areas. CP equipment
+                  shall not be placed in Class 1 Zone 1 areas.
+
+
+                                                © Saudi Arabian Oil Company, 2024                                   Page 17 of 24
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                  SAES-X-300
+   Issue Date: 07 July 2024                                                              Cathodic Protection of Marine Structures
+   Next Revision: 07 July 2029
+
+                  DC Cables
+   6.10.1         DC cables connected to the T/R output terminals shall comply with
+                  17-SAMSS-017 and shall be:
+                      25 mm2 or larger, and
+                      Sized in compliance with the National Fire Protection Association NFPA 70, National
+                      Electrical Code (NEC).
+                          Note:
+                          For typical applications, use the 90°C column in Table 310.15(16) and refer to 310.15(B)(2) to
+                          consider an ambient temperature of 40°C to calculate the ampacity for HMWPE cables.
+
+
+   6.10.2         Cable terminations shall comply with Standard Drawing AD-036132.
+   6.10.3         Platforms with impressed current CP shall have a dedicated negative cable to each well casing.
+                  Use a negative junction box (AA-036108) to terminate multiple negative leads. Junction and
+                  bond boxes used in cathodic protection systems for marine structures shall comply with the
+                  design and construction required by 17-SAMSS-008.
+   6.10.4         Size and length of cables (if considered) in galvanic anode CP systems designs shall be
+                  selected to limit DC voltage drop in cables not more than 10% of the driving voltage.
+                  Monitoring Facilities
+   6.11.1         For the onshore portions of marine pipelines, provide test stations for measuring pipe-to-soil
+                  potentials at insulated cased crossings, paved road crossings and other locations outside the
+                  SSD fence and plant fence as required by operational needs. Use Standard Drawing AB-036907
+                  as a reference for the design and construction of the test station.
+   6.11.2         For special cases where CP monitoring of offshore pipelines are restricted such as longer
+                  lengths of HDD pipelines, design and commissioning of CP system shall include additional
+                  measures which may include but not limited to attenuation calculations, simulation modeling
+                  and specialized monitoring surveys etc.
+   6.11.3         Where a remote monitoring system (RMS) is used, the design details for the RMS shall be
+                  submitted to CSD and the CP Proponent organization for review and approval. Mandatory
+                  design details include:
+                      A description of the existing CP RMS used by the respective CP Proponent in the respective
+                      area (if applicable). The description shall detail existing RMS hardware, software,
+                      communication connectivity and protocols.
+                      Confirmation of proposed hardware and software compatibility with the existing CP RMS (if
+                      applicable), or written authorization by CSD and the CP Proponent organization to use a
+                      non-compatible RMS.
+                      A data flowchart that illustrates the data path from the CP power supply to the CP
+                      Proponent’s desktop including connectivity details with software requirements and
+                      communication protocols.
+   6.11.4         Remote monitoring systems for offshore cathodic protection power supplies shall be designed
+                  (preferably with provision of remotely controlled) and installed at all new ICCP system
+                  installations.
+   6.11.5         Remote Monitoring Units (RMUs) for cathodic protection power supplies shall comply with the
+                  requirements of 17-SAMSS-018.
+   6.11.6         Cables and field wiring used for the remote monitoring systems shall comply with SAES-P-104.
+   6.11.7         Test posts remote monitoring units shall be provided for the sub-sea pipelines in the onshore to
+                  offshore transition locations with provision to monitor both the onshore and offshore side
+                  Junction and Bond Boxes
+
+
+                                                © Saudi Arabian Oil Company, 2024                                  Page 18 of 24
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                   SAES-X-300
+   Issue Date: 07 July 2024                                                               Cathodic Protection of Marine Structures
+   Next Revision: 07 July 2029
+
+                  Cathodic Protection Junction Boxes and Bond Boxes shall be manufactured in accordance with
+                  17-SAMSS-008.
+                  Bonding
+   6.13.1         Bonding shall be installed to ensure complete electrical continuity throughout a marine
+                  structure.
+                       In case of galvanic anode CP system, all bolted or clamped components with a surface area
+                       exceeding 1 m2 shall have resistance less than 0.1 ohm otherwise such components shall
+                       have an all-welded or brazed connection to an anode. The minimum size for cables shall be
+                       16 mm2 (6 AWG). At least two cables per anode shall be installed.
+                          Note:
+                          Electrical continuity with existing structure can be achieved by a mechanical connection using e.g.
+                          serrated washers to provide a reliable electrical connection at bolt heads or washers as long as the
+                          resistance requirement of less than 0.1 ohm can be achieved and demonstrated.
+
+
+                       For ICCP systems the minimum size for cathodic protection bond cables shall be 70 mm²
+                       (2/0 AWG).
+                       Install steel bond bars or bond cables to ensure electrical continuity between each well
+                       casing, its associated conductor/jacket, and the platform, in accordance with Library
+                       Drawing DA-950068-001.
+                       Install bond cables for J-tubes, boat landings, riser guards or other submerged mechanical
+                       fittings that are not welded to the primary marine structure.
+                       All support structures such as clamps for J Tube, Risers and / or Caissons as well as all non-
+                       welded structures shall be bonded to parent structure. This shall be documented clearly in
+                       design document and drawings.
+   6.13.2         Use flexible straps or bond cables at both ends of the walkway to electrically bond walkways
+                  connecting two adjacent platforms or other type of marine support structures. Provide at least
+                  two bonds at each end.
+                  Electrical Isolation
+   6.14.1         Do not use isolating devices on offshore structures.
+   6.14.2         Do not use isolating devices on submerged or buried portions of pipelines.
+   6.14.3         Provide aboveground electrical isolating devices to isolate pipelines at the onshore-offshore
+                  transition.
+   6.14.4         Install a 2-terminal bond box at each isolating device in an accessible location. The bond box
+                  design and construction shall comply with Standard Drawing AA-036350.
+
+                  Installation, Records, Commissioning, and Inspection
+                  Refer to Saudi Aramco Best Practice SABP-X-003. SABP-X-003 shall be deemed a mandatory
+                  document for this Standard.
+                  In addition to SABP-X-003, refer to Section 7 “Control of Interference Currents” and Section 8
+                  “Dielectric Shields” of NACE SP0176.
+                  As built drawings and documents including installation procedures and Commissioning Reports
+                  shall be submitted to Proponent for review and approval. Design Agency shall liaison with
+                  installation and commissioning contractor till the successful commissioning of the CP system.
+                  Commissioning Reports shall be submitted to CSD for information and feedback.
+                  Refer to Saudi Aramco Engineering Procedures SAEP-332 for commissioning and SAEP-333 for
+                  monitoring procedures.
+
+
+                                                © Saudi Arabian Oil Company, 2024                                   Page 19 of 24
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                     SAES-X-300
+   Issue Date: 07 July 2024                                                                 Cathodic Protection of Marine Structures
+   Next Revision: 07 July 2029
+
+                                         Table 1: Categories of Marine Structures
+       A) Subsea Pipeline                     B) Offshore Platforms                          C) Other Nearshore Marine
+                                                                                                      Structures
+    Pipeline laid on seabed          Pumping Platforms                                  Mooring Dolphins
+    Open trench/buried               Auxiliary Platforms                                Sea Islands
+    pipeline                         Utility Platforms                                  Breasting Dolphins
+    HDD Installed Pipeline           Metering Platforms                                 Trestles
+                                     Tie-in Platforms                                   Flare Support Structures
+                                     Gas/Oil Separator Platforms (GOSP)                 Break Waters
+                                     Gas Compression Platforms                          Pipe Supports
+                                     Well Platforms (including jackets and              Pipeline Markers
+                                     casings)                                           Loading/Mooring Buoys
+                                     Living Quarter Platforms                           Piers
+                                                                                        Piling (including sheet piling)
+                                                                                        Wharves
+                                                                                        Single Point Mooring (SPM)
+                                                                                        Boats and vessels.
+                          Note:
+                          For subsea pipeline, this standard shall be the only governing design standard for CP system, if
+                          pipeline is electrically continuous from the Onshore/Offshore transition to its other end. SAES-X-
+                          400/SAES-X-600 shall be considered only for onshore sections of pipeline.
+
+
+            Table 2 - Design(1) Current Requirement for Offshore Structures (Categories B & C only)
+
+                                           Type of                    Coated(2) & (3)                   Bare(2) & (3)
+           Offshore Structure              Cathodic
+                                                               Seawater       Mud/Soil(7)       Seawater       Mud/Soil(7)
+                                          Protection
+        Platform(2) and (3)            ICCP                   13 mA/m2        4 mA/m2          65 mA/m2        20 mA/m2
+        (Current for platform
+                                       Galvanic only(4)       15 mA/m2        6 mA/m2          75 mA/m2        30 mA/m2
+        surfaces)
+        Oil(2) Well Casing
+                                       ICCP or Galvanic       10 amps                          35 amps
+        (Current(6) for each well)
+        Gas(3) Well Casing
+                                       ICCP or Galvanic       50 amps                          Not applicable
+        (Current(6) for each well)
+        Other                          ICCP or Galvanic       13 mA/m2        4 mA/m2          65 mA/m2        20 mA/m2
+                          Notes:
+                          (1) Total current requirement calculated using Table 2 are for design purposes to determine the
+                              number of galvanic anodes and the minimum rated current capacity of the impressed current
+                              CP power supply where applicable.
+                          (2) Electrified / Energized Oil Fields structures with well casings (including water injection wells), do
+                              not need to be coated (structure as well as well casing), however ICCP system shall be designed
+                              to provide CP. Electrified / Energized Oil Fields without well casings, can have either coated
+                              structure with galvanic CP or bare structure with ICCP system. Non-electrified / Non-energized
+                              Oil Fields with or without well casings, shall have coated structure and coated well casings up
+                              to 4,000 ft. with galvanic CP. This is further clarified in Table form attached as Appendix 1.
+
+
+                                                © Saudi Arabian Oil Company, 2024                                       Page 20 of 24
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                    SAES-X-300
+   Issue Date: 07 July 2024                                                                Cathodic Protection of Marine Structures
+   Next Revision: 07 July 2029
+
+                          (3) Electrified / Energized Gas Fields with well casings, shall have coated structure and coated well
+                              casings up to 10000ft. ICCP system shall be designed to provide CP. Electrified / Energized Gas
+                              Fields without well casings, can have either coated structure with galvanic CP or bare structure
+                              with ICCP system. Non-electrified / Non-energized Gas Fields with or without well casings, shall
+                              have coated structure and coated well casings up to 10,000 ft. with galvanic CP. This is further
+                              clarified in Table form attached as Appendix 1.
+                          (4) Current density requirements for a “galvanic anode only” cathodic protection system for
+                              “platforms with well casings” is higher than “ICCP”, because ICCP systems use negative drain
+                              points connected directly to the well casings, whereas “galvanic only” are not connected
+                              immediately to the well casings and therefore experience additional comparative attenuation
+                              before protecting the well casings. For platforms with no well casing, current density values of
+                              “ICCP” shall be used.
+                          (5) Cathodic protection systems for pipelines or electrically isolated sections of a pipeline that
+                              require 2.0 amperes or less may use galvanic anodes.
+                          (6) A current drain of 5 Amps per well casing shall be considered for temporary CP system.
+                              However, current density values will be same for permanent and temporary CP system design
+                              for rest of the structure.
+                          (7) All buried structures such as piles and bottom of Mudmats (in contact with seabed) etc. shall be
+                              considered bare (even if coated) for calculating current requirements where significant damage
+                              to paint coatings during fabrication and installation is anticipated.
+
+
+                  Table 3 - Design Current Requirement for Offshore Pipelines (Category A only)
+
+                                             Type of                     Coated                          Bare
+             Offshore Structure              Cathodic
+                                                                 Seawater       Mud/Soil       Seawater       Mud/Soil
+                                            Protection
+          Pipeline Laid on
+                                                                See Standard Drawing AA-036335 for minimum bracelet
+          Seabed                        Bracelet Anodes         galvanic anode requirements. A verification design
+          (with concrete coating)                               calculation shall be submitted to confirm that these
+          Pipeline Laid on                                      anode quantities are adequate using the current density,
+          Seabed                                                coating break down factors values from DNV-RP-F103
+                                        Bracelet Anodes         and anode quantity increased if required by the
+          (without concrete
+                                                                calculations.
+          coating)
+          Buried(1) Pipeline or
+                                        ICCP, Galvanic(2),
+          installed
+                                        or ICCP plus            4 mA/M2                       Not Applicable
+          by open cut trench
+                                        Galvanic
+          method
+          HDD(3) installed
+                                        ICCP, Galvanic(2),
+          Pipeline
+                                        or ICCP plus            6 mA/M2                       Not Applicable
+          (CSD approved ARO
+                                        Galvanic
+          coating system)
+          Other                         ICCP or Galvanic        13 mA/M2        4 mA/M2       65 mA/M2        20 mA/M2
+
+
+
+
+                                                © Saudi Arabian Oil Company, 2024                                    Page 21 of 24
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                    SAES-X-300
+   Issue Date: 07 July 2024                                                                Cathodic Protection of Marine Structures
+   Next Revision: 07 July 2029
+
+                          Notes:
+                          (1) Any section of pipeline which will be subjected to trenching and backfilling or any section of
+                              pipeline to be laid in such area which is expected to complete self-burial may be considered as
+                              “buried”. However, any incomplete self-burials shall always be considered as “Pipeline Laid on
+                              Seabed”
+                          (2) Cathodic protection systems for pipelines or electrically isolated sections of a pipeline that
+                              require 2.0 amperes or less may use galvanic anodes.
+                          (3) All HDD installed pipeline shall be coated with CSD approved ARO coating system and CP
+                              system shall be designed for effective current distribution throughout the length of pipeline. Any
+                              HDD sections shall require a suitable attenuation calculations to verify protection can be
+                              achieved at either end AND the middle of the HDD. Also refer to section 6.2.8
+
+
+                              Table 4 – Design Parameters for Galvanic Anode Materials
+
+                                                    Consumption Rate           Open Circuit Potential
+                           Anode Material                                                      (1)
+                                                       (kg/A-Y) (2)                    (-mV)
+                              Aluminum                        3.7                        1050
+                              Magnesium                      10.3                        1650
+                                 Zinc                        11.8                        1050
+                          Note:
+                          (1) Measured with reference to a silver/silver chloride reference electrode.
+                          (2) Electrochemical capacity and open circuit potential values of the chosen pipeline anode shall be
+                              corrected for higher temperatures and burial status using Table 5 of ISO 15589-2.
+
+
+                        Table 5 - Design Parameters for Impressed Current Anode Materials
+                                                              Maximum
+                           Anode        Consumption            Current           Maximum Voltage
+                           Material       (kg/A-Y)             Density                (volt)
+                                                              (mA/cm2)
+                            HSCI             0.45                0.7                    No Limit
+                            MMO           See Note 1            60.0                    No Limit
+                            Pt/Nb         8.63 x 10-6           40.0                      60
+                          Note:
+                          (1) Use the consumption rate specified by the manufacturer of the MMO element, to determine the
+                              current output capacity and design life of MMO anodes.
+
+
+
+
+                                                © Saudi Arabian Oil Company, 2024                                    Page 22 of 24
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                      SAES-X-300
+   Issue Date: 07 July 2024                                                                  Cathodic Protection of Marine Structures
+   Next Revision: 07 July 2029
+
+   Appendices
+                     Appendix A - Coating & CP Requirements for Oil & Gas Fields Explained
+      Structures /                             Electrified                                    Non - Electrified
+          CP
+     Requirements             Oil Fields                     Gas Fields                Oil Fields               Gas Fields
+
+
+                          With       Without           With        Without                     Without       With       Without
+                                                                                With Well
+                          Well        Well             Well         Well                        Well         Well        Well
+                                                                                 Casing
+                         Casing      Casing           Casing       Casing                      Casing       Casing      Casing
+
+
+
+
+         Structure                                                 Bare (or)
+                                   Bare              Coated                                    Shall be coated
+        (Platform)                                                  Coated
+
+
+                                                                                                             Shall
+                                                                               Shall have                    have
+                                                     Coated                      coated                     coated
+                                                      up to                        well                       well
+       Well Casing        Bare            NA                          NA                            NA                     NA
+                                                     10000(1)                  casings up                   casings
+                                                       ft.                      to 4000(1)                   up to
+                                                                                    ft.                     10000(1)
+                                                                                                               ft.
+                                                                   Shall be
+                                     Shall be
+                                                                   ICCP for
+                                     ICCP for
+                                                                     bare
+                                       bare
+          CP              ICCP                         ICCP                                       Galvanic CP
+     Requirements         only                         only        ICCP or
+                                      ICCP or
+                                                                   Galvanic
+                                     Galvanic
+                                                                      for
+                                    (if coated)
+                                                                    coated
+                          Notes:
+                          (1) Coating lengths are obtained from previous experience based on CPET logging results, below
+                              the specified lengths coating will not be effective due to high temperature.
+
+
+
+
+                                                   © Saudi Arabian Oil Company, 2024                                   Page 23 of 24
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                SAES-X-300
+   Issue Date: 07 July 2024                                                            Cathodic Protection of Marine Structures
+   Next Revision: 07 July 2029
+
+   Document History
+    07 July 2024             Major                                    Major revisions to incorporate references to
+                                                                      several international standards, simulation
+                                                                      modelling requirements, over protection limits,
+                                                                      other items as listed in the revision under
+                                                                      summary of changes.
+    08 December 2021         Editorial                                Editorial revision to change the revision cycle
+                                                                      from three to five years as per the updated
+                                                                      SAEP-301.
+    02 May 2019              Editorial                                Editorial revision to correct cross reference issue
+    11 March 2019            Major                                    Major revision to allow welded insert bracelet
+                                                                      anode design with conditions and few minor
+                                                                      changes
+    24 January 2018          Major                                    Major revision to incorporate VE Session ideas,
+                                                                      committee member’s comments, and to align
+                                                                      with updated related company and industry
+                                                                      standards for improvement
+    11 December 2013         Editorial                                Editorial revision to paragraph 5.3.2.
+    19 September 2013        Editorial                                Editorial changes to clarify bonding and negative
+                                                                      cable requirements.
+    27 February 2013         Major                                    Revised the “Next Planned Update.” Reaffirmed
+                                                                      the content of the document, and made several
+                                                                      editorial changes:
+                                                                      Added the requirement for NACE certification
+                                                                      for design engineers and field technicians
+                                                                      Clarified the resistivity of seawater as 17 ohm-
+                                                                      cm
+                                                                      Added a section clarifying calculation
+                                                                      requirements for circuit resistance
+                                                                      Added a section clarifying power supply
+                                                                      requirements
+                                                                      Added a section to clarify remote monitoring
+                                                                      requirements.
+
+
+
+
+                                                © Saudi Arabian Oil Company, 2024                                Page 24 of 24
+
+Saudi Aramco: Company General Use
+

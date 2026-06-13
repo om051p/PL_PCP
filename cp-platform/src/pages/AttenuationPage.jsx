@@ -1,16 +1,17 @@
 /**
  * AttenuationPage.jsx
  *
- * Cathodic Protection Pipeline Attenuation Analysis Page.
- * Uses shared UI components from src/components/ui.jsx
- * and CSS classes from src/index.css for consistent styling.
+ * Cathodic Protection Pipeline Attenuation Analysis Page — Flagship Layout.
+ * Enterprise redesign: KPI row, full-width interactive graph, critical locations.
  */
 
 import { useState, useEffect } from 'react'
 import { useProjectStore } from '../store/projectStore.js'
 import { FieldInput, ResultRow, StatCard, SectionCard, Grid2 } from '../components/ui.jsx'
+import { CalculationInputsUsed, buildAttenuationInputsUsed } from '../visualizations/index.js'
 
 import { ProfileChart } from '../components/analytics/ProfileChart.jsx'
+import { AttenuationExplorer } from '../visualizations/AttenuationExplorer.jsx'
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
@@ -42,12 +43,6 @@ const DEFAULT_INPUT = {
 }
 
 const STATION_COLORS = ['#1D9E75', '#D85A30', '#7F77DD', '#BA7517', '#3B8BD4', '#E24B4A']
-
-const TABS = [
-  ['inputs', 'Inputs'],
-  ['results', 'Calculated values'],
-  ['profile', 'Potential profile'],
-]
 
 // ─── Station Table ───────────────────────────────────────────────────────────
 
@@ -154,8 +149,6 @@ function StationsTable({ stations, onAdd, onRemove, onUpdate }) {
   )
 }
 
-
-
 // ─── Main Page ───────────────────────────────────────────────────────────────
 
 export default function AttenuationPage() {
@@ -171,7 +164,6 @@ export default function AttenuationPage() {
     updateAttenuationStation,
   } = useProjectStore()
 
-  const [activeTab, setActiveTab] = useState('inputs')
   const project = useProjectStore((s) => s.getProject())
   const activeStation = useProjectStore((s) => s.getActiveStation())
   const firstSegment = activeStation?.pipelineSegments?.[0]
@@ -206,10 +198,10 @@ export default function AttenuationPage() {
   return (
     <div className="page">
       {/* Page header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10 }}>
         <div>
-          <h1 style={{ fontSize: 22, fontWeight: 500, margin: 0 }}>Attenuation Analysis</h1>
-          <p style={{ fontSize: 13, color: 'var(--text-secondary)', margin: '4px 0 0' }}>
+          <h1 style={{ fontSize: 20, fontWeight: 500, margin: 0 }}>Attenuation Analysis</h1>
+          <p style={{ fontSize: 12, color: 'var(--text-tertiary)', margin: '2px 0 0' }}>
             Transmission-line cosh model · NACE SP0169 · ISO 15589-1
           </p>
         </div>
@@ -224,7 +216,7 @@ export default function AttenuationPage() {
 
       {/* Validation errors */}
       {result && !result.success && (
-        <div className="info-box info-box--error" style={{ marginBottom: 16 }}>
+        <div className="info-box info-box--error" style={{ marginBottom: 10 }}>
           <div style={{ fontWeight: 500, fontSize: 13 }}>Calculation errors</div>
           {result.errors.map((e, i) => (
             <div key={i} style={{ fontSize: 13 }}>• {e}</div>
@@ -232,362 +224,152 @@ export default function AttenuationPage() {
         </div>
       )}
 
+      {/* Protection Status KPI Row */}
+      {result?.success && summary && (
+        <div className="kpi-row" style={{ marginBottom: 10 }}>
+          <div className={`kpi-card ${summary.designAdequate ? 'kpi-card--pass' : 'kpi-card--fail'}`}>
+            <span className="kpi-card__label">Protection Coverage</span>
+            <span className="kpi-card__value">{summary.protectionPercentage?.toFixed(0)}%</span>
+            <span className="kpi-card__sub">{summary.protectedPoints}/{summary.totalProfilePoints} points</span>
+          </div>
+          <div className="kpi-card kpi-card--brand">
+            <span className="kpi-card__label">Worst Potential</span>
+            <span className="kpi-card__value">{summary.minCombinedPotentialMv?.toFixed(1)}</span>
+            <span className="kpi-card__sub">mV (lowest combined)</span>
+          </div>
+          <div className="kpi-card kpi-card--info">
+            <span className="kpi-card__label">Best Potential</span>
+            <span className="kpi-card__value">{summary.maxCombinedPotentialMv?.toFixed(1)}</span>
+            <span className="kpi-card__sub">mV (highest combined)</span>
+          </div>
+          <div className="kpi-card">
+            <span className="kpi-card__label">Attenuation α</span>
+            <span className="kpi-card__value">{(im.alpha * 1e5).toFixed(2)}</span>
+            <span className="kpi-card__sub">×10⁻⁵ /m</span>
+          </div>
+          <div className="kpi-card">
+            <span className="kpi-card__label">Stations</span>
+            <span className="kpi-card__value">{(input.stations || []).length}</span>
+            <span className="kpi-card__sub">CP stations</span>
+          </div>
+          <div className={`kpi-card ${summary.designAdequate ? 'kpi-card--pass' : 'kpi-card--fail'}`}>
+            <span className="kpi-card__label">Design Status</span>
+            <span className="kpi-card__value">{summary.designAdequate ? 'Adequate' : 'Gap'}</span>
+            <span className="kpi-card__sub">{summary.designAdequate ? 'Full coverage' : 'Gaps found'}</span>
+          </div>
+        </div>
+      )}
+
       {/* Warnings */}
       {result?.warnings?.length > 0 && (
-        <div className="info-box info-box--warning" style={{ marginBottom: 16 }}>
+        <div className="info-box info-box--warning" style={{ marginBottom: 10 }}>
           {result.warnings.map((w, i) => (
             <div key={i}>⚠ {w}</div>
           ))}
         </div>
       )}
 
-      {/* Summary stat cards */}
-      {result?.success && summary && (
-        <div className="stat-grid">
-          <StatCard
-            label="Attenuation constant α"
-            value={(im.alpha * 1e5).toFixed(2)}
-            unit="×10⁻⁵ /m"
-          />
-          <StatCard
-            label="Station reach"
-            value={summary.stationReachKm?.toFixed(1)}
-            unit="km"
-          />
-          <StatCard
-            label="Current req. (total)"
-            value={im.currentRequiredTotal_A?.toFixed(1)}
-            unit="A"
-          />
-          <StatCard
-            label="Protection coverage"
-            value={summary.protectionPercentage?.toFixed(0)}
-            unit="%"
-            color={summary.designAdequate ? 'var(--pass)' : 'var(--fail)'}
-          />
-          <StatCard
-            label="Design status"
-            value={summary.designAdequate ? 'Adequate' : 'Gap found'}
-            color={summary.designAdequate ? 'var(--pass)' : 'var(--fail)'}
-          />
+      {/* Center: Full-width Interactive Attenuation Graph */}
+      <div className="viz-fullwidth" style={{ marginBottom: 10 }}>
+        <div className="viz-fullwidth__header">
+          <span className="viz-fullwidth__title">Potential Profile Along Pipeline</span>
+          <span style={{ fontSize: 11, color: 'var(--text-tertiary)' }}>
+            KM {input.profileConfig.startKm} – {input.profileConfig.endKm} · Step {input.profileConfig.stepKm} km
+          </span>
         </div>
-      )}
-
-      {/* Tabs */}
-      <div style={{ display: 'flex', gap: 6, marginBottom: 16 }}>
-        {TABS.map(([id, label]) => (
-          <button
-            key={id}
-            className={`btn ${activeTab === id ? 'btn-primary' : ''}`}
-            onClick={() => setActiveTab(id)}
-          >
-            {label}
-          </button>
-        ))}
+        <div className="viz-fullwidth__body" style={{ minHeight: 500, padding: 8 }}>
+          {!result?.success || !result.profile?.length ? (
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 400, color: 'var(--text-tertiary)', fontSize: 14 }}>
+              Run the calculation to view the potential profile.
+            </div>
+          ) : (
+            <AttenuationExplorer
+              input={input}
+              stations={input.stations || []}
+              project={project}
+              height={380}
+            />
+          )}
+        </div>
       </div>
 
-      {/* ── TAB: INPUTS ────────────────────────────────────────────────────── */}
-      {activeTab === 'inputs' && (
-        <Grid2>
-          <SectionCard title="Pipe geometry & material">
-            <FieldInput
-              label="Outside diameter"
-              value={diameter}
-              unit="inches"
-              readOnly={true}
-              hint="Locked to Pipeline Page (Segment 1)"
-            />
-            <FieldInput
-              label="Wall thickness"
-              value={wallThickness}
-              unit="inches"
-              readOnly={true}
-              hint="Locked to Pipeline Page (Segment 1)"
-            />
-            <FieldInput
-              label="Total pipe length"
-              value={input.pipe.totalLengthKm}
-              unit="km"
-              step="1"
-              min={0.1}
-              onChange={(v) => setPipe('totalLengthKm', v)}
-            />
-            <FieldInput
-              label="Max protection length (L_X)"
-              value={input.pipe.maxProtectionLengthKm}
-              unit="km"
-              step="1"
-              min={0.1}
-              hint="distance to check point X"
-              onChange={(v) => setPipe('maxProtectionLengthKm', v)}
-            />
-            <FieldInput
-              label="Steel resistivity"
-              value={input.pipe.steelResistivityMicroOhmCm}
-              unit="µΩ·cm"
-              step="0.5"
-              min={1}
-              hint="18 for carbon steel"
-              onChange={(v) => setPipe('steelResistivityMicroOhmCm', v)}
-            />
-          </SectionCard>
+      {/* Bottom: Critical Locations & Engineering Info */}
+      <div className="enterprise-2col">
+        {/* Left: Calculation details */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          {result?.success && (
+            <>
+              <SectionCard title="Key Parameters">
+                <ResultRow label="Station reach" value={summary.stationReachKm?.toFixed(2)} unit="km" />
+                <ResultRow label="Current req. (total)" value={im.currentRequiredTotal_A?.toFixed(1)} unit="A" />
+                <ResultRow label="Coating leakage resistivity (RL)" value={im.coatingLeakageResistance_OhmM?.toFixed(2)} unit="Ω·m" />
+                <ResultRow label="Attenuation constant (α)" value={(im.alpha * 1e5).toFixed(4)} unit="×10⁻⁵ /m" />
+              </SectionCard>
+              <SectionCard title="Check Point Analysis">
+                <ResultRow label="Drain point swing (ΔE₀)" value={im.deltaE0_V?.toFixed(4)} unit="V" />
+                <ResultRow label="Required swing at X (ΔE_req)" value={im.deltaERequired_V?.toFixed(4)} unit="V" />
+                <ResultRow label="Calculated swing at X (ΔE_calc)" value={cp.deltaECalculated_V?.toFixed(4)} unit="V" />
+                <ResultRow label="Calculated potential at X" value={cp.potentialCalculated_mV?.toFixed(1)} unit="mV" highlight />
+                <ResultRow
+                  label="Criterion at X"
+                  value={cp.criterionMet ? '✓ PASS' : '✗ FAIL'}
+                  unit={cp.criterionMet ? '' : `deficit ${(cp.deficitVolts * 1000).toFixed(0)} mV`}
+                  highlight
+                />
+              </SectionCard>
+            </>
+          )}
+          <CalculationInputsUsed
+            items={buildAttenuationInputsUsed(input, project)}
+            title="Inputs Driving This Analysis"
+            calculatedAt={result?.calculatedAt}
+          />
+        </div>
 
-          <SectionCard title="Coating & soil">
-            <FieldInput
-              label="Coating conductivity (g)"
-              value={input.coating.conductivityMicroSiemensPerM2}
-              unit="µS/m²"
-              step="10"
-              min={1}
-              hint="at 1000 Ω·cm reference"
-              onChange={(v) => setCoating('conductivityMicroSiemensPerM2', v)}
-            />
-            <FieldInput
-              label="Soil resistivity (ρ)"
-              value={soilResistivity}
-              unit="Ω·cm"
-              readOnly={true}
-              hint="Locked to Central Design Settings"
-            />
-            <FieldInput
-              label="Design current density"
-              value={input.coating.currentDensityMaPerM2}
-              unit="mA/m²"
-              step="0.01"
-              min={0.001}
-              onChange={(v) => setCoating('currentDensityMaPerM2', v)}
-            />
-          </SectionCard>
+        {/* Right: Protection Gaps, Warnings, Optimization */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          {result?.success && summary?.unprotectedSegments?.length > 0 && (
+            <SectionCard title="⚠ Protection Gaps">
+              {summary.unprotectedSegments.map((seg, i) => (
+                <ResultRow
+                  key={i}
+                  label={`KM ${seg.startKm} – ${seg.endKm}`}
+                  value={(seg.minPotentialV * 1000).toFixed(1)}
+                  unit="mV (worst)"
+                />
+              ))}
+            </SectionCard>
+          )}
 
-          <SectionCard title="Electrochemical potentials">
-            <FieldInput
-              label="Natural potential"
-              value={input.potentials.naturalMv}
-              unit="mV"
-              step="10"
-              min={1}
-              hint="free corrosion (vs Cu/CuSO₄)"
-              onChange={(v) => setPot('naturalMv', v)}
-            />
-            <FieldInput
-              label="Drain point potential"
-              value={input.potentials.drainPointMv}
-              unit="mV"
-              step="10"
-              min={1}
-              hint="on-potential at TR"
-              onChange={(v) => setPot('drainPointMv', v)}
-            />
-            <FieldInput
-              label="Minimum protection criterion"
-              value={input.potentials.minimumMv}
-              unit="mV"
-              step="10"
-              min={1}
-              hint="NACE: 850 mV"
-              onChange={(v) => setPot('minimumMv', v)}
-            />
-          </SectionCard>
-
-          <SectionCard title="Profile range">
-            <FieldInput
-              label="Start km"
-              value={input.profileConfig?.startKm ?? 44}
-              unit="km"
-              step="1"
-              onChange={(v) => setProfile('startKm', v)}
-            />
-            <FieldInput
-              label="End km"
-              value={input.profileConfig?.endKm ?? 89}
-              unit="km"
-              step="1"
-              onChange={(v) => setProfile('endKm', v)}
-            />
-            <FieldInput
-              label="Step size"
-              value={input.profileConfig?.stepKm ?? 1}
-              unit="km"
-              step="0.25"
-              min={0.1}
-              onChange={(v) => setProfile('stepKm', v)}
-            />
-          </SectionCard>
-
-          <div style={{ gridColumn: '1 / -1' }}>
-            <SectionCard title="CP stations">
+          <SectionCard title="CP Stations">
+            <div style={{ maxHeight: 200, overflowY: 'auto' }}>
               <StationsTable
                 stations={input.stations || []}
                 onAdd={addAttenuationStation}
                 onRemove={removeAttenuationStation}
                 onUpdate={updateAttenuationStation}
               />
-            </SectionCard>
-          </div>
-        </Grid2>
-      )}
-
-      {/* ── TAB: RESULTS ───────────────────────────────────────────────────── */}
-      {activeTab === 'results' && (
-        <Grid2>
-          {!result?.success ? (
-            <div className="no-result" style={{ gridColumn: '1/-1' }}>
-              Run the calculation to see results.
             </div>
-          ) : (
-            <>
-              <SectionCard title="Pipe & surface geometry">
-                <ResultRow
-                  label="Steel cross-section area (Ax)"
-                  value={(im.pipeSteelAreaM2 * 1e4).toFixed(4)}
-                  unit="cm²"
-                />
-                <ResultRow
-                  label="Unit surface area (A1)"
-                  value={im.unitSurfaceAreaM2PerM.toFixed(4)}
-                  unit="m²/m"
-                />
-                <ResultRow
-                  label="Surface area to X"
-                  value={im.surfaceAreaToX_M2.toFixed(0)}
-                  unit="m²"
-                />
-                <ResultRow
-                  label="Surface area total"
-                  value={im.surfaceAreaTotal_M2.toFixed(0)}
-                  unit="m²"
-                />
-              </SectionCard>
+          </SectionCard>
 
-              <SectionCard title="Current requirements">
-                <ResultRow
-                  label="Current required to X"
-                  value={im.currentRequiredToX_A.toFixed(3)}
-                  unit="A"
-                />
-                <ResultRow
-                  label="Current required total"
-                  value={im.currentRequiredTotal_A.toFixed(3)}
-                  unit="A"
-                />
-              </SectionCard>
-
-              <SectionCard title="Electrical properties">
-                <ResultRow
-                  label="Unit pipe resistance (RS)"
-                  value={(im.unitPipeResistance_OhmPerM * 1e6).toFixed(4)}
-                  unit="µΩ/m"
-                />
-                <ResultRow
-                  label="Coating leakage resistivity (RL)"
-                  value={im.coatingLeakageResistance_OhmM.toFixed(2)}
-                  unit="Ω·m"
-                />
-                <ResultRow
-                  label="Attenuation constant (α)"
-                  value={(im.alpha * 1e5).toFixed(4)}
-                  unit="×10⁻⁵ /m"
-                />
-              </SectionCard>
-
-              <SectionCard title="Potential parameters">
-                <ResultRow
-                  label="Drain point swing (ΔE₀)"
-                  value={im.deltaE0_V.toFixed(4)}
-                  unit="V"
-                />
-                <ResultRow
-                  label="Required swing at X (ΔE_req)"
-                  value={im.deltaERequired_V.toFixed(4)}
-                  unit="V"
-                />
-                <ResultRow
-                  label="Calculated swing at X (ΔE_calc)"
-                  value={cp.deltaECalculated_V.toFixed(4)}
-                  unit="V"
-                />
-                <ResultRow
-                  label="Calculated potential at X"
-                  value={cp.potentialCalculated_mV.toFixed(1)}
-                  unit="mV"
-                  highlight
-                />
-                <ResultRow
-                  label="Criterion at X (single station)"
-                  value={cp.criterionMet ? '✓ PASS' : '✗ FAIL'}
-                  unit={cp.criterionMet ? '' : `deficit ${(cp.deficitVolts * 1000).toFixed(0)} mV`}
-                  highlight
-                />
-              </SectionCard>
-
-              <SectionCard title="Design adequacy">
-                <ResultRow
-                  label="Station reach (single station)"
-                  value={summary.stationReachKm?.toFixed(2)}
-                  unit="km"
-                />
-                <ResultRow
-                  label="Protected points"
-                  value={`${summary.protectedPoints} / ${summary.totalProfilePoints}`}
-                />
-                <ResultRow
-                  label="Protection coverage"
-                  value={summary.protectionPercentage.toFixed(1)}
-                  unit="%"
-                />
-                <ResultRow
-                  label="Min combined potential"
-                  value={summary.minCombinedPotentialMv.toFixed(1)}
-                  unit="mV"
-                />
-                <ResultRow
-                  label="Max combined potential"
-                  value={summary.maxCombinedPotentialMv.toFixed(1)}
-                  unit="mV"
-                />
-                <ResultRow
-                  label="Design adequate"
-                  value={summary.designAdequate ? '✓ YES — full coverage' : '✗ NO — gaps exist'}
-                  highlight
-                />
-              </SectionCard>
-
-              {summary.unprotectedSegments?.length > 0 && (
-                <div style={{ gridColumn: '1/-1' }}>
-                  <SectionCard title="Unprotected segments">
-                    {summary.unprotectedSegments.map((seg, i) => (
-                      <ResultRow
-                        key={i}
-                        label={`Segment ${i + 1}: KM ${seg.startKm} – ${seg.endKm}`}
-                        value={(seg.minPotentialV * 1000).toFixed(1)}
-                        unit="mV (worst case)"
-                      />
-                    ))}
-                  </SectionCard>
-                </div>
-              )}
-            </>
-          )}
-        </Grid2>
-      )}
-
-      {/* ── TAB: PROFILE ───────────────────────────────────────────────────── */}
-      {activeTab === 'profile' && (
-        <SectionCard title="Potential profile along pipeline">
-          {!result?.success || !result.profile?.length ? (
-            <div className="no-result">
-              Run the calculation to view the potential profile.
-            </div>
-          ) : (
-            <ProfileChart
-              profile={result.profile}
-              stations={input.stations || []}
-              minimumMv={input.potentials.minimumMv}
-              naturalMv={input.potentials.naturalMv}
-            />
-          )}
-        </SectionCard>
-      )}
+          <SectionCard title="Optimization Opportunities">
+            {!result?.success ? (
+              <p style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>Run calculation to see optimization opportunities.</p>
+            ) : summary?.designAdequate ? (
+              <p style={{ fontSize: 12, color: 'var(--pass)' }}>✓ Design meets protection criteria. No gaps detected.</p>
+            ) : (
+              <div style={{ fontSize: 12, color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+                <p>Consider these optimization strategies:</p>
+                <ul style={{ paddingLeft: 16, marginTop: 4 }}>
+                  <li>Add intermediate CP stations in gap zones</li>
+                  <li>Increase drain point potential</li>
+                  <li>Review coating integrity assumptions</li>
+                </ul>
+              </div>
+            )}
+          </SectionCard>
+        </div>
+      </div>
     </div>
   )
 }

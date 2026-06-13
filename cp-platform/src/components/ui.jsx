@@ -4,6 +4,7 @@
  */
 
 import { useState, useEffect, useRef, useId } from 'react'
+import { motion } from 'framer-motion'
 import {
   ChevronDown,
   ChevronUp,
@@ -18,6 +19,8 @@ import {
   Sun,
 } from 'lucide-react'
 import { getActiveStandard } from '../constants/index.js'
+import { workflowStepVariants, staggerContainer, reducedVariants } from '../motion/variants.js'
+import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion.js'
 import { useProjectStore } from '../store/projectStore.js'
 import { useAuthStore } from '../store/authStore.js'
 
@@ -326,22 +329,36 @@ export function WorkflowStepper({ currentStatus }) {
     { id: 'issued_for_construction', label: 'Issued' },
   ]
   const currentIdx = STEPS.findIndex((s) => s.id === currentStatus)
+  const reduced = usePrefersReducedMotion()
+  const stepVariants = reduced ? reducedVariants.workflowStepVariants : workflowStepVariants
+  const containerVariants = reduced ? reducedVariants.staggerContainer : staggerContainer
 
   return (
-    <div className="workflow-stepper">
-      {STEPS.map((step, i) => (
-        <div
-          key={step.id}
-          className={`workflow-step ${i < currentIdx ? 'workflow-step--done' : ''} ${i === currentIdx ? 'workflow-step--active' : ''} ${i > currentIdx ? 'workflow-step--future' : ''}`}
-        >
-          <div className="workflow-step-dot">
-            {i < currentIdx ? <CheckCircle2 size={14} /> : <span>{i + 1}</span>}
-          </div>
-          <span className="workflow-step-label">{step.label}</span>
-          {i < STEPS.length - 1 && <div className="workflow-step-line" />}
-        </div>
-      ))}
-    </div>
+    <motion.div
+      className="workflow-stepper"
+      variants={containerVariants}
+      initial="initial"
+      animate="animate"
+    >
+      {STEPS.map((step, i) => {
+        const state = i < currentIdx ? 'complete' : i === currentIdx ? 'active' : 'pending'
+        return (
+          <motion.div
+            key={step.id}
+            className={`workflow-step workflow-step--${state}`}
+            variants={stepVariants}
+            animate={state}
+            aria-current={i === currentIdx ? 'step' : undefined}
+          >
+            <div className="workflow-step-dot">
+              {i < currentIdx ? <CheckCircle2 size={14} /> : <span>{i + 1}</span>}
+            </div>
+            <span className="workflow-step-label">{step.label}</span>
+            {i < STEPS.length - 1 && <div className="workflow-step-line" />}
+          </motion.div>
+        )
+      })}
+    </motion.div>
   )
 }
 

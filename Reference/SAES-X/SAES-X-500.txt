@@ -1,0 +1,877 @@
+   Engineering Standard                                                                 14 May 2023
+
+
+
+
+   SAES-X-500
+   Cathodic Protection of Vessel and Tank Internals
+   Document Responsibility: Cathodic Protection Standards Committee
+
+
+
+
+   Previous Revision: 01 February 2021                                       Next Revision: :14 May 2028
+   Contact: (BAKTHABX)                                                                      Page 1 of 18
+Saudi Aramco: Company General Use        © Saudi Arabian Oil Company, 2023
+   Document Responsibility: Cathodic Protection Standards Committee                                                                                               SAES-X-500
+   Issue Date: 14 May 2023                                                                                                    Cathodic Protection of Vessel and Tank Internals
+   Next Revision: :14 May 2028
+
+   Table of Content
+   SUMMARY OF CHANGES ......................................................................................................................................................... 3
+
+          SCOPE ................................................................................................................................................................................. 4
+
+          CONFLICTS AND DEVIATIONS ....................................................................................................................................... 4
+
+          REFERENCES ...................................................................................................................................................................... 4
+
+          TERMINOLOGY ................................................................................................................................................................. 5
+
+          DESIGN REVIEW AND APPROVAL ................................................................................................................................. 8
+
+          GENERAL DESIGN REQUIREMENTS ............................................................................................................................. 10
+
+          INSTALLATION, RECORDS, COMMISSIONING, AND INSPECTION ........................................................................ 15
+
+   DOCUMENT HISTORY ............................................................................................................................................................ 18
+
+
+
+
+   Table
+
+   Table 1: Cathodic Protection Requirements and Categories of Vessels and Tanks
+   Table 2: Consumption Rates for Galvanic Anodes (kg/A-Y)
+   Table 3: Design Parameters for Impressed Current Anode Materials
+   Table 4: Current Density and Voltage Maximums for Impressed Current Anodes
+   Table 5: Minimum Current Density Requirements (mA/m²)
+
+
+
+
+                                                                        © Saudi Arabian Oil Company, 2023                                                                         Page 2 of 18
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                        SAES-X-500
+   Issue Date: 14 May 2023                                                             Cathodic Protection of Vessel and Tank Internals
+   Next Revision: :14 May 2028
+
+   Summary of Changes
+
+                  Paragraph Number
+                                                                 Change Type
+     Previous Revision         Current Revision                                                      Technical Change(s)
+                                                          (Addition, Modification, Deletion,
+          01 February 2021          14 May 2023                        New)
+
+    6.2.14                    6.2.14                    Addition                                Requirement to isolate
+                                                                                                internal members i.e.,
+                                                                                                stainless steel coalescence
+                                                                                                packing at all points of
+                                                                                                contact between these two
+                                                                                                structures and testing
+                                                                                                requirement for isolation has
+                                                                                                been added.
+    6.3.3                     6.3.3                     Modification                            Clarification on use of section
+                                                                                                6.3.3 for multiple galvanic
+                                                                                                anodes.
+    6.3.7                     6.3.7                     Modification                            Need to energize the CP
+                                                                                                system within 45 days or
+                                                                                                provide short term protection.
+    6.4                       6.4                       Addition                                Current density values
+                                                                                                applicable for water resistivity
+                                                                                                values of below 100 ohm-cm
+
+
+
+
+                                                  © Saudi Arabian Oil Company, 2023                                       Page 3 of 18
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                     SAES-X-500
+   Issue Date: 14 May 2023                                                          Cathodic Protection of Vessel and Tank Internals
+   Next Revision: :14 May 2028
+
+                  Scope
+                  This standard prescribes the minimum mandatory requirements governing the design and
+                  installation of cathodic protection systems for the internal surfaces of new metallic vessels and
+                  tanks. For existing tanks and vessels this standard may be used as guideline considering the CP
+                  requirements mentioned in section 1.2 below.
+                  This standard is applicable to but not limited to the vessels and tanks categorized in Table 1.
+                  Conflicts and Deviations
+                  Any conflicts between this document and other applicable Mandatory Saudi Aramco
+                  Engineering Requirements (MSAERs) shall be addressed to the EK&RD Manager.
+                  Any deviation from the requirements herein shall follow internal company procedure SAEP-302.
+                  References
+                  All referenced specifications, standards, codes, drawings, and similar material are considered
+                  part of this Engineering Standard to the extent specified, applying the latest version, unless
+                  otherwise stated.
+                  Saudi Aramco References
+                  Saudi Aramco Engineering Procedures
+                  SAEP-302            Waiver of a Mandatory Saudi Aramco Engineering Requirement
+                  SAEP-303            Engineering Reviews of Project Proposal and Detail Design Documentation
+                  SAEP-332            Cathodic Protection Commissioning
+                  SAEP-333            Cathodic Protection Monitoring
+
+                  Saudi Aramco Materials System Specification
+                  17-SAMSS-004        Tap Adjustable Rectifiers for Cathodic Protection
+                  17-SAMSS-005        Cathodic Protection Phase Controlled Rectifiers
+                  17-SAMSS-006        Galvanic Anodes for Cathodic Protection
+                  17-SAMSS-007        Impressed Current Anodes for Cathodic Protection
+                  17-SAMSS-008        Junction Boxes for Cathodic Protection
+                  17-SAMSS-017        Impressed Current Cathodic Protection Cables
+                  17-SAMSS-018        Remote Monitoring System (RMS) for Cathodic Protection Applications
+
+                  Saudi Aramco Best Practices
+                  SABP-X-001          CP Design Package Preparation
+                  SABP-X-003          Cathodic Protection Installation Requirements
+
+                  Saudi Aramco Standard Drawings
+                  AA-036353           Water Storage Tanks Impressed Current C.P.
+                  AA-036354           Water Storage Tanks Galvanic Anode C.P.
+                  AB-036378           Cathodic Protection Onshore Rectifier Installation Details
+                  AA-036388           Internal Galvanic Anodes Installation Details for Vessels
+                  AA-036389           Galvanic Anode Details
+                  AA-036762           Crude and Product Tank Bottom, Internal, Magnesium Anode Installation
+                  AD-036785           Symbols for Cathodic Protection
+                  Other References
+
+
+                                                © Saudi Arabian Oil Company, 2023                                      Page 4 of 18
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                     SAES-X-500
+   Issue Date: 14 May 2023                                                          Cathodic Protection of Vessel and Tank Internals
+   Next Revision: :14 May 2028
+
+                  National Fire Protection Association
+                  NFPA 70             National Electric Code (NEC)
+
+                  The Association for Materials Protection and Performance (AMPP/NACE)
+                  AMPP SP0388-        Impressed Current Cathodic Protection of Internal Submerged Surfaces of
+                  2018                Carbon Steel Water Storage Tanks
+                  AMPP SP0196 –       Galvanic Anode Cathodic Protection of Internal Submerged Surfaces of Steel
+                  2020                Water Storage Tanks
+                  AMPP SP0575 –       Internal Cathodic Protection (CP) Systems in Oil-Treating Vessels
+                  2007
+
+
+                  Terminology
+                  Acronyms
+                  ANSI                       American National Standards Institute
+                  ASME                       American Society of Mechanical Engineers (USA)
+                  ASTM                       American Society for Testing and Materials
+                  AWS                        American Welding Society
+                  CP                         Cathodic Protection
+                  CSD                        The Saudi Aramco Consulting Services Department
+                  GOSP                       Gas and Oil Separation Plant
+                  ICCP                       Impressed Current Cathodic Protection
+                  MSAERs                     Mandatory Saudi Aramco Engineering Requirements
+                  NEC                        National Electric Code
+                  NEMA                       National Electrical Manufacturers Association (USA)
+                  RSA                        Saudi Aramco Responsible Standardization Agency
+                  SAES                       Saudi Aramco Engineering Standard
+                  WIP                        Water Injection Plant
+                  Definitions
+                  AA:                        The ANSI cooling class for a dry-type self-cooled transformer or reactor
+                                             that is cooled by the natural circulation of air. Syn.: AN (IEC), See
+                                             definition 3.1 in IEEE C57.12.
+                  Anode:                     An impressed current or a galvanic anode for cathodic protection
+                                             applications.
+                  Anode Cable:               A cable directly connected to an impressed current or galvanic anode.
+                  ANV:                       The ANSI cooling class for a dry-type non-ventilated self-cooled
+                                             transformer, which is so constructed as to provide no intentional
+                                             circulation of external air through the transformer, and that operates at
+                                             zero-gauge pressure. Syn.: ANAN (IEC), See definition 3.15 in IEEE
+                                             C57.12.
+
+
+
+                                                © Saudi Arabian Oil Company, 2023                                      Page 5 of 18
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                     SAES-X-500
+   Issue Date: 14 May 2023                                                          Cathodic Protection of Vessel and Tank Internals
+   Next Revision: :14 May 2028
+
+                  Armored Cable:             Armored cable for cathodic protection is a single core insulated cable
+                                             manufactured with a double layer spiral wound insulated galvanized
+                                             steel sheath to provide mechanical protection, and typically used for
+                                             subsea applications.
+                  Bond Cable:                A cable installed between two metallic structures to provide electrical
+                                             continuity between the structures for the purpose of cathodic
+                                             protection.
+                  Buyer:                     Saudi Aramco Purchasing Department Representative
+                  Buyer's                    The person or persons designated by the Purchasing Department to
+                  Representative:            monitor/enforce the contract. Normally, this is the on-site inspector.
+                  CP Assessment              A CP assessment probe is a multi-electrode probe designed to enable
+                  Probe:                     measurement of the soil resistivity in addition to representative
+                                             polarized and depolarized potentials for the pipeline or other buried or
+                                             immersed metallic structure at the probe location.
+                  CP Coupon:                 A CP coupon is a single electrode coupon that has been designed to
+                                             enable measurement of representative potentials, current densities, or
+                                             corrosion rates on a pipeline or other buried or immersed metallic
+                                             structure at the coupon location.
+                  CP System                  The total resistance seen at the output of a CP power supply or the
+                  Operating Circuit          total working resistance in a galvanic anode system.
+                  Resistance:
+                  CP System Rated            The rated output voltage of a cathodic protection power supply
+                  Circuit Resistance:        divided by the rated output current. For photovoltaic power supplies,
+                                             the rated output current is the design commissioning current.
+                  Design Agency:             The organization responsible for the design of the pipeline and
+                                             associated CP system. The Design Agency may be the Design
+                                             Contractor, the Lump Sum Turn Key Contractor or an in-house design
+                                             organization of Saudi Aramco.
+                  Drain Point:               The location on the cathodically protected structure where the negative
+                                             cable from the T/R or negative junction box is fastened to the structure.
+                  Foundry (for               An anode foundry is a facility that produces metal castings from either
+                  anodes):                   ferrous or non-ferrous metals or alloys.
+                  Galvanic Anodes:           Anodes fabricated from materials such as aluminum, magnesium or
+                                             zinc that are connected directly to the buried structure to provide
+                                             cathodic protection current without the requirement for an external
+                                             cathodic protection power supply. Galvanic anodes are also referred to
+                                             as sacrificial anodes.
+                  Hazardous Areas:           Those areas where fire or explosion hazards may exist due to
+                                             flammable gases or vapors, flammable liquids, combustible dust, or
+                                             ignitable fibers or filings (see NEC Article 500).
+                  Impressed Current          Anodes typically fabricated from High Silicon Cast Iron (HSCI) or Mixed
+                  Anodes:                    Metal Oxide (MMO) that are connected through a DC power supply to
+                                             the buried or immersed structure to provide cathodic protection
+                                             current.
+
+
+
+                                                © Saudi Arabian Oil Company, 2023                                      Page 6 of 18
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                     SAES-X-500
+   Issue Date: 14 May 2023                                                          Cathodic Protection of Vessel and Tank Internals
+   Next Revision: :14 May 2028
+
+                  Lead Wire (for             A cable directly connected to an anode.
+                  anodes):
+                  Manufacturer:              The Company that assembles the components for the finished product
+                                             and provides the finished product either through a Vendor or directly
+                                             to Saudi Aramco.
+                  Mill (for anodes):         An anode mill is a facility that produces anodes such as MMO or
+                                             Platinized Niobium (without lead wires) for cathodic protection
+                                             applications (or any other anode type that does not involve casting).
+                  Negative Cable:            A cable that is electrically connected (directly or indirectly) to the
+                                             negative output terminal of a cathodic protection power supply or to a
+                                             galvanic anode. This includes bond cables to a cathodically protected
+                                             structure.
+                  Non-incendive              Equipment having electrical/electronic circuitry that is incapable, under
+                  Equipment:                 normal operating conditions, of causing ignition of a specified
+                                             flammable gas-air, vapor-air, or dust-air mixture due to arcing or
+                                             thermal means. (See NEC Article 100).
+                  Off-Plot:                  Off-plot refers to any area outside of the plot limits.
+                  ONAN:                      The ANSI cooling class for a transformer or reactor having its core and
+                                             coils immersed in mineral oil or synthetic insulating liquid with a fire
+                                             point less than or equal to 300 C, the cooling being effected by the
+                                             natural circulation of air over the cooling surface. (ONAN was
+                                             previously termed OA). See definition 3.303 in IEEE C57.12.
+                  On-Plot:                   On-plot refers to any area inside the plot limits.
+                  Perimeter Fence:           The fence which completely surrounds an area designated by Saudi
+                                             Aramco for a distinct function.
+                  Photovoltaic               A number of solar cells wired and sealed into an environmentally
+                  Module:                    protected assembly.
+                  Pipeline:                  The term “pipeline” is used generically in this standard and can be used
+                                             to refer to any type of pipeline.
+                  Plant Area:                A plant area is the area within the plot limits of a process or storage
+                                             facility.
+                  Plot Limit:                The plot limit is the boundary around a plant or process facility. The
+                                             plot limit may be physical such as a fence, a wall, the edge of a road or
+                                             pipe rack, chains and posts or a boundary indicated on an approved
+                                             plot plan.
+                  Positive Cable:            A cable that is electrically connected (directly or indirectly) to the
+                                             positive output terminal of an impressed current cathodic protection
+                                             power supply, including impressed current anode cables.
+                  PMT:                       Project Management Team used as a truncated version of Saudi
+                                             Aramco Project Management Team or SAPMT.
+                  Process Pipeline:          A pipeline typically associated with a plant process and typically above
+                                             ground within a plant facility.
+                  Production                 A pipeline transporting oil, gas or water to or from a well.
+                  Pipeline:                  These include flow-lines, test-lines, water injection lines and trunk-lines.
+
+
+
+                                                © Saudi Arabian Oil Company, 2023                                      Page 7 of 18
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                     SAES-X-500
+   Issue Date: 14 May 2023                                                          Cathodic Protection of Vessel and Tank Internals
+   Next Revision: :14 May 2028
+
+                  Reference                  An industry standardized electrode used as a common reference
+                  Electrode:                 potential for cathodic protection measurements. A copper/copper
+                                             sulfate (Cu/CuSO4) reference electrode is typically used for soil
+                                             applications. A silver/silver chloride (Ag/AgCl/0.6M Cl) reference
+                                             electrode is typically used for aqueous applications.
+                  Resistivity Meter          A meter designed to measure ground resistivity, or can be connected
+                  (such as Megger            to measure resistance in a format that excludes the resistance of the
+                  Tester or
+                  equivalent):               test wires.
+
+                  Subject Matter             For the purposes of this standard, the SME shall be the assigned
+                  Expert (SME):              Consulting Services Department cathodic protection specialist.
+                  Thermite Weld:             An exothermic process for use in making electrical connections
+                                             between two pieces of copper or between copper and steel.
+                  T/R:                       Transformer/Rectifier - A cathodic protection power supply that
+                                             transforms and rectifies AC power into an adjustable output DC power
+                                             for cathodic protection applications. Typically abbreviated or truncated
+                                             as “T/R” or “Rectifier”.
+                  Utilization Factor:        Utilization factor is a constant value, depending upon the shape of
+                                             anode and how it is attached, relates to reduction in anode size due to
+                                             consumption to the minimum size before it ceases to provide the
+                                             required current output.
+                  Vendor:                    A company that receives a purchase order to supply the finished
+                                             product, material or equipment. The Vendor may also be the
+                                             Manufacturer.
+                  Design Review and Approval
+                  The proposed construction drawings and the related cathodic protection design information for
+                  every design package in accordance with SAEP-303 shall be submitted to the CP Proponent
+                  organization and to Saudi Aramco’s Consulting Services Department (CSD) for review and
+                  approval.
+                          Notes:
+                          1) PMT may request assistance from CSD for the verification of the qualifications of the Design
+                             Contractor’s engineer responsible for designing the CP systems.
+                          2) It is recommended that the CP Design Agency hold a pre-design meeting with CSD and the
+                             Proponent CP Group to outline the design approach for the Project Proposal and Detailed
+                             Design.
+                  The Design Agency shall not issue drawings for construction until the drawings have been
+                  reviewed and approved in writing by CSD and the CP Proponent organization or where
+                  applicable by the Saudi Aramco approved local design office Engineers and the CP Proponent
+                  organization.
+                  Product hardware and software specifications and relevant design information for all remote
+                  monitoring equipment proposed for cathodic protection systems shall be submitted to the
+                  Supervisor of IT/COD/SCSD (Information Technology/Communication Operations Dept/Satellite
+                  & Communication Support Div.) for review and approval during the Project Proposal and Detail
+                  Design phases of the Project.
+                  The Project Proposal package shall provide all general design considerations that can be
+                  developed without requiring measurement of field data. The process data including but not
+                  limited to type of service, operating temperature, operating pressure, coating details, pH and
+
+                                                © Saudi Arabian Oil Company, 2023                                      Page 8 of 18
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                     SAES-X-500
+   Issue Date: 14 May 2023                                                          Cathodic Protection of Vessel and Tank Internals
+   Next Revision: :14 May 2028
+
+                  TDS of electrolyte, H2S, oxygen, and Cl content along with existing CP system details (if any)
+                  shall be provided as an input by the PMT team after collecting the same from Proponent.
+                  DBSP and project proposal does not require conducting a site visit unless that is mandatory to
+                  complete the package. The proposed construction drawings and the related cathodic
+                  protection design information for every design package shall at minimum be submitted to the
+                  CP Proponent organization and to Saudi Aramco’s Consulting Services Department (CSD) or
+                  where applicable to the Saudi Aramco approved local design office Engineers for review and
+                  approval. The most up to date list of approved design offices is posted on ShareK and also can
+                  be obtained from CSD (if required).
+                  Unless specifically requested by PMT, DBSP does not need to be reviewed or approved by CSD
+                  per SAEP-303. The DBSP shall specifically state if cathodic protection is required, or is not
+                  required, as dictated by SAES-X-500. No other design considerations for cathodic protection
+                  are required for the DBSP.
+                  Unless specifically requested by PMT, project proposal does not need to be reviewed or
+                  approved by CSD. Project Proposal packages submitted to CSD for review shall provide all
+                  design considerations that can be developed without requiring the measurement of field data
+                  or a site visit.
+                  The Project Proposal and 90% Design package shall include (Refer to SABP-X-001 for details):
+                      The detailed CP Design Philosophy, scope of work / basis of the CP design with reference to
+                      project specifications and applicable standards.
+                      List all Critical CP Design’s assumptions, limitations and exclusions clearly.
+                      Calculations of surface area of the structure to be protected.
+                          Notes:
+                                1.   Surface area calculations shall be verified by PMT and/or proponent, review and approval
+                                     of any design packages by CSD is based on verified surface area values provided in the
+                                     design package.
+                                2.   Any change in surface area after CSD approval of CP design package shall be
+                                     reconsidered by CP Designer / CP Contractor in revised CP Design package and require
+                                     review and re approval from CSD.
+                       All design calculations and applicable field data required to verify design compliance with
+                       Saudi Aramco Cathodic Protection Engineering Standards.
+                       Professionally drafted full size Index “X” CP drawings that:
+                  •    Detail each CP item by description and stock number if applicable.
+                  •    Detail the proposed location for each piece of CP equipment including but not limited to
+                       T/Rs, anodes, junction boxes and test stations.
+                  •    Detail and specifically identify all cathodic protection cables including all anode, structure,
+                       bond, and T/R cables.
+                  •    Clearly identify the specific and individual cable routing and termination points within the
+                       respective junction boxes, bond boxes, and T/Rs.
+                  •    Detail all cathodic protection equipment using the cathodic protection symbols shown on
+                       Standard Drawing AD-036785 “Symbols for Cathodic Protection”.
+                       All details for the Remote Monitoring System including details on the hardware, software,
+                       and connectivity.
+                       Detail all existing CP installations that could have an effect on the new CP system, and also
+                       provide information on spare current capacity of existing CP systems that will be utilized by
+                       the project.
+                       All calculations and applicable field data are required to verify design compliance with the
+                       Saudi Aramco Cathodic Protection Engineering Standards. CSD's approval of the design
+                       calculations, using average fluid resistivity values, does not relieve the designer from his
+                       responsibility of meeting the required potential criteria stated by this standard.
+
+                                                © Saudi Arabian Oil Company, 2023                                      Page 9 of 18
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                     SAES-X-500
+   Issue Date: 14 May 2023                                                          Cathodic Protection of Vessel and Tank Internals
+   Next Revision: :14 May 2028
+
+                          Notes:
+                                1.   Cathodic protection design considerations begin at the Design Basis Scoping paper
+                                     (DBSP) stage and shall be reasonably developed by the Project Proposal stage. The
+                                     Project Proposal Design Package shall include all design considerations that can be
+                                     developed without acquiring actual field measurement data, including spare system
+                                     capacity within the plant, proposed anode type(s) and sizing of the cathodic protection
+                                     power source(s).
+                                2.   The Detailed Design Package submitted to CSD for review, shall present a complete and
+                                     comprehensive cathodic protection system design including all required field
+                                     measurement data, calculations, a detailed description of the proposed cathodic
+                                     protection equipment, and a set of detailed drawings that illustrate the proposed
+                                     placement of all cathodic protection equipment and the associated protected structures.
+                  The Project Proposal and 90% Detailed Design Package shall include a specific statement in the
+                  scope of work that clearly identifies any requirement to provide CP based on the data provided.
+                  The Project Proposal and 90% Detailed Design Package shall provide clear direction on the
+                  general design approach with respect to the following:
+                  The CP system shall be:
+                  • Galvanic, or
+                  • AC powered impressed current TR considering
+                  o air cooled, or
+                  o oil cooled
+                  o single phase, or
+                  o three phase
+                  The Project Proposal and 90% Detailed Design Package shall clearly state if remote monitoring
+                  equipment will be included per 17-SAMSS-018 with the CP power supplies and if so it shall
+                  provide the following general design information:
+                      Will the CP power supply be provided with:
+                  • signal transmitters, or
+                  • a Remote Monitoring Unit (RMU)
+                      What operating parameters are going to be monitored (must meet minimum requirements)
+                      What communication system will be used for the remote monitoring system?
+                      What software will be supplied for the CP Proponent? If the data is not transmitted to the
+                      area Saudi Aramco PI data base, then the software shall be provided through the Project.
+                  General Design Requirements
+                  Contractor/Designer Qualifications
+   6.1.1          Cathodic protection designs shall be completed by Saudi Aramco approved local design offices
+                  with a minimum of five years verifiable cathodic protection design experience and a minimum
+                  industry qualification of NACE CP Level 4 and BS degree. Indicate the NACE CP level,
+                  certification number, name of designer and/or his signature/initial in the design package.
+   6.1.2          Field measurements required for the design, survey, installation, walk-through, pre-
+                  commissioning, commissioning, inspection, monitoring, restoration, replacement,
+                  troubleshooting, field-investigation, assessment etc. shall be performed by an Engineer or
+                  Technician with a minimum industry certification level of NACE CP Level 2. Indicate the NACE
+                  CP level, certification number, name of designer and/or his signature/initial in the design
+                  package.
+
+
+
+
+                                                © Saudi Arabian Oil Company, 2023                                     Page 10 of 18
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                     SAES-X-500
+   Issue Date: 14 May 2023                                                          Cathodic Protection of Vessel and Tank Internals
+   Next Revision: :14 May 2028
+
+                          Note:
+                          PMT may request assistance from CSD for the verification of the qualifications of the Design
+                          Contractor’s engineer responsible for designing the CP systems and to approve new designers.
+                  General / Philosophy / Limitations
+                  When cathodic protection is required, based on recommendations from proponent considering
+                  important factors including but not only limited to mentioned in Note 1 of section 1.2, as
+                  appropriate corrosion mitigation measures, following CP design parameters shall be considered.
+   6.2.1          Cathodic protection is required for the internal surfaces of metallic tanks and vessels based on
+                  the following:
+                       Cathodic protection shall be designed based on actual resistivity if the resistivity of the
+                       electrolyte is less than 2,000 ohm-cm
+                       Cathodic protection shall be designed based on design input of 2,000 ohm-cm if the actual
+                       resistivity of the electrolyte is between 2,000 – 5,000 ohm-cm. In such cases, potential
+                       criteria is not applicable for commissioning or commissioning shall be carried out during
+                       hydrostatic test (where possible).
+                       If the actual resistivity of electrolyte is greater than 5,000 ohm-cm, cathodic protection is
+                       only required if deemed necessary by the Cathodic Protection Proponent Organization and
+                       concurred by Saudi Aramco's Consulting Services Department.
+   6.2.2          Determination of Need for CP in oil treating vessels is further explained in section 3.2.1 of NACE
+                  SP0575.
+   6.2.3          Impressed Current Cathodic Protection (ICCP) is not recommended for hydrocarbon and
+                  chemical tanks due to safety reasons and galvanic CP shall be considered for such
+                  environments. For safety precautions while designing CP systems in oil-treating vessels refer to
+                  Section 9 “Safety” of NACE SP0575 – 2007.
+   6.2.4          Cathodic protection cannot reverse the corrosion damage that has already occurred. Moreover,
+                  cathodic protection cannot protect surfaces that are not in contact with electrolyte (non-
+                  submerged) during operation.
+   6.2.5          The CP system for vessels shall be based on internal configuration of the vessel.
+                  Compartmented vessels shall have at least one anode installed in each compartment exposed
+                  to the corrosive field. Anodes shall be placed such that CP current can reach to all surfaces
+                  exposed to electrolyte.
+   6.2.6          Number, weight and shape of anodes required for CP of vessels depends on surface area to be
+                  protected, current density required, anticipated anode output, vessel configuration and design
+                  life. For typical vessels requirements of CP system including number, type and weight of anodes
+                  etc. are governed by Standard Drawing AA-036388.
+   6.2.7          Only zinc alloy anodes typically known as “high temperature zinc (HTZ)” suitable for service at
+                  elevated temperatures from 50 - 70°C, aluminum alloy anodes shall be used above 70°C in all
+                  applications. Refer to Standard Drawing AA-036389.
+   6.2.8          Anode monitoring system (AMS) is mandatory requirement for CP system of all vessels
+                  regardless of application. Refer to Standard Drawing AA-036389.
+   6.2.9          Cathodic protection shall be provided by galvanic or impressed current systems for water
+                  storage tanks according to Standard Drawings AA-036353 and AA-036354. Design drawings
+                  shall use standardized symbols for cathodic protection equipment in accordance with Standard
+                  Drawing AD-036785.
+   6.2.10         Cathodic protection of sumps and bottoms of crude tanks and product storage tanks shall be
+                  cathodically protected by galvanic anodes according to Standard Drawing AA-036762.
+   6.2.11         For galvanic anode system for tank internals, CP designers shall be aware of limitations of CP
+                  and tank design effects on CP. Please see sections A.5 and A.6 of NACE SP-0196.
+
+
+                                                © Saudi Arabian Oil Company, 2023                                     Page 11 of 18
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                       SAES-X-500
+   Issue Date: 14 May 2023                                                            Cathodic Protection of Vessel and Tank Internals
+   Next Revision: :14 May 2028
+
+   6.2.12         An impressed current system utilizing inert anodes shall be used where undesirable
+                  contamination of the contained liquid would occur due to the corrosion products of other
+                  anode materials.
+   6.2.13         CP designs as per standard drawings AA-036389 and AA-036762 with no change / modification
+                  prepared by Saudi Aramco approved CP designers can go to construction without CSD
+                  approval; however, such designs shall still be reviewed by Area Technical Support and/or
+                  Proponent.
+                          Notes:
+                                  1.   CP designs that use standard drawings but considers several modifications due to either
+                                       changes to dimension of the tank/vessel or process parameters etc. shall be submitted to
+                                       CSD for review and approval.
+                                  2.   Anode quantity mentioned in the standard drawings shall be taken as the minimum
+                                       requirements only.
+   6.2.14         For Tank Internal CP system, all internal metallic structures, i.e., pipework and appurtenances
+                  shall be coated (where applicable) and included in CP surface area calculations where they are
+                  immersed. For galvanic CP system in oil treating vessels, coating shall be considered for all
+                  internal mixed metal structures. Where coating is not possible or not applicable, i.e., stainless
+                  steel coalescence packing, it shall be designed to remain electrically isolated from the structure
+                  at all points of contact between these two structures throughout the design life. This is required
+                  to avoid accelerated corrosion of the vessel surface due to excessive CP current drain to
+                  stainless steel internals.
+                  To ensure proper isolation & to verify its integrity, testing shall be carried out at all points of
+                  contact between stainless steel (SS) & carbon steel (CS) vessel surfaces using equipment based
+                  on Radio Frequency insulation/isolation testing prior to commissioning of system and during
+                  every T&I. Any failure of isolation shall be rectified and re-tested to ensure its continued
+                  effectiveness prior to re-commissioning of system. Use of multimeter and/or megger for
+                  isolation testing is not acceptable.
+   6.2.15         For applications with sea water electrolyte where ICCP system is selected with MMO anodes,
+                  MMO coatings thickness required shall be calculated based on manufacturer’s data sheet and
+                  required current demand for each project considering handling damages and consumption
+                  rates during design life to avoid titanium substrate exposure to sea water which may result in
+                  failure if reached to its breakdown voltage.
+                  Design Life
+   6.3.1          The minimum design life for galvanic anode systems shall be either 8 years, or the testing and
+                  inspection (T&I) period plus one year, whichever is greater.
+   6.3.2          The minimum design life for impressed current cathodic protection (ICCP) systems shall be
+                  either:
+                  • 25 years, or
+                  o Equal to design life of the structure (tank / vessel) or
+                  o Three times the testing and inspection (T&I) period plus one year {3 x (T&I period +1)},
+                       whichever is greater.
+                          Note:
+                          T & I period mentioned above is usually 7 years, addition of one year is required due to possible
+                          extension / necessary arrangements, etc.
+   6.3.3          The consumption rates detailed below in Table 2 shall be used for the calculation of the design
+                  life of galvanic anodes. Each anode must serve the required life taking into account its current
+                  output, the equation detailed below:
+
+
+
+
+                                                  © Saudi Arabian Oil Company, 2023                                     Page 12 of 18
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                              SAES-X-500
+   Issue Date: 14 May 2023                                                                   Cathodic Protection of Vessel and Tank Internals
+   Next Revision: :14 May 2028
+
+
+                                         𝐴𝑛𝑜𝑑𝑒 𝑊𝑒𝑖𝑔ℎ𝑡 (𝑘𝑔𝑠) × 𝑈𝑡𝑖𝑙𝑖𝑧𝑎𝑡𝑖𝑜𝑛 𝐹𝑎𝑐𝑡𝑜𝑟
+                    [                                                                               ] ≥ 𝐷𝑒𝑠𝑖𝑔𝑛 𝐿𝑖𝑓𝑒 (𝑌𝑒𝑎𝑟𝑠)
+                                              𝐴𝑛𝑜𝑑𝑒 𝑂𝑝𝑒𝑛 𝐶𝑖𝑟𝑐𝑢𝑖𝑡 𝑃𝑜𝑡𝑒𝑛𝑡𝑖𝑎𝑙 − 𝑃𝑟𝑜𝑡𝑒𝑐𝑡𝑒𝑑 𝑃𝑜𝑡𝑒𝑛𝑡𝑖𝑎𝑙
+                        {𝐶𝑜𝑛𝑠𝑢𝑚𝑝𝑡𝑖𝑜𝑛 𝑅𝑎𝑡𝑒 × (                                                    ) }
+                                                              𝐴𝑛𝑜𝑑𝑒 𝑅𝑒𝑠𝑖𝑠𝑡𝑎𝑛𝑐𝑒
+
+                             Note:
+                             For the life calculation of a galvanic anode system, use the lowest water (electrolyte) measured
+                             resistivity value for the planned. In case of multiple galvanic anodes, calculations mentioned in
+                             Section 6.3.4 are applicable.
+   6.3.4          Following equations shall also hold true for the proposed CP design:
+                                       𝐶𝑢𝑟𝑟𝑒𝑛𝑡 𝐷𝑒𝑚𝑎𝑛𝑑(𝐴𝑚𝑝) × 𝐷𝑒𝑠𝑖𝑔𝑛 𝐿𝑖𝑓𝑒 (𝑦𝑒𝑎𝑟𝑠)𝑥 8760
+                                   [                                                      ] ≤ 𝑇𝑜𝑡𝑎𝑙 𝑤𝑒𝑖𝑔ℎ𝑡 𝑜𝑓 𝑎𝑙𝑙 𝑎𝑛𝑜𝑑𝑒𝑠
+                                        𝑈𝑡𝑖𝑙𝑖𝑠𝑎𝑡𝑖𝑜𝑛 𝑓𝑎𝑐𝑡𝑜𝑟 𝑜𝑓 𝐴𝑛𝑜𝑑𝑒 𝑥 𝐸𝑓𝑓𝑖𝑐𝑖𝑒𝑛𝑐𝑦 𝑜𝑓 𝐴𝑛𝑜𝑑𝑒
+
+                                   𝐼𝑛𝑑𝑖𝑣𝑖𝑑𝑢𝑎𝑙 𝑎𝑛𝑜𝑑𝑒 𝑐𝑢𝑟𝑟𝑒𝑛𝑡 𝑜𝑢𝑡𝑝𝑢𝑡 × 𝑇𝑜𝑡𝑎𝑙 𝑁𝑢𝑚𝑏𝑒𝑟 𝑜𝑓 𝐴𝑛𝑜𝑑𝑒𝑠 𝑃𝑟𝑜𝑝𝑜𝑠𝑒𝑑 ≥ 𝐶𝑢𝑟𝑟𝑒𝑛𝑡 𝐷𝑒𝑚𝑎𝑛𝑑
+                             Notes:
+                                        1.   Current demand shall be calculated by multiplying surface area to be protected with
+                                             required current density.
+                                        2.   Individual anode current output shall be calculated based on the resistance of selected
+                                             anode (calculated using dimensions of anode) and electrolyte resistivity.
+   6.3.5          The consumption rates detailed in Table 3 shall be used for the calculation of the design life of
+                  impressed current anodes using the equation detailed below:
+                                                𝑇𝑜𝑡𝑎𝑙 𝑊𝑒𝑖𝑔ℎ𝑡 𝑜𝑓 𝐴𝑙𝑙 𝐴𝑛𝑜𝑑𝑒𝑠(𝑘𝑔𝑠)
+                             [                                                                ] ≥ 𝐷𝑒𝑠𝑖𝑔𝑛 𝐿𝑖𝑓𝑒 (𝑌𝑒𝑎𝑟𝑠)
+                                 {𝐶𝑜𝑛𝑠𝑢𝑚𝑝𝑡𝑖𝑜𝑛 𝑅𝑎𝑡𝑒 × 𝐶𝑃 𝑃𝑜𝑤𝑒𝑟 𝑆𝑜𝑢𝑟𝑐𝑒 𝐷𝑒𝑠𝑖𝑔𝑛 𝐶𝑢𝑟𝑟𝑒𝑛𝑡 𝐶𝑎𝑝𝑎𝑐𝑖𝑡𝑦 }
+
+   6.3.6          The maximum allowable current density and voltage characteristics detailed in Table 4 shall be
+                  used for the design of impressed current anode systems.
+   6.3.7          Temporary CP is not required for tanks and vessels designed to be protected by galvanic anode
+                  CP system. For ICCP designed CP systems, CP system shall be energized as soon as possible
+                  (within 45 days) after the tank is filled with electrolyte, otherwise temporary CP shall be
+                  provided during installation / construction period and/or till ICCP system is turned ON.
+                  Current Density Criteria
+                  The system design shall provide the minimum current density values for coated and uncoated
+                  surfaces shown in Table 5.
+                  Protection Criteria
+                  The cathodic protection potential shall comply with the following potential criteria.
+   6.5.1          The minimum steel-to-electrolyte potential shall be equal or more negative than negative 0.9 V
+                  (on) with reference to a silver/silver chloride electrode, or equal or less positive than 0.15 V (on)
+                  with reference to a zinc electrode.
+   6.5.2          A minimum of 100 mV of cathodic polarization (potential decay) between steel-to-electrolyte.
+                  The “potential decay” is the decrease in potential between the “instant off” and the steady state
+                  off potential. Refer to NACE SP0388 for further details.
+                             Note:
+                             This criterion is applicable to ICCP system protected structures and shall not be used when mixed-
+                             metal components or dissimilar metals are in contact for example steel pipeline in contact with
+                             copper or stainless steel (pipe or tubing).
+   6.5.3          The maximum steel-to-electrolyte potential for impressed current systems shall be equal or less
+                  negative than negative 1.5 V (on) with reference to a silver/silver chloride electrode, or equal or
+                  less negative than negative 0.45 V (on) with reference to a zinc electrode.
+
+
+                                                         © Saudi Arabian Oil Company, 2023                                     Page 13 of 18
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                     SAES-X-500
+   Issue Date: 14 May 2023                                                          Cathodic Protection of Vessel and Tank Internals
+   Next Revision: :14 May 2028
+
+                          Exception:
+                          The maximum limit of the criteria can be exceeded subject to demonstration that polarized
+                          potential has not exceeded negative 1.15 V with respect to a silver/silver chloride electrode and
+                          negative 0.1 V with reference to a zinc electrode.
+                  Anodes
+   6.6.1          Anode materials (manufactured in accordance with 17-SAMSS-006 or 17-SAMSS-007) shall be
+                  selected from Table 2 in Section 6.3.3 or Table 3 in Section 6.3.4.
+   6.6.2          The number and location of anodes shall depend upon the accessibility of components, the
+                  current requirement, and the configuration of the tank or vessel. Shielding by structural
+                  members or compartments shall be recognized and accounted for in the design.
+   6.6.3          Magnesium anodes shall not be used if the electrolyte resistivity at normal operating
+                  temperature is less than 500 ohm-cm.
+   6.6.4          Zinc anodes shall not be used in environments where temperature exceeds 50°C, except for
+                  high temperature zinc anodes which meets the requirements in Table 2 of Section 6.3.3.
+   6.6.5          Mercury activated aluminum anodes and zinc anodes shall not be used in water systems where
+                  humans and/or animals may consume the water. All Saudi Aramco approved aluminum and
+                  zinc anodes do not contain mercury.
+                  Circuit Resistance
+   6.7.1          For a T/R, the CP system rated circuit resistance shall be defined as the T/R rated voltage,
+                  divided by the T/R rated current. Rated voltages and currents are as detailed on the
+                  manufacturer's data sheet/plate.
+                  Example, 1 ohm is the rated resistance for a 50V/50A rectifier.
+   6.7.2          The CP system operating circuit resistance for an ICCP system shall be defined as the total
+                  effective resistance seen by the output terminals of the respective ICCP power supply, and for
+                  calculation purposes shall include:
+                       Anode resistance to water.
+                       Positive cable resistance from CP power source to anodes.
+                       Negative (cable)s resistance from CP power source to structure.
+                       Effective resistance caused by +0.95 volts anode back emf for MMO in water plus the
+                       structure back emf -0.9 volts (example: -0.9 volts tank back emf + 0.95 volts anode bed
+                       back emf = 1.85 volts total between the anodes and structure).
+   6.7.3          ICCP system designs shall take into consideration the calculated operating resistance and shall
+                  size the positive and negative cables and voltage rating of the T/R such that the “calculated”
+                  operating output of the T/R complies with all of the following:
+                       At the design stage only, the target commissioning current shall be achieved at a voltage
+                       between 40% and 60% of the T/R rated voltage output. The target commissioning current
+                       shall be achieved at a voltage between 30% and 70% of the T/R rated voltage output.
+                       The normal operating output current shall be achieved with the voltage adjustment set at
+                       more than 10% of the available (rated) T/R voltage output.
+                          Note:
+                          The above section is a mandatory design requirement but is not a mandatory requirement for
+                          commissioning acceptance.
+   6.7.4          The CP system “operating” circuit resistance measured during commissioning of a new CP
+                  system shall not be greater than 90% of the CP power supply “rated” circuit resistance.
+                  DC Power Source
+
+
+
+                                                © Saudi Arabian Oil Company, 2023                                     Page 14 of 18
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                     SAES-X-500
+   Issue Date: 14 May 2023                                                          Cathodic Protection of Vessel and Tank Internals
+   Next Revision: :14 May 2028
+
+   6.8.1          Cathodic protection rectifiers shall be manufactured in accordance with 17-SAMSS-004 or 17-
+                  SAMSS-005.
+   6.8.2          Install the CP power supplies in accordance with Saudi Aramco Standard Drawing AB-036378
+                  sheets 1 and 2.
+   6.8.3          Selection of type of T/R shall be as per Table 1 of 17-SAMSS-004. Use oil immersed T/Rs (type
+                  ONAN) inside hydrocarbon plant areas, for all outdoor marine environment applications, and
+                  for Class I Division 2 (Zone 2) applications.
+   6.8.4          DC power supplies shall have a maximum rated output voltage of no greater than 100 volts.
+                  The sizing of the T/R shall be optimized based on the circuit resistance in accordance with
+                  Section 6.7 of this standard.
+   6.8.5          For hazardous areas (maximum Class I, Zone 2), the design agency shall select a cathodic
+                  protection DC power supply (and other CP system equipment) that complies with the
+                  requirements of NEC Articles 500 to 504 for hazardous (Class I, Zone 2) areas. CP equipment
+                  shall not be placed in Class 1 Zone 1 areas.
+   6.8.6          Transformer/Rectifiers and junction boxes shall be permanently and systematically labeled in
+                  line with the plant electrical devices and equipment labeling system. Use T/R for
+                  transformer/rectifier and J/B for junction box. Transformer/rectifier example is ANDR-GOSP-1-
+                  T/R-07. Junction box example is ANDR-GOSP-1-T/R-07-J/B-12.
+                  Cables
+                  All cathodic protection cables including the primary positive and negative cables shall be as per
+                  17-SAMSS-017 and sized to comply with the most recent edition of NFPA 70, National Electric
+                  Code (NEC).
+                           Note:
+                           For typical applications, use the 90°C column in Table 310.15(16) and refer to 310.15(B)(2) to
+                           consider an ambient temperature of 40°C to calculate the ampacity for HMWPE cables.
+                  Junction Boxes
+                  Cathodic protection junction boxes shall be manufactured in accordance with 17-SAMSS-008.
+                  Installation, Records, Commissioning, and Inspection
+                  Refer to Saudi Aramco Best Practice SABP-X-003. SABP-X-003 shall be deemed a mandatory
+                  document for this standard.
+                  As built drawings and documents as well as Commissioning Reports shall be submitted to
+                  Proponent for review and approval.
+                  Commissioning Reports shall be submitted to CSD for information and feedback.
+                  Refer to Saudi Aramco Engineering Procedures SAEP-332 for commissioning and SAEP-333 for
+                  monitoring procedures.
+
+
+
+
+                                                © Saudi Arabian Oil Company, 2023                                     Page 15 of 18
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                        SAES-X-500
+   Issue Date: 14 May 2023                                                             Cathodic Protection of Vessel and Tank Internals
+   Next Revision: :14 May 2028
+
+
+
+
+                 Table 1: Cathodic Protection Requirements and Categories of Vessels and Tanks
+         A) List of Vessels and Tanks which shall be                       B) List of Vessels and Tanks for which CP
+                  internally protected by CP                               Consideration depends on other factors
+    Water Storage Tanks, i.e., Potable Water, Fire Water,              RO Surge Tanks
+    and Sea Water, etc.                                                Hot Water Storage Tanks
+    Sand Traps                                                         Cooling Water Surge Tanks
+    Condenser Water Boxes                                              Fresh or Lean DGA Storage Tanks
+    Salt Water Strainers                                               Methanol Storage Tanks
+    Sewage Treatment Plant                                             Glycol Storage Tanks
+    Slop Oil Tanks                                                     Lube Oil Storage Tanks
+    Wet Crude Separation Vessels, i.e., Desalters,                     Gas Chiller Separators
+    Dehydrators, Oil and Water Separation Plants (WOSEP),              Regen Gas LP KO Drums
+    Low Pressure Production Traps (LPPT), High Pressure                Refrigerant Cooling Water Surge Drums
+    Production Traps (HPPT)                                            Compressed Air Receivers
+    Effluents Tanks, Product Tanks, Sump Tanks, and all                LP Hot-water Expansion Tanks
+    types of Chemical and Hydrocarbon Tanks that may                   MP Hot-water Expansion Tanks
+    accumulate a layer of water, condensate, or sediment               Jet Fuel Tanks (Kerosene)
+    in the bottom.                                                     Any other Tank / Vessel not included in the list A)
+    Seawater Filters and Deaerators                                    and B)
+        Note:
+        For tanks and vessels listed in category B) CP requirement shall be considered based on Proponents past experience
+        with similar structures and shall be based on many factors but not limited to electrolytic resistivity, corrosion inhibitor
+        dosage, electrolyte’s corrosiveness, possibility of water condensate, pH of electrolyte, Chloride, H2S, and oxygen
+        concentration in the electrolyte.
+
+
+
+                              Table 2: Consumption Rates for Galvanic Anodes (kg/A-Y)
+                                     Structure                        ANODE TYPE
+                                                            Al        Mg  Zn     Zn
+                                                                                                        ( )
+                                                                                        (High Temp) ¹
+                              Water Storage Tanks         3.8      10.95      11.8      11.8
+                              Process Vessels (²)         6.9      N/A        11.8      11.8
+                                                 (³)
+                              Process Vessels             23.3     N/A        N/A       16.1
+        Note (1): Zinc anodes shall be certified by the manufacturer for maximum consumption rates at 70°C of equal to or
+        better than the consumption rates listed in Table 1.
+        Note (2): Process vessels for this application are those vessels that contain no dissolved H2S and normally operate at
+        temperatures below 50°C.
+        Note (3): Process vessels for this application are those vessels that contain dissolved H2S and normally operate at
+        temperatures above 50°C.
+        Note (4): N/A indicates not applicable, or not suitable for this application
+        Note (5:) The consumption rates detailed in Table 2 are corrected for efficiency, however, a utilization factor of 0.85
+        shall be included in the calculations.
+
+
+                                                 © Saudi Arabian Oil Company, 2023                                       Page 16 of 18
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                      SAES-X-500
+   Issue Date: 14 May 2023                                                           Cathodic Protection of Vessel and Tank Internals
+   Next Revision: :14 May 2028
+
+                        Table 3: Design Parameters for Impressed Current Anode Materials
+           Anode Material            Consumption (kg/A-Y)                 Current Density Maximum (mA/cm2)2
+           HSCI                   0.5                                    0.7
+           MMO1                   Not applicable                         7.0 (for fresh water)
+                                  (see manufacturer’s                    35 (for sea water)
+                                  specification for 25 years life)
+
+
+        Note (1): Inert anodes (i.e., MMO) shall not be used in vessels that have hydrocarbon products (asphaltine).
+        Note (2): Use of manufacturer specification may be allowed backed by relevant test certificates from reputed third
+        party laboratory or in-house R&DC test results and part of the CP calculations for review and approval by Saudi
+        Aramco.
+
+
+
+                 Table 4: Current Density and Voltage Maximums for Impressed Current Anodes
+                                                                 A N O D E T Y P E (1)
+                                                            HSCI         Mixed Metal Oxide
+                           Current (mA/ cm²)            0.7           60.0 (Salt Water)
+                           Voltage (volts)              100                  Per Manufacturer Rating
+        Note (1): Do not exceed manufacturer's rated current output of anodes in the applicable electrolyte.
+        Note (2): Inert anodes (i.e., MMO) shall not be used in vessels that have hydrocarbon products (asphaltine).
+
+
+
+                              Table 5: Minimum Current Density Requirements (mA/m²)
+                   Surface                                                Current Density(4)
+                                           Process / Water(1)          Process / Water(2)    Water Resistivity values
+                                                                                             of below 100 ohm-cm(3)
+        Coated Tanks                      0.5                         3                    13.0
+        Coated Vessels                    3.0                         11.0                    13.0
+        Uncoated Tanks & Vessels          30.0                        108                     65.0
+        Note (1): Tanks and vessels for this application are those vessels that contain no dissolved H2S and normally operate
+        at temperatures below 50°C.
+        Note (2): Tanks and vessels for this application are those vessels that contain dissolved H2S and normally operate at
+        temperatures above 50°C.
+        Note (3): The current density values mentioned in this column are also applicable for electrolytic resistivity values of
+        below 100ohm.cm including sea water.
+        Note (4): Suitable temperature correction factor shall be applied to values mentioned above for tanks and vessels that
+        contain no dissolved H2S and operating more than 50°C.
+
+
+
+
+                                                 © Saudi Arabian Oil Company, 2023                                     Page 17 of 18
+
+Saudi Aramco: Company General Use
+   Document Responsibility: Cathodic Protection Standards Committee                                                     SAES-X-500
+   Issue Date: 14 May 2023                                                          Cathodic Protection of Vessel and Tank Internals
+   Next Revision: :14 May 2028
+
+   Document History
+    14 May 2023              Major                          Reaffirmed the content of the document, and reissued
+                                                            with several changes and mandated the need for
+                                                            NACE CP qualifications.
+    01 February 2021         Editorial                      Editorial revision to extend due date to 2023.
+    18 October 2018          Editorial                      Editorial revision.
+    18 April 2018            Major                          Major revision incorporating all ideas and comments
+                                                            accepted during value engineering workshop
+    24 July 2013             Editorial                      Editorial revision.
+
+
+
+
+                                                © Saudi Arabian Oil Company, 2023                                     Page 18 of 18
+
+Saudi Aramco: Company General Use
+

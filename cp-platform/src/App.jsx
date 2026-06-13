@@ -1,5 +1,6 @@
 import { Component, useState, useEffect } from 'react'
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
+import { MotionConfig, motion } from 'framer-motion'
 import { useProjectStore } from './store/projectStore.js'
 import { Sidebar, TopBar } from './components/layout.jsx'
 import { ProtectedRoute, PublicRoute, RoleRoute } from './components/ProtectedRoute.jsx'
@@ -11,6 +12,7 @@ import { RegisterPage } from './pages/RegisterPage.jsx'
 import {
   PageProjectSetup,
   PagePipeline,
+  PageSoilResistivity,
   PageCurrentRequirement,
   PageGroundbed,
   PageCableResistance,
@@ -25,6 +27,8 @@ import {
   PageTank,
   PageVessel,
   PageHistory,
+  PageCompliance,
+  PageSensitivity,
 } from './pages/index.jsx'
 import PageDashboard from './pages/PageDashboard.jsx'
 import SettingsPage from './pages/SettingsPage.jsx'
@@ -48,7 +52,12 @@ class ErrorBoundary extends Component {
   render() {
     if (this.state.error) {
       return (
-        <div className="error-boundary">
+        <motion.div
+          className="error-boundary"
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.2, ease: [0.2, 0, 0.2, 1] }}
+        >
           <div className="error-boundary-card">
             <div className="error-boundary-icon">!</div>
             <h2>Something went wrong</h2>
@@ -80,7 +89,7 @@ class ErrorBoundary extends Component {
               Reload Application
             </button>
           </div>
-        </div>
+        </motion.div>
       )
     }
     return this.props.children
@@ -191,15 +200,18 @@ function AppShell() {
               <Route path="/dashboard" element={<PageDashboard />} />
               <Route path="/project" element={<RoleRoute requiredRole="engineer"><PageProjectSetup /></RoleRoute>} />
               <Route path="/pipeline" element={<RoleRoute requiredRole="engineer"><PagePipeline /></RoleRoute>} />
+              <Route path="/resistivity" element={<RoleRoute requiredRole="engineer"><PageSoilResistivity /></RoleRoute>} />
               <Route path="/current" element={<RoleRoute requiredRole="engineer"><PageCurrentRequirement /></RoleRoute>} />
               <Route path="/groundbed" element={<RoleRoute requiredRole="engineer"><PageGroundbed /></RoleRoute>} />
               <Route path="/cable" element={<RoleRoute requiredRole="engineer"><PageCableResistance /></RoleRoute>} />
               <Route path="/tr" element={<RoleRoute requiredRole="engineer"><PageTRSizing /></RoleRoute>} />
               <Route path="/validation" element={<PageValidation />} />
               <Route path="/optimizer" element={<RoleRoute requiredRole="engineer"><PageOptimizer /></RoleRoute>} />
+              <Route path="/sensitivity" element={<RoleRoute requiredRole="engineer"><PageSensitivity /></RoleRoute>} />
               <Route path="/bom" element={<RoleRoute requiredRole="engineer"><PageBOM /></RoleRoute>} />
               <Route path="/report" element={<PageReport />} />
               <Route path="/history" element={<PageHistory />} />
+              <Route path="/compliance" element={<PageCompliance />} />
               <Route path="/import" element={<RoleRoute requiredRole="engineer"><PageImport /></RoleRoute>} />
               <Route path="/attenuation" element={<RoleRoute requiredRole="engineer"><PageAttenuation /></RoleRoute>} />
               <Route path="/tank" element={<RoleRoute requiredRole="engineer"><PageTank /></RoleRoute>} />
@@ -226,21 +238,23 @@ function AppShell() {
 
 export default function App() {
   return (
-    <Routes>
-      {/* Public routes — no sidebar/topbar */}
-      <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
-      <Route path="/forgot-password" element={<PublicRoute><ForgotPasswordPage /></PublicRoute>} />
-      <Route path="/register" element={<PublicRoute><RegisterPage /></PublicRoute>} />
+    <MotionConfig reducedMotion="user">
+      <Routes>
+        {/* Public routes — no sidebar/topbar */}
+        <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
+        <Route path="/forgot-password" element={<PublicRoute><ForgotPasswordPage /></PublicRoute>} />
+        <Route path="/register" element={<PublicRoute><RegisterPage /></PublicRoute>} />
 
-      {/* Protected routes — full app shell */}
-      <Route
-        path="/*"
-        element={
-          <ProtectedRoute>
-            <AppShell />
-          </ProtectedRoute>
-        }
-      />
-    </Routes>
+        {/* Protected routes — full app shell */}
+        <Route
+          path="/*"
+          element={
+            <ProtectedRoute>
+              <AppShell />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+    </MotionConfig>
   )
 }

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useProjectStore } from '../store/projectStore.js'
 import { useAuthStore } from '../store/authStore.js'
 import {
@@ -9,6 +9,8 @@ import {
   InfoBox,
   WorkflowStepper,
 } from '../components/ui.jsx'
+import { ProtectionHeatMap, buildHeatMapMatrix } from '../visualizations/ProtectionHeatMap.jsx'
+import { runStationCalculations } from '../engine/modules/calculations.js'
 
 export function PageValidation() {
   const project = useProjectStore((s) => s.getProject())
@@ -19,7 +21,7 @@ export function PageValidation() {
   const advanceWorkflow = useProjectStore((s) => s.advanceWorkflow)
   const createRevision = useProjectStore((s) => s.createRevision)
 
-  const [activeTab, setActiveTab] = useState('all') // 'all', 'calculations', 'standards', 'issues'
+  const [activeTab, setActiveTab] = useState('all') // 'all', 'calculations', 'standards', 'issues', 'spatial'
   const [searchQuery, setSearchQuery] = useState('')
   const [unlockingStationId, setUnlockingStationId] = useState(null)
   const [unlockJustification, setUnlockJustification] = useState('')
@@ -56,6 +58,12 @@ export function PageValidation() {
           >
             Warnings & Fails
           </button>
+          <button
+            className={`validation-filter-tab ${activeTab === 'spatial' ? 'validation-filter-tab--active' : ''}`}
+            onClick={() => setActiveTab('spatial')}
+          >
+            Spatial View
+          </button>
         </div>
         <input
           type="text"
@@ -66,6 +74,10 @@ export function PageValidation() {
         />
       </div>
 
+      {activeTab === 'spatial' ? (
+        <SpatialView stations={stations} project={project} />
+      ) : (
+        <>
       {stations.map((st) => {
         const r = st.lastCalcResult
         const allPass = r?.allChecksPassed
@@ -261,7 +273,60 @@ export function PageValidation() {
           </div>
         </div>
       )}
+        </>
+      )}
     </div>
+  )
+}
+
+/**
+ * Spatial view: ProtectionHeatMap (stations × scenarios)
+ * Evaluates each (station, scenario) pair and shows the pass ratio.
+ */
+function SpatialView({ stations, project }) {
+  const scenarios = useMemo(() => [
+    { id: 'existing', label: 'Existing', factor: 1.0 },
+    { id: 'plus20', label: '+20%', factor: 1.2 },
+    { id: 'minus20', label: '−20%', factor: 0.8 },
+    { id: 'half', label: '½ anodes', factor: 0.5, anodes: true },
+  ], [])
+
+  const data = useMemo(() => {
+    const stationsLite = stations.map((st) => ({ id: st.id, name: st.name || st.id }))
+    if (stationsLite.length === 0) return { stations: [], scenarios, matrix: [] }
+
+    const evaluate = (station, scenario) => {
+      const s = stations.find((x) => x.id === station.id)
+      if (!s) return 0
+      try {
+        let sc = { ...s }
+        if (scenario.anodes && s.proposedAnodes) {
+          sc.proposedAnodes = Math.max(1, Math.floor(s.proposedAnodes * scenario.factor))
+        } else if (s.tr?.ratedCurrent) {
+          sc = { ...s, tr: { ...s.tr, ratedCurrent: s.tr.ratedCurrent * scenario.factor } }
+        }
+        const r = runStationCalculations(sc, sc.designLifeYears || 25, null, project)
+        if (!r) return 0
+        // Pass ratio: 1.0 = all pass; 0.0 = critical failures
+        const checks = r.checks || []
+        if (checks.length === 0) return 0
+        const failed = checks.filter((c) => c.status === 'fail').length
+        return Math.max(0, 1 - failed / checks.length)
+      } catch {
+        return 0
+      }
+    }
+
+    return buildHeatMapMatrix(stationsLite, scenarios, evaluate)
+  }, [stations, project, scenarios])
+
+  return (
+    <SectionCard
+      title="Protection Heat Map"
+      sub="Stations × Scenarios — each cell shows the pass ratio (1.0 = all checks pass)"
+    >
+      <ProtectionHeatMap data={data} threshold={{ pass: 1.0, warn: 0.7 }} height={320} />
+    </SectionCard>
   )
 }
 

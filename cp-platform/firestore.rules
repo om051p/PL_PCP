@@ -94,5 +94,20 @@ service cloud.firestore {
       allow read: if isApproved() && getUserRecord().get('role', '') == 'admin';
       allow update, delete: if false;
     }
+
+    // Activity Log (Phase 7d — cross-user activity feed)
+    // Authenticated users can append (create) and read entries in their own organization.
+    // Append-only (no update/delete) to maintain audit integrity.
+    match /activity/{logId} {
+      allow create: if request.auth != null &&
+        request.resource.data.userId == request.auth.uid &&
+        request.resource.data.projectId is string &&
+        request.resource.data.action is string &&
+        request.resource.data.module is string &&
+        request.resource.data.timestamp is string;
+      allow read: if isApproved() &&
+        getUserRecord().get('organizationId', '') == resource.data.get('organizationId', '');
+      allow update, delete: if false;
+    }
   }
 }

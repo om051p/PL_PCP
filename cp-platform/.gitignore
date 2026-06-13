@@ -4,6 +4,7 @@ site/
 dist-types/
 build/
 .vite/
+demo-out/
 coverage/
 playwright-report/
 test-results/

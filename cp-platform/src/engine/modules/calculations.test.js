@@ -513,8 +513,8 @@ describe('runStationCalculations', () => {
       // Target life should match project level (40) rather than station (25)
       expect(result.targetDesignLifeYears).toBe(40)
       
-      // Check back EMF resistance override: R_emf = (2 * back_emf_v) / ratedCurrent = (2 * 1.5) / 25 = 3 / 25 = 0.12 Ω
-      expect(result.backEMFResistanceOhm).toBeCloseTo(0.12, 3)
+      // Check back EMF resistance override: R_emf = back_emf_v / ratedCurrent = 1.5 / 25 = 0.06 Ω
+      expect(result.backEMFResistanceOhm).toBeCloseTo(0.06, 3)
       
       // Check AC input calculation with overrides:
       // dcPowerW = 30 * 25 = 750W

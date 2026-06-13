@@ -110,7 +110,7 @@ test.describe('CP Platform — Full Engineering Workflow', () => {
               consumptionRate: 0.45,
               lengthM: 2.13,
               diameterM: 0.064,
-              maxCurrentDensity: 10.8,
+              maxCurrentDensity: 7.0,
               material: 'High-Silicon Cast Iron (14.5% Si)',
             },
             proposedAnodes: 9,

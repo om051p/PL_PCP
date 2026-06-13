@@ -1,0 +1,1804 @@
+Engineering Standard                                                                14 May 2023
+
+
+
+
+SAES-X-600
+Cathodic Protection of External Surfaces of Plant Facilities
+Document Responsibility: Cathodic Protection Standards Committee
+
+
+
+
+Previous Revision: 01 February 2021                                       Next Revision: 14 May 2028
+Contact: (BAKTHABX)                                                                     Page 1 of 36
+                                      © Saudi Arabian Oil Company, 2023
+   Document Responsibility: CHOOSE COMMITTEE Standards Committee                                                                                               SAES-X-600
+   Issue Date: 14 May 2023                                                                                       Cathodic Protection of External Surfaces of Plant Facilities
+   Next Revision: 14 May 2028
+
+   Table of Content
+   SUMMARY OF CHANGES ......................................................................................................................................................... 3
+
+          SCOPE ................................................................................................................................................................................. 4
+
+          CONFLICTS AND DEVIATIONS ....................................................................................................................................... 4
+
+          REFERENCES ...................................................................................................................................................................... 4
+
+          TERMINOLOGY ................................................................................................................................................................. 6
+
+          DESIGN REQUIREMENTS ............................................................................................................................................... 10
+
+          INSTALLATION, RECORDS, COMMISSIONING, AND INSPECTION ........................................................................ 27
+
+   APPENDICES ............................................................................................................................................................................ 31
+
+   APPENDIX A – EARTH POTENTIAL RISE FORMULAS ........................................................................................................ 31
+
+   APPENDIX B – TANK BOTTOM CP TESTING PROCEDURE FOR TANKS SITTING ON OILY-SAND PADS ................... 32
+
+   DOCUMENT HISTORY ............................................................................................................................................................ 36
+
+
+
+   Table of Figures
+
+   Table 1: Potential Criteria
+
+   Table 2: Minimum Surface Current Densities
+
+   Table 4: Impressed Current Anode Design Parameters
+
+   Table 5: Impressed Current Anode Data
+
+   Table 6: Standard CP Rectifier Rating
+
+   Table 7: Galvanic Anodes for Coated Casings that are Electrically Isolated
+
+   Table 8: Number of Power Feed Connections
+
+
+
+
+                                                                        © Saudi Arabian Oil Company, 2023                                                                         Page 2 of 36
+
+Saudi Aramco: Company General Use
+   Document Responsibility: CHOOSE COMMITTEE Standards Committee                                                        SAES-X-600
+   Issue Date: 14 May 2023                                                Cathodic Protection of External Surfaces of Plant Facilities
+   Next Revision: 14 May 2028
+
+   Summary of Changes
+
+                Paragraph Number
+                                                              Change Type
+     Previous Revision       Current Revision                                                      Technical Change(s)
+                                                       (Addition, Modification, Deletion,
+       01 February 2021          14 May 2023                        New)
+
+    5.1.2.4                 5.1.2.4                  Addition                                Remote Monitoring Units
+    5.3.5.3                 5.3.5.3                                                          (RMU)
+    5.2.1                   5.2.1                    Addition                                Continuous linear anode
+    5.3.1                   5.3.1                                                            included
+    5.2                     5.2                      Addition                                Design current density for
+                                                                                             copper in aerated
+                                                                                             environment added.
+    Table-4                 Table-4                  Modification                            MMO Anodes requirements
+                                                                                             referred to 17-SAMSS-007
+    5.2.7.7                 5.2.7.7                  Modification                            Junction boxes requirement
+    5.4.3.1.2               5.4.3.1.2                                                        referred to 17-SAMSS-008
+    5.2.13.6                5.2.13.6                 Addition                                Solid state polarization cells
+                                                                                             included
+    5.3.4.5                 5.3.4.5                  Modification                            For multiple short sections
+                                                                                             with combined length of
+                                                                                             500m and more, ICCP is the
+                                                                                             preferred method
+
+
+
+
+                                               © Saudi Arabian Oil Company, 2023                                        Page 3 of 36
+
+Saudi Aramco: Company General Use
+   Document Responsibility: CHOOSE COMMITTEE Standards Committee                                                    SAES-X-600
+   Issue Date: 14 May 2023                                            Cathodic Protection of External Surfaces of Plant Facilities
+   Next Revision: 14 May 2028
+
+                 Scope
+                 This standard prescribes the minimum mandatory requirements governing the design and
+                 installation of cathodic protection systems for the external surfaces of buried and submerged
+                 structures for onshore plant facilities. This standard does not address buried pipelines entering
+                 or exiting the plant before the launcher/receiver area.
+                 Plant facilities that require cathodic protection include but are not limited to the following
+                 structures:
+                      Buried pressurized piping including short sections at road crossings, dike crossings, or at
+                      connections to existing underground piping.
+                      Buried non-pressurized piping containing a product that might pose a safety or
+                      environmental concern if leakage was to occur, i.e., gravity drain lines with H2S.
+                      Only if economically viable and when stray current corrosion could be a concern, non-
+                      pressurized buried hydrocarbon piping shall be electrically bonded to the CP systems, but
+                      does not need to comply with any protection criteria.
+                      Vent pipes and non-pressurized instrument air pipes do not require cathodic protection.
+                      Pipeline casings for pressurized piping at road or dike crossings.
+                      The bottom or soil-side of above ground storage tanks.
+                      Buried metallic storage tanks.
+                      Critical metal piles, onshore side of sheet piling and associated anchors. Non-critical metal
+                      piles shall be coated for the entire length with APCS-113A as per SAES-H-002 and do not
+                      require cathodic protection.
+                      Buried valves and fittings connected to non-metallic underground piping.
+                      Water wells inside the plant facilities shall be protected as detailed in SAES-X-700.
+                      Catch basins and metal fittings and appurtenances associated with catch basins are outside
+                      the scope of this standard.
+                 This standard may not be attached to nor made part of purchase orders.
+
+
+                 Conflicts and Deviations
+                 Any conflicts between this document and other applicable Mandatory Saudi Aramco
+                 Engineering Requirements (MSAERs) shall be addressed to the EK&RD Manager.
+                 Any deviation from the requirements herein shall follow internal company procedure SAEP-302.
+                 References
+                 All referenced specifications, standards, codes, drawings, and similar material are considered
+                 part of this Engineering Standard to the extent specified, applying the latest version, unless
+                 otherwise stated.
+                Saudi Aramco References
+                Saudi Aramco Engineering Procedures
+                SAEP-302            Waiver of a Mandatory Saudi Aramco Engineering Requirement
+                SAEP-303            Engineering Reviews of Project Proposal and Detail Design Documentation
+
+                Saudi Aramco Materials System Specification
+                17-SAMSS-004        Tap Adjustable Rectifiers for Cathodic Protection
+                17-SAMSS-005        Cathodic Protection Phase Controlled Rectifiers
+                17-SAMSS-006        Galvanic Anodes for Cathodic Protection
+                17-SAMSS-007        Impressed Current Anodes for Cathodic Protection
+                17-SAMSS-008        Junction Boxes for Cathodic Protection
+
+                                             © Saudi Arabian Oil Company, 2023                                      Page 4 of 36
+
+Saudi Aramco: Company General Use
+   Document Responsibility: CHOOSE COMMITTEE Standards Committee                                                    SAES-X-600
+   Issue Date: 14 May 2023                                            Cathodic Protection of External Surfaces of Plant Facilities
+   Next Revision: 14 May 2028
+
+                17-SAMSS-017        Impressed Current Cathodic Protection Cables
+                17-SAMSS-018        Remote Monitoring System (RMS) for Cathodic Protection Applications
+                32-SAMSS-005        Manufacture of Atmospheric Tanks
+
+                Saudi Aramco Engineering Standards
+                SAES-H-002          Internal and External Coatings for Steel Pipelines and Piping
+                SAES-X-400          Cathodic Protection of Buried Pipelines
+                SAES-X-700          Cathodic Protection of Onshore Well Casings
+                SAES-D-100          Design Criteria of Atmospheric and Low-Pressure Tanks
+
+                Saudi Aramco Best Practices
+                SABP-X-003          Cathodic Protection Installation Requirements
+
+                Saudi Aramco Standard Drawings
+                AA-036276           Multi-purpose Junction Box Details
+                AA-036277           5 Terminal Bond Box Details
+                AB-036346           Surface Anode Bed Details - Horizontal and Vertical Anodes (Sheets 1&2)
+                AA-036349           3 Terminal Bond Box Details
+                AA-036350           2 Terminal Bond Box Details
+                AA-036352           Galvanic Anodes for Roads and Camel Pipeline Crossing
+                AA-036355           Tank Bottom Impressed Current Cathodic Protection
+                AB-036378           Cathodic Protection Onshore Rectifier Installation Details
+                AB-036381           Thermite Welding of Cables to Pipelines and Structures
+                AA-036385           Deep Anode Bed without Anode Support Pipe
+                AA-036629           Anode Details for Hydrants and Risers from RTR or Plastic Mains
+                AA-036637           Bond Box Details for Manholes
+                AD-036785           Symbols for Cathodic Protection
+                AA-036905           Details of Installation of New Bottoms and Cathodic Protection for Existing
+                                    Welded and Riveted Tanks
+                AB-036907           Kilometer Marker & CP Test Stations for Buried Pipelines
+                Other References
+                National Fire Protection Association
+                NFPA 70             National Electric Code (NEC)
+
+                The Association for Materials Protection and Performance (AMPP/NACE)
+                AMPP SP0169-        Control of External Corrosion on Underground or Submerged Metallic Piping
+                2013                Systems
+                AMPP SP0193 –       External Cathodic Protection of On-Grade Carbon Steel Storage Tank
+                2016                Bottoms
+                AMPP SP0285 –       Corrosion Control of Underground Storage Tank Systems by Cathodic
+                2021                Protection
+                AMPP SP0200 –       Steel-Cased Pipeline Practices
+                2014
+
+
+                                             © Saudi Arabian Oil Company, 2023                                      Page 5 of 36
+
+Saudi Aramco: Company General Use
+   Document Responsibility: CHOOSE COMMITTEE Standards Committee                                                    SAES-X-600
+   Issue Date: 14 May 2023                                            Cathodic Protection of External Surfaces of Plant Facilities
+   Next Revision: 14 May 2028
+
+                AMPP SP0286 –       Electrical Isolation of Cathodically Protected Pipelines
+                2007
+                AMPP TM0497         Measurement Techniques Related to Criteria for Cathodic Protection on
+                – 2012              Underground or Submerged Metallic Piping Systems
+
+
+                International Organization of Standardization
+                ISO 15589-1-        Petroleum and Natural Gas Industries - Cathodic Protection of Pipeline
+                2015                Transportation Systems - Part 1: On-land Pipelines
+
+
+                The International Electrotechnical Commission
+                IEC 62305-4         Protection against Lightning — Part 4: Electrical and Electronic Systems
+                                    within Structures
+
+
+                 Terminology
+                Acronyms
+                ANSI                      American National Standards Institute
+                ASME                      American Society of Mechanical Engineers (USA)
+                ASTM                      American Society for Testing and Materials
+                AWS                       American Welding Society
+                CP                        Cathodic Protection
+                CSD                       The Saudi Aramco Consulting Services Department
+                CSE                       Saturated copper/copper sulfate reference electrode
+                GOSP                      Gas and Oil Separation Plant
+                HDD                       Horizontal directional drilling
+                ICCP                      Impressed Current Cathodic Protection
+                MSAERs                    Mandatory Saudi Aramco Engineering Requirements
+                NEC                       National Electric Code
+                NEMA                      National Electrical Manufacturers Association (USA)
+                OHPL                      High-voltage overhead or buried power lines
+                RSA                       Saudi Aramco Responsible Standardization Agency
+                SAES                      Saudi Aramco Engineering Standard
+                SAMSS                     Saudi Aramco Materials System Specification
+                SCC                       Stress corrosion cracking
+                WIP                       Water Injection Plant
+                Definitions
+                AA:                       The ANSI cooling class for a dry-type self-cooled transformer or reactor
+                                          that is cooled by the natural circulation of air. Syn.: AN (IEC), See
+                                          definition 3.1 in IEEE C57.12.
+
+
+                                             © Saudi Arabian Oil Company, 2023                                      Page 6 of 36
+
+Saudi Aramco: Company General Use
+   Document Responsibility: CHOOSE COMMITTEE Standards Committee                                                    SAES-X-600
+   Issue Date: 14 May 2023                                            Cathodic Protection of External Surfaces of Plant Facilities
+   Next Revision: 14 May 2028
+
+                Anode:                    An impressed current or a galvanic anode for cathodic protection
+                                          applications.
+                Anode Cable:              A cable directly connected to an impressed current or galvanic anode.
+                ANV:                      The ANSI cooling class for a dry-type non-ventilated self-cooled
+                                          transformer, which is so constructed as to provide no intentional
+                                          circulation of external air through the transformer, and that operates at
+                                          zero-gauge pressure. Syn.: ANAN (IEC), See definition 3.15 in IEEE
+                                          C57.12.
+                Armored Cable:            Armored cable for cathodic protection is a single core insulated cable
+                                          manufactured with a double layer spiral wound insulated galvanized
+                                          steel sheath to provide mechanical protection, and typically used for
+                                          subsea applications.
+                Bond Cable:               A cable installed between two metallic structures to provide electrical
+                                          continuity between the structures for the purpose of cathodic
+                                          protection.
+                Buyer:                    Saudi Aramco Purchasing Department Representative
+                Buyer's                   The person or persons designated by the Purchasing Department to
+                Representative:           monitor/enforce the contract. Normally, this is the on-site inspector.
+                Calcined Petroleum        A carbonaceous backfill used as a conductive backfill media for
+                Coke Breeze:              impressed current anodes in soil.
+                Coated Casing:            The term “coated casing” as used in this engineering standard
+                                          describes a well casing with an external non-conductive coating
+                                          (typically Fusion Bond Epoxy or FBE). The coating must be applied to
+                                          all sections of the casing in contact with soil or formation, from surface
+                                          to the bottom of the casing or to a depth determined to facilitate
+                                          external corrosion mitigation with cathodic protection through the
+                                          relevant down hole corrosive aquifers. Casings that have been coated
+                                          over the upper two or three joints of casing only are not “coated
+                                          casings”. Coating applied to well casings is not applied as a corrosion
+                                          barrier. It is applied to reduce the total amount of CP required or to
+                                          extend the influence of the applied CP.
+                CP Assessment             A CP assessment probe is a multi-electrode probe designed to enable
+                Probe:                    measurement of the soil resistivity in addition to representative
+                                          polarized and depolarized potentials for the pipeline or other buried or
+                                          immersed metallic structure at the probe location.
+                CP Coupon:                A CP coupon is a single electrode coupon that has been designed to
+                                          enable measurement of representative potentials, current densities, or
+                                          corrosion rates on a pipeline or other buried or immersed metallic
+                                          structure at the coupon location.
+                CP System                 The total resistance seen at the output of a CP power supply or the
+                Operating Circuit         total working resistance in a galvanic anode system.
+                Resistance:
+                CP System Rated           The rated output voltage of a cathodic protection power supply
+                Circuit Resistance:       divided by the rated output current. For photovoltaic power supplies,
+                                          the rated output current is the design commissioning current.
+
+
+                                             © Saudi Arabian Oil Company, 2023                                      Page 7 of 36
+
+Saudi Aramco: Company General Use
+   Document Responsibility: CHOOSE COMMITTEE Standards Committee                                                    SAES-X-600
+   Issue Date: 14 May 2023                                            Cathodic Protection of External Surfaces of Plant Facilities
+   Next Revision: 14 May 2028
+
+                Cross Country             A pipeline between; two plant areas, another cross country pipeline
+                Pipeline:                 and a plant area, or between two cross country pipelines.
+                Deep Anode Bed:           Anode or anodes connected to a common CP power supply and
+                                          installed in a vertical hole with a depth exceeding 15 m (50 ft).
+                Design Agency:            The organization responsible for the design of the pipeline and
+                                          associated CP system. The Design Agency may be the Design
+                                          Contractor, the Lump Sum Turn Key Contractor or an in-house design
+                                          organization of Saudi Aramco.
+                Drain Point:              The location on the cathodically protected structure where the negative
+                                          cable from the T/R or negative junction box is fastened to the structure.
+                ER Probe:                 Monitoring probe that uses electrical resistance (ER) technique as an
+                                          on-line method of monitoring the rate of corrosion and the extent of
+                                          total metal loss for any metallic equipment or structure.
+                Flowline:                 A pipeline connected to a well.
+                Foundry (for              An anode foundry is a facility that produces metal castings from either
+                anodes):                  ferrous or non-ferrous metals or alloys.
+                Galvanic Anodes:          Anodes fabricated from materials such as aluminum, magnesium or
+                                          zinc that are connected directly to the buried structure to provide
+                                          cathodic protection current without the requirement for an external
+                                          cathodic protection power supply. Galvanic anodes are also referred to
+                                          as sacrificial anodes.
+                Hazardous Areas:          Those areas where fire or explosion hazards may exist due to
+                                          flammable gases or vapors, flammable liquids, combustible dust, or
+                                          ignitable fibers or filings (see NEC Article 500).
+                Impressed Current         Anodes typically fabricated from High Silicon Cast Iron (HSCI) or Mixed
+                Anodes:                   Metal Oxide (MMO) that are connected through a DC power supply to
+                                          the buried or immersed structure to provide cathodic protection
+                                          current.
+                Instant-OFF               OFF potential measured with a short delay after interruption (switching
+                Potential:                off) of all sources of applied cathodic protection current with the aim of
+                                          approaching the IR-free potential.
+                Isolating Spark Gap       Component to discharge high voltages from lightning strikes and/or
+                (ISG):                    AC fault currents for isolating electrically conductive installation
+                                          sections to prevent potential damage to isolation devices.
+                Lead Wire (for            A cable directly connected to an anode.
+                anodes):
+                Manufacturer:             The Company that assembles the components for the finished product
+                                          and provides the finished product either through a Vendor or directly
+                                          to Saudi Aramco.
+                Mill (for anodes):        An anode mill is a facility that produces anodes such as MMO or
+                                          Platinized Niobium (without lead wires) for cathodic protection
+                                          applications (or any other anode type that does not involve casting).
+                Negative Cable:           A cable that is electrically connected (directly or indirectly) to the
+                                          negative output terminal of a cathodic protection power supply or to a
+
+
+
+                                             © Saudi Arabian Oil Company, 2023                                      Page 8 of 36
+
+Saudi Aramco: Company General Use
+   Document Responsibility: CHOOSE COMMITTEE Standards Committee                                                    SAES-X-600
+   Issue Date: 14 May 2023                                            Cathodic Protection of External Surfaces of Plant Facilities
+   Next Revision: 14 May 2028
+
+                                          galvanic anode. This includes bond cables to a cathodically protected
+                                          structure.
+                Non-incendive             Equipment having electrical/electronic circuitry that is incapable, under
+                Equipment:                normal operating conditions, of causing ignition of a specified
+                                          flammable gas-air, vapor-air, or dust-air mixture due to arcing or
+                                          thermal means. (See NEC Article 100).
+                Off-Plot:                 Off-plot refers to any area outside of the plot limits.
+                ON Potential:             Potential measured while all sources of applied cathodic protection
+                                          current (CP System) is continuously operating.
+                OFF Potential:            Potential measured after interruption (switching off) of all sources of
+                                          applied cathodic protection current with the aim of approaching an IR-
+                                          free potential.
+                ONAN:                     The ANSI cooling class for a transformer or reactor having its core and
+                                          coils immersed in mineral oil or synthetic insulating liquid with a fire
+                                          point less than or equal to 300 C, the cooling being effected by the
+                                          natural circulation of air over the cooling surface. (ONAN was
+                                          previously termed OA). See definition 3.303 in IEEE C57.12.
+                On-Plot:                  On-plot refers to any area inside the plot limits.
+                Perimeter Fence:          The fence which completely surrounds an area designated by Saudi
+                                          Aramco for a distinct function.
+                Photovoltaic              A number of solar cells wired and sealed into an environmentally
+                Module:                   protected assembly.
+                Pipeline:                 The term “pipeline” is used generically in this standard and can be used
+                                          to refer to any type of pipeline.
+                Plant Area:               A plant area is the area within the plot limits of a process or storage
+                                          facility.
+                Plot Limit:               The plot limit is the boundary around a plant or process facility. The
+                                          plot limit may be physical such as a fence, a wall, the edge of a road or
+                                          pipe rack, chains and posts or a boundary indicated on an approved
+                                          plot plan.
+                Positive Cable:           A cable that is electrically connected (directly or indirectly) to the
+                                          positive output terminal of an impressed current cathodic protection
+                                          power supply, including impressed current anode cables.
+                PMT:                      Project Management Team used as a truncated version of Saudi
+                                          Aramco Project Management Team or SAPMT.
+                Process Pipeline:         A pipeline typically associated with a plant process and typically above
+                                          ground within a plant facility.
+                Production                A pipeline transporting oil, gas or water to or from a well.
+                Pipeline:                 These include flow-lines, test-lines, water injection lines and trunk-lines.
+                Pyramid Anode:            An offshore anode assembly custom manufactured for Saudi Aramco
+                                          that is fabricated with mixed metal oxide anode components and
+                                          placed on the sea bed. The pyramid anode derives its name from the
+                                          pyramid shaped concrete base.
+                Reference                 An industry standardized electrode used as a common reference
+                Electrode:                potential for cathodic protection measurements. A copper/copper
+
+
+                                             © Saudi Arabian Oil Company, 2023                                      Page 9 of 36
+
+Saudi Aramco: Company General Use
+   Document Responsibility: CHOOSE COMMITTEE Standards Committee                                                    SAES-X-600
+   Issue Date: 14 May 2023                                            Cathodic Protection of External Surfaces of Plant Facilities
+   Next Revision: 14 May 2028
+
+                                          sulfate (Cu/CuSO4) reference electrode is typically used for soil
+                                          applications. A silver/silver chloride (Ag/AgCl/0.6M Cl) reference
+                                          electrode is typically used for aqueous applications.
+                Resistivity Meter         A meter designed to measure ground resistivity, or can be connected
+                (such as Megger           to measure resistance in a format that excludes the resistance of the
+                Tester or
+                equivalent):              test wires.
+
+                Soil Transition           The surface location where a pipeline enters or exits the soil, i.e., above
+                Point:                    grade to below grade transition, or below grade to above grade
+                                          transition.
+                Stray Current:            Current flowing through the unintended circuits/paths.
+                Subject Matter            For the purposes of this standard, the SME shall be the assigned
+                Expert (SME):             Consulting Services Department cathodic protection specialist.
+                Surface Anode Bed         Anode or anodes connected to a common CP power supply, installed
+                                          either vertically or horizontally at a depth of less than 15 m (50 ft).
+                Surge Diverters           Component to discharge high voltages from lightning strikes and/or
+                (SD):                     AC fault currents for isolating electrically conductive installation
+                                          sections to prevent potential damage to isolation devices.
+                Tension Spring            An offshore anode assembly custom manufactured for Saudi Aramco
+                Anode:                    that is fabricated with mixed metal oxide anode components and
+                                          suspended on a wire rope/tension spring assembly beneath an
+                                          offshore platform.
+                Test Line:                A pipeline that is used for testing an individual well or group of wells:
+                Thermite Weld:            An exothermic process for use in making electrical connections
+                                          between two pieces of copper or between copper and steel.
+                Transformer               A cathodic protection power supply that transforms and rectifies AC
+                Rectifier (T/R):          power into an adjustable output DC power for cathodic protection
+                                          applications. Typically abbreviated or truncated as “T/R” or “Rectifier”.
+                Transmission              A cross country pipeline transporting product between GOSPs WIPs or
+                Pipeline:                 other process facilities.
+                Trunkline:                A pipeline designed to distribute or gather product from two or more
+                                          wells, typically connecting flowlines or injection lines to the associated
+                                          GOSP or WIP.
+                Uncoated Casing:          The term “uncoated casing” when used in this engineering standard
+                                          describes a well casing that is either bare (no external coating), or may
+                                          have an external coating applied to the shallow sections of casing to
+                                          minimize corrosion in the landing base or surface soils.
+                Utility-line:             A pipeline designed to deliver an end use service product (typically
+                                          water, gas or air).
+                Vendor:                   A company that receives a purchase order to supply the finished
+                                          product, material or equipment. The Vendor may also be the
+                                          Manufacturer.
+                 Design Requirements
+                 General Design Requirements
+
+
+
+                                             © Saudi Arabian Oil Company, 2023                                     Page 10 of 36
+
+Saudi Aramco: Company General Use
+   Document Responsibility: CHOOSE COMMITTEE Standards Committee                                                      SAES-X-600
+   Issue Date: 14 May 2023                                              Cathodic Protection of External Surfaces of Plant Facilities
+   Next Revision: 14 May 2028
+
+   5.1.1         Contractor/Designer Qualifications
+                 Cathodic protection designs shall be carried out by design offices that are approved by Saudi
+                 Aramco. Such design offices must have qualified engineers with a minimum of five years
+                 verifiable cathodic protection design experience and a minimum industry qualification of NACE
+                 CP Level 4 and BS degree. NACE CP certification level, certification number, name of designer,
+                 and his signature/initial shall be provided in the design package.
+                         Note:
+                         Review, validation and approval of 90% detailed design package is responsibility of CSD and it is
+                         not delegated to anyone (including the approved designers).
+                 Field measurements required for the design shall be collected by an Engineer or Technician with
+                 a minimum of five years verifiable cathodic protection field experience and industry certification
+                 level of NACE CP Level 2 or higher. Installation supervision of cathodic protection materials
+                 shall be done by Engineer or Technician with a minimum of five years verifiable cathodic
+                 protection field experience and industry certification level of NACE CP Level 2 or higher.
+                         Note:
+                         PMT may request assistance from CSD for the verification of the qualifications of the Design
+                         Contractor’s engineer/technicians responsible for the CP field and engineering work.
+   5.1.2         Design Review
+                 Proposed construction drawings and related cathodic protection design information in
+                 accordance with SAEP-303 shall be submitted to the Proponent cathodic protection
+                 organization and to Saudi Aramco’s Consulting Services Department (CSD) for review and
+                 approval.
+                 The design agency shall not issue drawings for construction until the design has been reviewed
+                 and approved in writing by CSD and the Proponent cathodic protection organization.
+                         Exception:
+                         Design package approval is not required for CP designs based specifically on a CP standard
+                         drawing, e.g., galvanic anode installations per Standard Drawing AA-036352, for road crossings on
+                         normally above grade pipelines with no dedicated CP systems.
+                 The design package submitted for review shall contain at minimum:
+                     The scope of work
+                     Professionally drafted full size Index “X” CP drawings that:
+                 • Detail each CP item by description and stock number if applicable.
+                 • Detail the proposed location for each piece of CP equipment including but not limited to
+                     rectifiers, anodes, junction boxes, bond stations, test stations, soil access holes, bonds to
+                     pipelines, insulating flanges and unions.
+                 • Detail and clearly illustrate an organized numbering system (sequential order) for test
+                     points and soil access boxes that begins at the top left corner of the cathodic protection
+                     layout drawing.
+                 • Detail and specifically identify all cathodic protection cables including all anode, structure,
+                     bond, and rectifier cables. These details shall be shown on the One-Line Diagram for
+                     Impressed Current Cathodic Protection (ICCP) system.
+                 • Clearly identify the specific and individual cable routing and termination points within the
+                     respective test stations, junction boxes, bond boxes, and rectifiers.
+                 • Detail all cathodic protection equipment using the cathodic protection symbols as shown
+                     on Standard Drawing AD-036785 “Symbols for Cathodic Protection.”
+                 • Detail all existing CP installations in the plant that could have an effect on the new CP
+                     system, and also provide information on spare current capacity of existing CP systems that
+                     will be utilized by the project.
+
+
+                                              © Saudi Arabian Oil Company, 2023                                      Page 11 of 36
+
+Saudi Aramco: Company General Use
+   Document Responsibility: CHOOSE COMMITTEE Standards Committee                                                      SAES-X-600
+   Issue Date: 14 May 2023                                              Cathodic Protection of External Surfaces of Plant Facilities
+   Next Revision: 14 May 2028
+
+                 •   For plant piping CP, A0’ sized plot plan drawing showing anode layout, anode gradient
+                     circles (anode voltage cones) and UG piping shall be provided with the design for review.
+                 •   Plot plan with hazardous area overlay drawing showing clearly all structures that are CP
+                     protected and all CP equipments and their locations shall be provided.
+                     All calculations and applicable field data are required to verify design compliance with the
+                     Saudi Aramco Cathodic Protection Engineering Standards. CSD's approval of the design
+                     calculations, using average soil resistivity values, does not relieve the designer from his
+                     responsibility of meeting the required potential criteria stated by this standard.
+                         Notes:
+                              1.   Cathodic protection design considerations begin at the Design Basis Scoping paper
+                                   (DBSP) stage and shall be reasonably developed by the Project Proposal stage. The
+                                   Project Proposal Design Package shall include all design considerations that can be
+                                   developed without acquiring actual field measurement data, including spare system
+                                   capacity within the plant, proposed anode type(s) and sizing of the cathodic protection
+                                   power source(s).
+                              2.   The Detailed Design Package submitted to CSD for review, shall present a complete and
+                                   comprehensive cathodic protection system design including all required field
+                                   measurement data, calculations, a detailed description of the proposed cathodic
+                                   protection equipment, and a set of detailed drawings that illustrate the proposed
+                                   placement of all cathodic protection equipment and the associated protected structures.
+                              3.   It is recommended that the CP design office hold a preliminary meeting jointly with CSD
+                                   and the Proponent CP Group to outline their design approach for the Project Proposal or
+                                   Detailed Design CP package, before starting work on the design package. This will help
+                                   to eliminate a large number of the design review comments resulting from inadequate
+                                   field information or lack of in-depth existing CP system information, and speed up the
+                                   review and approval processes.
+                     The CP system shall be:
+                 •   Galvanic, or
+                 •   AC powered impressed current considering
+                 o   Air cooled, or
+                 o   Oil cooled T/R
+                 o   Single phase, or
+                 o   Three phase T/R.
+                 New CP systems installed in a Plant area shall be provided with Remote Monitoring Units
+                 (RMU), with signal transmitters to the existing DCS or SCADA system. Remote monitoring
+                 equipment shall be provided for ICCP power supplies.
+                 The remote monitoring equipment shall be constructed to interface with the existing remote
+                 monitoring system being used by the respective CP Proponent Department. Interfacing of the
+                 new & existing RMU is mandatory to ensure that the RMU data is reliably collected and utilized.
+                 To address this requirement, details of the communication system that will be used for the
+                 remote monitoring system and software that will be supplied for the CP Proponent shall be
+                 detailed. If the data is not transmitted to the Saudi Aramco data base, then the software shall be
+                 provided through the Project.
+                 PMT shall determine the specifications for the existing remote monitoring system and shall be
+                 fully responsible for providing this information to the CP Design Contractor and ICCP power
+                 supply vendor.
+                 In addition to the RMU at power supplies, at least remote monitoring unit shall be provided for
+                 the plant piping network in standalone area or when the total piping length is 500 m. This will
+                 result in multiple RMUs. For example, if the total piping length is 2000 m, then four RMUs will
+
+
+
+                                              © Saudi Arabian Oil Company, 2023                                      Page 12 of 36
+
+Saudi Aramco: Company General Use
+   Document Responsibility: CHOOSE COMMITTEE Standards Committee                                                         SAES-X-600
+   Issue Date: 14 May 2023                                                 Cathodic Protection of External Surfaces of Plant Facilities
+   Next Revision: 14 May 2028
+
+                 be required. Irrespective of the total piping length; each of the different plant areas (such as
+                 utility area and other plant areas,) must be provided with at least one RMU.
+                 Remote Monitoring Systems shall comply with 17-SAMSS-018 and shall be constructed to
+                 interface with the existing Saudi Aramco Remote Monitoring Systems.
+                 Technical Design Requirements
+   5.2.1         Design Philosophy
+                 Unless otherwise specified in this standard, cathodic protection systems shall be designed using
+                 the “earth potential rise” method with distributed, continuous linear anode or with MMO grid
+                 type impressed current anodes.
+                           Exception:
+                           An alternative design philosophy using a combination of remote and distributed anode beds may
+                           be more cost effective in some situations. Proposals must be submitted with a complete and
+                           thorough economic comparison and shall be considered unacceptable unless pre-approved in
+                           writing by the proponent.
+                           Note:
+                           In the case of plant piping, the earth potential rise calculation is applicable as per Appendix I. For
+                           the other type of system such as linear anode and grid type under tank bottoms anode separation is
+                           the limiting factor as calculated within the permitted maximum as per applicable company
+                           drawings.
+   5.2.2         Protection Criteria
+                 The potential criteria for the specific structures shall be achieved in the design by determining
+                 the number, placement, current loading, and length of the anodes required to achieve the
+                 necessary voltage gradient. The calculation method for this procedure shall use the “earth
+                 potential rise” equations detailed in Appendix I. To achieve the potential criteria for the specific
+                 structure, use the detailed values in the sections of this standard listed in Table 1.
+                 Unless actual field data indicates otherwise “earth potential rise” calculations shall presume an
+                 initial structure potential of:
+                       -0.250 volt (Cu-CuSO4) for structures electrically continuous with bare stainless steel or
+                       copper piping, bare ground cables (copper or tinned), or copper or stainless steel ground
+                       rods.
+                       -0.500 volt (Cu-CuSO4) for structures that are not shorted to buried and bare copper or
+                       stainless steel structures, but may be electrically continuous with insulated ground cables,
+                       galvanized ground rods, or other galvanized or coated structures.
+   5.2.3         Design Current Density
+                 Cathodic protection designs shall provide the minimum current densities detailed in Table 2.
+   5.2.4         Design Life
+                 The minimum design life for galvanic anode systems shall be 15 years.
+                 The minimum design life for impressed current systems shall be 25 years.
+                 The design life for a galvanic system shall be calculated using parameters from Table 3 and the
+                 equation detailed below:
+                             𝑇𝑜𝑡𝑎𝑙 𝑊𝑒𝑖𝑔ℎ𝑡 𝑜𝑓 𝐴𝑙𝑙 𝐴𝑛𝑜𝑑𝑒𝑠(𝑘𝑔𝑠) × 𝑈𝑡𝑖𝑙𝑖𝑧𝑎𝑡𝑖𝑜𝑛 𝐹𝑎𝑐𝑡𝑜𝑟
+                 [                                                                        ] ≥ 𝐷𝑒𝑠𝑖𝑔𝑛 𝐿𝑖𝑓𝑒 𝑌𝑒𝑎𝑟𝑠
+                     {𝐶𝑜𝑛𝑠𝑢𝑚𝑝𝑡𝑖𝑜𝑛 𝑅𝑎𝑡𝑒 × 𝐶𝑎𝑙𝑐𝑢𝑙𝑎𝑡𝑒𝑑 𝐴𝑛𝑜𝑑𝑒 𝑜𝑢𝑡𝑝𝑢𝑡 𝑐𝑢𝑟𝑟𝑒𝑛𝑡 𝑓𝑜𝑟 𝑎𝑙𝑙 𝑎𝑛𝑜𝑑𝑒𝑠 ∗}
+
+                           *For the life calculation of a galvanic anode bed system, use the lowest measured
+                           resistivity value for the planned installation depth of the anodes based on the finished
+                           grade levels at the site.
+
+
+                                                 © Saudi Arabian Oil Company, 2023                                      Page 13 of 36
+
+Saudi Aramco: Company General Use
+   Document Responsibility: CHOOSE COMMITTEE Standards Committee                                                           SAES-X-600
+   Issue Date: 14 May 2023                                                   Cathodic Protection of External Surfaces of Plant Facilities
+   Next Revision: 14 May 2028
+
+                         Notes:
+                                 1.   Design life stated above for galvanic anodes is not applicable for temporary CP systems if
+                                      considered for the project.
+                                 2.   The purpose of the above formula is to ensure that each anode must serve the required
+                                      life taking into account its calculated current output, whilst the anodes will last longer if
+                                      they operate less than the calculated current output. This has nothing to do with the
+                                      cathodic protection current requirement.
+                 The design life for an impressed current distributed anode system shall be calculated using
+                 parameters detailed in Table 4 and the following equation:
+                                          𝐴𝑛𝑜𝑑𝑒 𝑊𝑒𝑖𝑔ℎ𝑡(𝑘𝑔𝑠)
+                           [                                                 ] ≥ 𝐷𝑒𝑠𝑖𝑔𝑛 𝐿𝑖𝑓𝑒 𝑌𝑒𝑎𝑟𝑠
+                            (𝐴𝑛𝑜𝑑𝑒 𝐶𝑜𝑛𝑠𝑢𝑚𝑝𝑡𝑖𝑜𝑛 𝑅𝑎𝑡𝑒 × 𝐴𝑛𝑜𝑑𝑒 𝐶𝑢𝑟𝑟𝑒𝑛𝑡 𝐶𝑎𝑝𝑎𝑐𝑖𝑡𝑦)
+
+                 The design life for an impressed current remote anode system shall be calculated using
+                 parameters detailed in Table 4 and the following equation:
+                                         𝑇𝑜𝑡𝑎𝑙 𝐴𝑛𝑜𝑑𝑒 𝑊𝑒𝑖𝑔ℎ𝑡 (𝑘𝑔𝑠)
+                        [                                                           ] ≥ 𝐷𝑒𝑠𝑖𝑔𝑛 𝐿𝑖𝑓𝑒 𝑌𝑒𝑎𝑟𝑠
+                         (𝐴𝑛𝑜𝑑𝑒 𝐶𝑜𝑛𝑠𝑢𝑚𝑝𝑡𝑖𝑜𝑛 𝑅𝑎𝑡𝑒 × 𝑅𝑒𝑐𝑡𝑖𝑓𝑖𝑒𝑟 𝑅𝑎𝑡𝑒𝑑 𝐶𝑢𝑟𝑟𝑒𝑛𝑡 𝐶𝑎𝑝𝑎𝑐𝑖𝑡𝑦)
+
+
+                 Use of other types of impressed current anode materials such as polymer anodes, for use in
+                 special applications may be permitted after thoroughly evaluating the anode performance. The
+                 impressed current anodes most commonly used by Saudi Aramco are as listed in Table 5.
+   5.2.5         Circuit Resistance
+                 For a T/R, the CP system rated circuit resistance shall be defined as the T/R rated voltage,
+                 divided by the T/R rated current. Rated voltages and currents are as detailed on the
+                 manufacturer's data sheet/plate.
+                 The CP system operating circuit resistance for an ICCP system shall be defined as the total
+                 effective resistance as seen by the output terminals of the respective ICCP power supply, and for
+                 calculation purposes shall include:
+                      Anode bed resistance to ground.
+                      Positive cable resistance from CP power source to anodes.
+                      Negative cable resistance from CP power source to structure.
+                      Resistance of the structure to remote earth.
+                      Unless otherwise stated, use a value of 0.01 ohm.
+                      Effective resistance caused by +0.8 volts anode bed back emf (for HSCI in coke breeze) plus
+                      the structure back emf of -1.2 volts = 2.0 volts total between the anode with coke breeze
+                      backfill, and a coated buried piping.
+                      Remf=(0.8 v + back emf) / Irated
+                      Irated=CP power supply “rated” current.
+                         Exception:
+                         A back emf of +1.0 volts (Cu/CuSO4) shall be used for mixed metal oxide anodes in water tanks,
+                         subkha, or comparable high salinity wet applications without coke breeze. This does not include the
+                         back emf associated with the polarized potential of the structure.
+                         Note:
+                         When using Remf to calculate the maximum allowable anode bed resistance to provide 70% of
+                         Rrated, the value of Remf must be multiplied by 0.7.
+                         Example: Ranodebed maximum = (0.7 x (Rrated - Remf)) - Rcables - Rstructure.
+
+
+
+
+                                                  © Saudi Arabian Oil Company, 2023                                       Page 14 of 36
+
+Saudi Aramco: Company General Use
+   Document Responsibility: CHOOSE COMMITTEE Standards Committee                                                    SAES-X-600
+   Issue Date: 14 May 2023                                            Cathodic Protection of External Surfaces of Plant Facilities
+   Next Revision: 14 May 2028
+
+                 ICCP system designs shall take into consideration the calculated operating resistance and shall
+                 size the positive and negative cables and voltage rating of the T/R such that the “calculated”
+                 operating output of the T/R complies with all of the following:
+                      The target commissioning current shall be achieved at a voltage between 30% and 70% of
+                      the T/R rated voltage output.
+                      The normal operating output current shall be achieved with the voltage adjustment set at
+                      more than 10% of the available (rated) T/R voltage output.
+                         Note:
+                         The above section is a mandatory design requirement but is not a mandatory requirement for
+                         commissioning acceptance.
+                 The CP system “operating” circuit resistance measured during commissioning of a new CP
+                 system shall not be greater than 90% of the CP power supply “rated” circuit resistance unless all
+                 of the following are met:
+                      Structure is cathodically protected and meeting protection criteria requirements as per this
+                      standard.
+                      If the CP system power supply is a tap adjustable T/R, it shall have at least two fine tap
+                      setting increments remaining.
+                      If the CP system power supply is automatic and/or phase controlled type, it shall have at
+                      15% of rated voltage still remaining for further adjustments when required.
+                      Each anode current, for the required minimum number of anodes is at or below the
+                      maximum commissioning current rating (Table 5 of SAES-X-600).
+                      For anode types not mentioned in Table 5 or other types of anode (GRID), the anode
+                      operating current shall never exceed the permitted maximum as per design and/or the
+                      manufacturer anode data sheet.
+   5.2.6         Soil Resistivity Surveys
+                 Ensure that the readings are taken for the planned installation depths of the anodes based on
+                 the finished grade levels at the plant.
+                 Distributed Anode Beds
+                     Conduct soil resistivity or soil conductivity measurements over a representative sample of
+                     the distributed anode installation locations.
+                     Ensure that the measurements are representative for the planned installation depths of the
+                     anodes based on the finished grade levels at the site.
+                     Show the location that each measurement was taken on a detailed CP layout drawing.
+                     For plant plots that exceed 50 m by 50 m, soil resistivity survey at multiple locations shall be
+                     carried out and the worst case values (lowest resistivity values) used in the anode voltage
+                     gradient calculations.
+                 Surface Anode Beds
+                     Conduct soil resistivity or soil conductivity measurements at 10 meter intervals over the full
+                     length of the proposed surface anode bed location.
+                     The four pin Wenner method may be used in areas with nominal soil resistivities below
+                     10,000 ohm-cm. A non-contact electromagnetic soil resistivity/conductivity instrument shall
+                     be used where equipment capability favors depending upon the depth and resistivity of the
+                     area.
+                     Measurements shall be taken for the planned installation depth of the anode bed.
+                     Mark the selected location of the surface anode bed with wooden or metal stakes at each
+                     end of the proposed anode bed location. Show the location on a detailed site sketch, and
+                     include this information on the CP design drawings.
+                 Remote Deep Anode Bed:
+
+
+
+                                             © Saudi Arabian Oil Company, 2023                                     Page 15 of 36
+
+Saudi Aramco: Company General Use
+   Document Responsibility: CHOOSE COMMITTEE Standards Committee                                                       SAES-X-600
+   Issue Date: 14 May 2023                                               Cathodic Protection of External Surfaces of Plant Facilities
+   Next Revision: 14 May 2028
+
+                 In consultation with the Groundwater Protection Unit of the Saudi Aramco Environmental
+                 Protection Department, determine the final bore hole depth and anode placement based on the
+                 drill stem resistance and test anode resistance measurements collected while drilling the anode
+                 hole.
+                     Conduct soil resistivity or soil conductivity measurements for deep anode bed locations.
+                     Anodes to be installed deeper than 15 meters shall be classified as “deep” anode beds, and
+                     hence will require the drilling depth to be pre-approved in writing by the Groundwater
+                     Protection Unit of the Saudi Aramco Environmental Protection Department.
+                     Record drill stem and test anode resistance measurements and submit for review and
+                     analysis to Saudi Aramco (or designate).
+                     The drill stem and test anode measurements shall be taken in accordance with the
+                     requirements detailed in Standard Drawing AA-036385. Final acceptable borehole depth
+                     anode distribution based on the dill stem and test anode analysis.
+                     Mark the selected location of the deep anode bed with a wooden or metal stake. Show the
+                     location on a detailed site sketch, and include this information on the CP design drawings.
+   5.2.7         DC Power Supply
+                 For hazardous areas (maximum Class I, Zone 2), the design agency shall select a cathodic
+                 protection DC power supply (and other CP system equipment) that complies with the
+                 requirements of NEC Articles 500 to 504 for hazardous (Class I, Zone 2) areas. CP equipment
+                 shall not be placed in Class 1 Zone 1 areas.
+                 Install the rectifiers in non-hazardous areas where possible and use oil-immersed rectifier units
+                 inside hydrocarbon plant areas, in all locations that are within 30 meters of hydrocarbon plant
+                 perimeter fencing (outside), and within 1 km of a coastline.
+                 Designs shall be based on T/Rs manufactured in compliance with 17-SAMSS-004 or 17-SAMSS-
+                 005.
+                         Exception:
+                         The DC power supply for a grid or continuous impressed current anode CP system can be air cooled
+                         (NEMA 4X) and need not comply with the requirements of 17-SAMSS-004 and 17-SAMSS-005 but
+                         shall be supplied by a Saudi Aramco approved manufacturer.
+                 Install the CP power supplies in accordance with Saudi Aramco Standard Drawing AB-036378
+                 sheets 1 and 2.
+                 Use air cooled T/Rs (type AA) for indoor or non-classified, non-marine environment
+                 applications. T/Rs with NEMA Class 3R enclosures shall NOT be used inside hydrocarbon plant
+                 areas or in marine environments unless installed indoors.
+                 DC power supplies shall have a maximum rated output voltage of no greater than 100 volts.
+                 The sizing of the T/R shall be optimized based on the circuit resistance in accordance with
+                 Section 5.2.5 of this standard.
+                 Transformer/Rectifiers and junction boxes (as per 17-SAMSS-008) shall be permanently and
+                 systematically labeled in line with the plant electrical devices and equipment labeling system.
+                 Use T/R for transformer/rectifier and J/B for junction box. Transformer/rectifier example is
+                 ANDR-GOSP-1-T/R-07. Junction box example is ANDR-GOSP-1-T/R-07-J/B-12.
+                 CP Power Supply Rating
+                 CP systems shall be designed with CP power supplies sized with a minimum rated output
+                 current equaling the sum of the current requirement plus a design surplus of 30%.
+                         Note:
+                         When selecting the current rating for power supply units, if the use of 30% surplus results in a
+                         rating of say 104 or 105 amps whereas the next standard power supply rating available is 150
+
+
+
+                                               © Saudi Arabian Oil Company, 2023                                      Page 16 of 36
+
+Saudi Aramco: Company General Use
+   Document Responsibility: CHOOSE COMMITTEE Standards Committee                                                       SAES-X-600
+   Issue Date: 14 May 2023                                               Cathodic Protection of External Surfaces of Plant Facilities
+   Next Revision: 14 May 2028
+
+                          amps. It is economical to use 100 amps which will still give surplus of more than 20%. Therefore,
+                          use of surplus capacity must be carefully selected ensuring a minimum surplus of 20%.
+                 Standard/Recommended CP Rectifier Rating
+                 For the purpose of cathodic protection, rectifier ratings must be selected from the standard list
+                 in Table 6.
+   5.2.8         Anodes
+                 Unless specified otherwise in this document, impressed current anode materials for soil
+                 applications shall be high silicon cast iron or mixed metal oxide complying with 17-SAMSS-007
+                 and shall use design parameters as detailed in Table 4.
+                 Galvanic anode materials for soil applications shall be manufactured in accordance with 17-
+                 SAMSS-006. Designs using galvanic anodes shall comply with the design parameters detailed in
+                 Table 3.
+                 In asphalt, paved areas, or tightly compacted marl areas, conventional impressed current
+                 anodes shall be vented according to Standard Drawing AA-036346. Vent openings shall be
+                 above-grade if product spill could contaminate the anode backfill.
+                 Use zinc anodes in lieu of magnesium anodes where the soil resistivity is below 500 ohm-cm.
+   5.2.9         Cables
+                 Cathodic protection cables shall be manufactured in accordance with 17-SAMSS-017.
+                 The minimum size for the primary positive and negative DC cables from the rectifier shall be 25
+                 mm² (#4 AWG).
+                 All cathodic protection cables including the primary positive and negative cables shall be sized
+                 to comply with the most recent edition of the National Fire Protection Association NFPA 70,
+                 National Electric Code (NEC).
+                 Unless otherwise specified by the cable manufacturer, the allowable ampacity of High Molecular
+                 Weight Polyethylene (HMWPE) cables manufactured in accordance with 17-SAMSS-017 shall be
+                 rated for ampacity under the column for insulation rated for 90°C in the NFPA 70, NEC
+                 Handbook. Correction shall be made to an operating conductor temperature of 40°C.
+   5.2.10        Structure Electrical Continuity
+                 Install dedicated bonds to all structures influenced by the impressed current anode systems to
+                 ensure electrical continuity back to the cathodic protection rectifier including metallic valve
+                 flange connections with or without rubber gaskets (mechanical joints are not reliable joints for
+                 electrical continuity). Make all cable connections to structures according to Standard Drawing
+                 AB-036381.
+                 Cables installed for, or associated with electrical grounding or electrical ground continuity
+                 purposes shall not be used to achieve the required electrical continuity for cathodic protection.
+                 Identify and locate all bonding connections on the cathodic protection drawings.
+   5.2.11        Resistors for Current Distribution Control
+                 Electrical resistors shall not be used for current distribution control.
+   5.2.12        Bonding
+                 All buried metal structures influenced by cathodic protection systems shall be electrically
+                 continuous. Install continuity bonds between all buried structures requiring cathodic protection
+                 that are not welded together including metallic valve flange connections with or without rubber
+                 gaskets (mechanical joints are not reliable joints for electrical continuity).
+                 A separate reliable connection of the anode to the valve either by a bond cable across the
+                 flange or by a separate cable from each metallic part of the valve to the test point shall be
+
+
+                                               © Saudi Arabian Oil Company, 2023                                      Page 17 of 36
+
+Saudi Aramco: Company General Use
+   Document Responsibility: CHOOSE COMMITTEE Standards Committee                                                        SAES-X-600
+   Issue Date: 14 May 2023                                                Cathodic Protection of External Surfaces of Plant Facilities
+   Next Revision: 14 May 2028
+
+                 provided to ensure proper electrical continuity. Make all bond cable terminations between
+                 structures in an above-grade enclosure constructed according to one of the following Standard
+                 Drawings AA-036276, AA-036277, AA-036349, AA-036350, and AA-036637. Make bond
+                 connections for manholes according to Standard Drawing AA-036637.
+                 The bond conductor shall be sized to achieve a voltage drop across the conductor of less than
+                 0.05 volt and shall be minimum 16 mm² (#6 AWG).
+                 Make all cable connections to structures according to Standard Drawing AB-036381.
+                 Install a test lead on all buried bonded structures in addition to the bond cable. Terminate the
+                 test lead in the bond box on its own individual terminal.
+                 If an above ground bond box will interfere with the operation of the plant, a flush mounted
+                 bond box installed according to Standard Drawing AA-036637 may be used provided the
+                 cathodic protection proponent organization concurs in writing.
+   5.2.13        Electrical Isolation
+                 Isolating flanges, isolating joints or spools, or other electrical isolating devices are not allowed
+                 except to limit protective current flow between plant facilities and off-plot pipelines, and for
+                 short pipeline sections less than 500 meters long protected by a galvanic anode system.
+                         Exceptions:
+                         Fire water systems at office buildings may be electrically isolated.
+                         Isolation flanges may also be used to electrically isolate protected and non-protected piping
+                         sections to prevent loss of CP current.
+                         Note:
+                         Purpose of section 5.2.13.1 is to ensure that all CP protected structures within the plant are treated
+                         as a common cathode to prevent stray current interference.
+                 For hazardous locations where if use of isolation devices are prevented for safety reasons, then
+                 supplemental cathodic protection shall be provided at these locations to ensure proper
+                 protection.
+                 Where the installation of electrical isolation is required for the purposes of CP, then all possible
+                 piping pathways including the main pipe, branches, instrumentation lines shall all be considered
+                 for the purpose of electrical isolation.
+                 For details of pipeline isolation, isolation devices and tests see NACE SP0286 & ISO-15589-1.
+                 Type of isolation joint is not dictated by this standard and is based on pipeline size, service
+                 requirements such as temperature, pressure, chemical resistance, mechanical properties. Use of
+                 insulating unions, flange type isolation devices, monolithic isolation devices as well isolation
+                 spools are all considered appropriate. However, for wet services where the internal fluid may be
+                 electrically conductive, use of isolating spool pieces are considered more appropriate unless it
+                 can be evidently demonstrated with the help of internal lining and/or coating that flange type
+                 connection can be effective.
+                 Electrical isolation devices if installed, shall be protected from lightening and surges by surge
+                 diverters / spark gaps/ solid state polarization cells. Such devices must be fully encapsulated
+                 and suitable for installation in hazardous areas. Their voltage and current rating shall be based
+                 on expected surges and capable of safely discharging the expected surge/lightning currents
+                 without any damages and/or breakdown. Such devices must be regularly monitored and
+                 maintained for their integrity. Any failed devices must be replaced immediately. Cathodic
+                 Protection design documents shall provide a detailed section for selection of devices as stated
+                 above along with a detailed monitoring and maintenance procedure.
+                 Do not install isolating devices in any buried or submerged portions of a pipeline.
+
+
+
+                                               © Saudi Arabian Oil Company, 2023                                       Page 18 of 36
+
+Saudi Aramco: Company General Use
+   Document Responsibility: CHOOSE COMMITTEE Standards Committee                                                          SAES-X-600
+   Issue Date: 14 May 2023                                                  Cathodic Protection of External Surfaces of Plant Facilities
+   Next Revision: 14 May 2028
+
+                 Provide an above-grade bond box for all isolating devices. Construct the box according to
+                 Standard Drawings AA-036277, AA-036349 or AA-036350.
+                         Exception:
+                         An above grade bond box is not required for isolation devices mentioned in Section 5.2.
+   5.2.14        Hazardous Areas
+                 For CP equipment and materials such as T/R unit and Junction boxes, as much as possible these
+                 must be located in non-hazardous areas. However, if these are to be located in hazardous areas
+                 (maximum Class I, Zone 2), the design agency shall select a cathodic protection DC power
+                 supply (and other CP system equipment) that complies with the requirements of NEC Articles
+                 500 to 504 for hazardous (Class I, Zone 2) areas.
+                 Plot plan with hazardous area overlay drawing showing clearly all structures that are CP
+                 protected and all CP equipment and their locations shall be provided.
+                 Buried Metal Pipelines
+   5.3.1         Design Philosophy
+                 The cathodic protection system for a buried metal pipeline shall be designed using the “earth
+                 potential rise” method with distributed impressed current anodes or continuous linear anodes
+                 and the relative equations detailed in Appendix I.
+   5.3.2         Protection Criteria
+                 The negative pipe-to-soil potential shall be:
+                     A minimum of -1.0 volt and a maximum of -2.5 volts, with reference to a copper/copper
+                     sulfate electrode and the current on, or,
+                     If all of the protective current can be interrupted, or a corrosion coupon or cathodic
+                     protection assessment probe is used, a minimum potential of either -0.850 volt off with
+                     reference to a copper/copper sulfate electrode, or
+                     a 100 mV polarization shift between the instant off potential and either the native state
+                     potential (for initial commissioning only) or the depolarized state potential.
+                         Notes:
+                              1.      Criteria a. (ON Potential) Maximum ON potential limit stated here refers to potentials
+                                      with all influencing CP power supplies turned ON and if with the help of a coupon or
+                                      other reliable method if it can be demonstrated that the instant OFF values are within the
+                                      acceptable limits and in such specific cases, higher ON potentials than the limit stated will
+                                      be allowed.
+                              2.      Criteria c. (Polarization Potential) The “potential decay” is the decrease in potential
+                                      between the “instant off” and the steady state off potential. A probe or coupon typically
+                                      reaches a steady state off potential within 60 seconds to 60 minutes. Refer to ISO15589-1
+                                      and NACE TM0497 for depolarization measurement procedures. This criteria shall not be
+                                      used when mixed-metal components or dissimilar metals are in contact for example steel
+                                      pipeline in contact with copper (pipe or earthing). And in soils containing Sulfate
+                                      Reducing Bacteria (SRBs), or when interference or stray current activity is present.
+                              3.      Protection criteria stated in here applicable to buried and submerged carbon steel, , cast
+                                      iron, ductile iron materials only.
+                                          -   When specials stainless steel and other corrosion-resistant alloys are used which
+                                              are prone to SCC, more positive potentials than what is stated here may be
+                                              applicable.
+                                          -   Similarly for other materials like copper, aluminum, stainless steel and other
+                                              alloys different criteria will be applicable (Refer to ISO 15589-1 & NACE
+                                              standards).
+
+
+                                                 © Saudi Arabian Oil Company, 2023                                       Page 19 of 36
+
+Saudi Aramco: Company General Use
+   Document Responsibility: CHOOSE COMMITTEE Standards Committee                                                         SAES-X-600
+   Issue Date: 14 May 2023                                                 Cathodic Protection of External Surfaces of Plant Facilities
+   Next Revision: 14 May 2028
+
+                                 4.   All pipe-to-soil potentials measured with reference to a Cu/CuSO4 reference electrode.
+                                      Dissimilar metal piping requires that the polarized potential be maintained on all
+                                      surfaces of the structure based on the protection requirements for the most anodic metal.
+                                      For pipelines in anaerobic soils in which there are significant quantities of SRBs, the
+                                      potential values indicated shall be increased by further 100 mV. (For example when using
+                                      minimum off potential values, it shall more negative than -950 mV CSE).
+   5.3.3         DC Power Supply
+                 The DC power supply shall comply with Section 5.2.7 of this standard.
+   5.3.4         Anode Beds
+                 The number and size requirements for the anodes shall be determined based on providing a
+                 sufficient potential gradient over the entire length of the respective pipeline to achieve the
+                 protection criteria.
+                 The resistance to ground of a distributed anode bed does not need to compliment the rated
+                 resistance of the rectifier, however, the combined current capacity of the anodes shall be equal
+                 to or greater than the rectifier rated current.
+                 Anode spacing shall be considered based on the voltage gradient calculations. It is required to
+                 ensure that the recommended anode quantity and spacing covers the entire piping network
+                 that is part of the CP system. One good approach to satisfy this requirement is to verify on the
+                 plot plan with known area, anodes are spaced enough based on voltage gradient and then draw
+                 a circle of gradient for each anode to show that these gradient circles overlap each and other
+                 and covers the entire piping under consideration. ‘A0’ sized plot plan drawing showing anode
+                 layout, anode voltage gradient circles (anode voltage cones) and UG piping shall be provided
+                 with the design for review.
+                 For plant plot that exceed 50 m by 50 m, soil resistivity survey at multiple locations shall be
+                 carried out and the worst case values (lowest resistivity values) used in the anode voltage
+                 gradient calculations.
+                 If impressed current anodes are placed within 50 meters of a thrust anchor, then two additional
+                 impressed current anodes shall be installed within 15 meters of the anchor, and placed on
+                 opposite sides of the anchor. If impressed current anodes are installed, galvanic anodes are not
+                 required for the thrust anchor.
+                         Note:
+                         Cathodic protection requirements for thrust anchors on pipelines exiting or entering the plant are
+                         covered in SAES-X-400.
+                 Galvanic anodes may be used to protect short (less than 500 meters) buried sections of coated
+                 piping; provided the following conditions are met:
+                      All parts of the piping are greater than 100 meters from the closest impressed current
+                      rectifier.
+                      The piping is not shielded by other structures and no other structures (concrete, plastic,
+                      wood, and metal) are within 6 meters of the piping.
+                      The piping is not electrically continuous with any other buried uncoated structure.
+                      The cathodic protection design shall be based on calculation of the current requirement for
+                      the short section of buried pipeline, and determination of the required number and size of
+                      galvanic anodes to achieve that current for the minimum life requirement.
+                      For multiple short sections of piping less than 500m each, the combined length shall be less
+                      than 500m. Otherwise, the preferred method in such cases shall be ICCP system considering
+                      common cathode to avoid multiple isolations in a plant facility.
+   5.3.5         Monitoring
+
+
+
+                                                 © Saudi Arabian Oil Company, 2023                                      Page 20 of 36
+
+Saudi Aramco: Company General Use
+   Document Responsibility: CHOOSE COMMITTEE Standards Committee                                                    SAES-X-600
+   Issue Date: 14 May 2023                                            Cathodic Protection of External Surfaces of Plant Facilities
+   Next Revision: 14 May 2028
+
+                 Provide a test station according to Standard Drawing AB-036907 for measuring pipe-to-soil
+                 potentials at:
+                     Insulated cased crossings
+                     Paved road crossings
+                     Thrust-bored road crossings
+                     Negative connections to underground piping
+                     Buried bond connections
+                     Other locations as required by operational needs.
+                 The maximum spacing between test stations or risers used for test stations is 100 meters.
+                 Remote Monitoring Test Stations as per section 5.1.2.4 shall be provided.
+                 25% of test stations shall include CP coupons and these be strategically deployed at drain
+                 points (DPs) and most distant pipe locations from DPs.
+                 Piping risers may be used for test stations provided they are labeled and identified as test
+                 points on the Cathodic Protection Layout Drawings and on the riser.
+                 Install soil access test holes, according to Standard Drawing AB-036907, in concrete and asphalt
+                 (paved) areas directly over the top of the pipe or structure to be monitored. In these concrete
+                 or asphalt areas, install one soil access hole at each of the following locations:
+                      Midway between anodes.
+                      One over the structure closest to each anode.
+                      One at the beginning and one at the end of each pipeline segment.
+                      One at each metallic hydrant, metallic riser or metallic valve that is part of a non-metallic
+                      piping system. However, if there is sufficient soil access at the base of the hydrant, riser or
+                      valve, a soil access test hole is not required.
+                      One at each test station or riser used as a test station.
+   5.3.6         Bonding, Electrical Continuity, and Electrical Isolation
+                 Bonding, electrical continuity, and electrical isolation shall comply with Section 5.2.12 of this
+                 standard.
+   5.3.7         Buried Metal Pipelines - Temporary Cathodic Protection
+                 Temporary CP of plant piping sometimes impractical due to arrangement and construction;
+                 therefore, requirement for temporary CP shall be carefully evaluated at the project design stage.
+                 Various factors that needs to be considered for such evaluations include but not limited to
+                 following:
+                 • Soil corrosivity
+                 • Presence of copper earthing network
+                 • Other corrosion protection measures such as coating, corrosion allowance considerations
+                 • construction period
+                 If the permanent ICCP will not be energized within 6 months of burial of any portion of the
+                 pipeline, then temporary CP shall be provided.
+                 The current density requirements for temporary CP shall be 10% of current density stated in
+                 Table 2 of this standard.
+                 The design life of temporary cathodic protection shall be 2 years minimum.
+                 Instead of separate temporary CP system, permanent CP installations can be temporarily
+                 energized to achieve temporary protection.
+                 Where supplemental galvanic anodes are determined to be necessary for temporary cathodic
+                 protection, wherever practical, they shall be installed at permanent galvanic anode locations.
+
+
+
+                                             © Saudi Arabian Oil Company, 2023                                     Page 21 of 36
+
+Saudi Aramco: Company General Use
+   Document Responsibility: CHOOSE COMMITTEE Standards Committee                                                    SAES-X-600
+   Issue Date: 14 May 2023                                            Cathodic Protection of External Surfaces of Plant Facilities
+   Next Revision: 14 May 2028
+
+                 The permanent junction box or test station facilities shall be used to terminate the supplemental
+                 galvanic anodes.
+                 For temporary protection whilst there is no need to apply specific protection criteria, pipe-to
+                 soil potential survey data as well as current from the anode to connected piping will be required
+                 to verifying that the temporary system is providing current to the piping.
+                 At locations where the permanent galvanic anode equipment will not work for effective
+                 temporary cathodic protection:
+                 • Select low resistivity locations to maximize the current output and minimize the number of
+                      anodes required.
+                 • Install galvanic anodes on an “as required” basis, i.e., use the calculated numbers of anodes
+                      as a guide, and install anodes as required basis to ensure that the connected piping are
+                      receiving current.
+                 Terminate galvanic anodes for temporary cathodic protection in a 3-pin test station using the
+                 installation details given in Standard DrawingAA-036352. The number of anodes required per
+                 location shall be based on the actual requirement and not as shown on the standard drawing.
+   5.3.8         Cathodic Protection of existing unprotected Pipelines
+                 When it is desired to cathodically protect existing unprotected structures, considering that these
+                 are existing pipelines whose condition is unknown, it is recommended to carry out a current
+                 injection test. Current injection test in addition to providing current requirement for CP, also
+                 verifies the capability of cathodic protection system to protect the structure of interest. Such
+                 current injection tests can be carried out utilizing temporary DC power sources (including
+                 batteries with variable resistors), temporary anode beds (usually made of scrap steel) to
+                 determine current required for cathodic protection and probable locations for anode beds.
+                 For existing structures prior to design of CP system, other asset integrity tests such as physical
+                 condition assessment (sample dig survey), fitness for purpose, leak and/or failure history, etc…,
+                 shall be assessed. When cathodically protecting existing unprotected structures, it shall be
+                 brought to the notice of all concerned including the proponent that effective CP system whilst
+                 providing protection from further corrosion does not correct any pre-existing corrosion which
+                 may still result in accelerated corrosion and/or failure and hence over reliance on CP under such
+                 conditions shall be avoided unless all such pre-existing corrosion defects have been identified
+                 and repaired.
+                 Isolated Buried Pipeline Casings
+   5.4.1         Design Philosophy
+                 The cathodic protection system for a buried metal casing installed for a buried section of a
+                 metal pipeline shall be:
+                     Designed using the “earth potential rise” method for casings of normally buried metal
+                     pipelines protected by impressed current anodes, or,
+                     designed using galvanic anodes for casings of normally above grade pipelines that are
+                     cased for crossings such as at roads or dikes.
+   5.4.2         Protection Criteria
+                 Refer to section 5.3.2
+   5.4.3         Anodes for Pipeline Casings
+                 Galvanic Anodes
+                 Install the number of anodes specified in Table 7. Use 27.2 kgs (60 lbs) magnesium anodes for
+                 soil resistivities greater than 500 ohm-cm. Use 22 kgs (48.5 lbs) or 50 kgs (110.23 lbs) zinc
+                 anodes for soil resistivities equal to or less than 500 ohm-cm.
+                 Galvanic anodes shall be connected to the casing through galvanic anode (3-pin) junction boxes
+                 (17-SAMSS-008). See Table 7.
+
+
+                                             © Saudi Arabian Oil Company, 2023                                     Page 22 of 36
+
+Saudi Aramco: Company General Use
+   Document Responsibility: CHOOSE COMMITTEE Standards Committee                                                        SAES-X-600
+   Issue Date: 14 May 2023                                                Cathodic Protection of External Surfaces of Plant Facilities
+   Next Revision: 14 May 2028
+
+                 For casings not addressed by this table, such as bare casings or casings longer than 30 meters, a
+                 site-specific design must be completed that considers soil resistivity, total current requirement,
+                 and anode life. The supervisor of the Cathodic Protection and Coatings Unit must concur with
+                 the proposed design.
+   5.4.4         Monitoring
+                 Monitoring shall comply with Section 5.3.5 of this standard.
+   5.4.5         Bonding and Electrical Continuity
+                 Bonding and electrical continuity, shall comply with sections 5.2.12, and 5.2.10 of this standard.
+                 At crossing locations involving more than one casing, the casings shall be bonded together.
+                 On Grade Tank Bottoms - Soil Side
+   5.5.1         New Tanks - CP Design Philosophy
+                 The cathodic protection system shall be designed in accordance with the requirements for new
+                 tanks detailed in Standard Drawing AA-036355.
+                 New tanks shall be designed with an impressed current grid system, loop system, or continuous
+                 distributed anode system placed directly beneath the tank (see 5.5.1.4) and designed to ensure
+                 a relatively uniform current distribution that maintains all points on the tank bottom within the
+                 required protection criteria limits.
+                         Note:
+                         In case of a tank(s) containing high temperature product(s) typically in the region of 90°C and
+                         above that could make the soil environment under the tank bottom to be very dry making the CP
+                         system ineffective, then there is no need for a CP system to protect the tank(s) bottom. However,
+                         this commentary note is only applicable when the said tanks are operating at high temperatures. If
+                         the said tank is used for some other purpose (lower operating temperatures) or operated at
+                         temperatures much lower than 90°C then cathodic protection will be required. Therefore, decision
+                         to include or exclude CP shall be case-to-case evaluation for new tanks as applicable.
+                         Before any decision can be made to exclude CP, CONTRACTOR are to provide the temperature
+                         profile through the appropriate heat transfer calculations that include coating skin temperature on
+                         the underside of the tank base, soil temperature directly on the underside of the tank base, the soil
+                         temperature a vertical distance 500 mm below the tank base where anodes and cables would
+                         potentially be installed.
+                         The heat transfer calculations will involve specifying tank design and operating parameters
+                         including (but not limited to) the following:
+                         - Tank operating temperature envelope
+                         - Coating types (internal and external)
+                         - Thicknesses and coating heat transfer values
+                         - Tank base thicknesses and steel heat transfer values
+                         - Ambient soil temperatures and soil heat transfer values
+                         When it is deemed necessary to install cathodic protection for such high temperature application,
+                         then all the CP materials such as anodes, reference electrodes, coupons and corrosion probes,
+                         cables, connections, etc…, must be suitably rated and/or corrected for the temperature of
+                         installation.
+                 The backfill sand for the tank external bottoms shall be clean washed chloride free sweet sand
+                 (Bitumen Sand / Oily Sand NOT permitted). (Refer to 32-SAMSS-005 Appendix B for details)
+
+
+
+
+                                               © Saudi Arabian Oil Company, 2023                                       Page 23 of 36
+
+Saudi Aramco: Company General Use
+   Document Responsibility: CHOOSE COMMITTEE Standards Committee                                                     SAES-X-600
+   Issue Date: 14 May 2023                                             Cathodic Protection of External Surfaces of Plant Facilities
+   Next Revision: 14 May 2028
+
+                 Tank bottoms are usually provided with secondary containment liners as dictated by SAES-D-
+                 100, primarily for protection of the soil from contamination by the stored product during leak.
+                 CP considerations differ for the tanks with and without secondary containment liners.
+                 • For the tanks with liners, anodes and monitoring facilities such as reference electrodes,
+                     coupons and ER probes etc. are installed within the liner directly under the tank bottom.
+                     Current drain to other nearby structures such as grounding are negligible and hence
+                     ignored.
+                 • For the tanks without any secondary containment liners, anodes can be directly installed
+                     under the tank bottom or distributed type or any other acceptable configuration.
+                     Monitoring facilities such as reference electrodes, coupons and ER probes etc. are installed
+                     directly under the tank bottom. In such cases current drain to nearby structures such as
+                     earthing, and rebars, etc.., must be factored into the design.
+                 For new tank external bottoms, a soil resistivity value of 50,000 ohm-cm can be used for
+                 calculations unless the actual field verified values indicate differently.
+                 Monitoring
+                 Monitoring shall comply with Section 5.3.5 of this standard.
+                 Perforated/slotted monitoring tube installed across the center of the tank bottom will be
+                 required to monitor tank bottom potentials. Appropriate purpose made reference electrodes
+                 with moist backing (e.g., wet foam) shall be used to pull through the perforated monitoring
+                 tube for the purpose of tank to soil potential measurements. Flooding of tank bottoms is not
+                 permitted.
+                 Stationary reference electrodes & CP Coupons capable of working in tank bottom installations
+                 shall be provided for monitoring at selected locations.
+                 ER probes capable of working in tank bottom installations shall be provided for monitoring at
+                 selected locations.
+                         Note:
+                         ER probes are provided for regular ongoing monitoring and not for the purpose of commissioning.
+                         ER probe data shall be collected and recorded at the time of commissioning for review later (see
+                         also Section 5.5.8).
+                 For the tank bottoms with GRID type systems, number of power feed connection to the anode
+                 GRID shall be based on Table 8.
+   5.5.2         Existing Tanks - CP Design Philosophy
+                 It is up to the proponent organization to evaluate the corrosion history of the tank(s) and to
+                 conduct the required field measurements to facilitate a justifiable engineering decision on the
+                 need to replace or upgrade a cathodic protection system. Appendix II contains a description of
+                 field measurement procedures that can be used to determine if CP will be effective for tank
+                 bottoms on oily sand.
+                 If the decision is to install a cathodic protection system, then the following procedure shall be
+                 implemented:
+                     Conduct soil resistivity measurements approximately 10 meters from the tank to determine
+                     uniformity of the soil surrounding the tank and to determine the optimum depth and
+                     orientation to place the anodes.
+                     Install one test anode remote from the tank (25 to 50 meters) at the depth determined by
+                     step a) above and connect a DC power supply between the anode and the tank set to
+                     discharge the rated current from this anode.
+                     Measure the resulting gradient to determine the optimum distance the anodes shall be
+                     place from the tank.
+                     Design and install the anodes circumferentially distributed around the tank based on the
+                     information gathered from the above testing. Conduct this field testing for each group of
+                     tanks within the same plant sharing similar soil characteristics.
+
+
+                                              © Saudi Arabian Oil Company, 2023                                     Page 24 of 36
+
+Saudi Aramco: Company General Use
+   Document Responsibility: CHOOSE COMMITTEE Standards Committee                                                          SAES-X-600
+   Issue Date: 14 May 2023                                                  Cathodic Protection of External Surfaces of Plant Facilities
+   Next Revision: 14 May 2028
+
+                 The cathodic protection system shall be designed in accordance with the requirements for
+                 existing tanks detailed in Standard Drawing AA-036355.
+                 The anode configuration for existing tanks requiring new impressed current cathodic protection
+                 systems, or upgrades to existing impressed current cathodic protection systems shall be
+                 designed using impressed current distributed anodes placed around the perimeter of a tank.
+                         Note:
+                         Existing tanks that require anode upgrades and have an oily sand foundation mixture or asphalt or
+                         concrete foundation pad will not receive complete cathodic protection in areas where the oily sand
+                         mixture collects water at the interface between the tank bottom and the oily sand. Consideration
+                         shall be given to removing the oily sand wherever economically viable.
+                 Existing tanks requiring new tank bottoms that will be installed above the existing bottom
+                 without removal of the existing bottom shall be cathodically protected with galvanic anodes in
+                 accordance with Standard Drawing AA-036905.
+   5.5.3         Protection Criteria - Tank Bottoms and Buried Tanks
+                 For new tank bottom CP system installation, the negative structure-to-soil potential shall be
+                 measured at 1 meter intervals through a slotted monitoring tube installed beneath the tank,
+                 and through access holes in the ring wall. The protection criteria for tank bottoms and buried
+                 tanks shall be:
+                     A minimum of -1.0 volt and a maximum of -2.5 volts, with reference to a copper/copper
+                     sulfate electrode and the current on, or
+                     if all of the protective current can be interrupted, a minimum potential of either -0.850 volt
+                     off with reference to a copper/copper sulfate electrode, or
+                     a 100 mV polarization shift between the instant off potential and either the native state (for
+                     initial commissioning only), or the depolarized state potential.
+                         Notes:
+                                 1.   Criteria a. (ON Potential) Maximum ON potential limit stated here refers to potentials
+                                      with all influencing CP power supplies turned ON and if with the help of a coupon or
+                                      other reliable method if it can be demonstrated that the instant OFF values are within the
+                                      acceptable limits and in such specific cases, higher ON potentials than the limit stated will
+                                      be allowed.
+                                 2.   Criteria c. (Polarization Potential) The “potential decay” is the decrease in potential
+                                      between the “instant off” and the steady state off potential. A probe or coupon typically
+                                      reaches a steady state off potential within 60 seconds to 60 minutes. Refer to ISO15589-1
+                                      and NACE TM0497 for depolarization measurement procedures. This criteria shall not be
+                                      used when mixed-metal components or dissimilar metals are in contact for example steel
+                                      pipeline in contact with copper (pipe or earthing). And in soils containing Sulfate
+                                      Reducing Bacteria (SRBs), or when interference or stray current activity is present.
+   5.5.4         DC Power Supply - Tank Bottoms
+                 The DC power supply shall comply with Section 5.2.7 of this standard.
+   5.5.5         Anodes - Tank Bottoms
+                 For an existing tank, HSCI, mixed metal oxide or polymeric anodes shall be used for existing
+                 tank designs.
+                 Mixed metal oxide, or polymeric anodes shall be used for new tank designs. The design
+                 concept and the anode specifications and manufacturer must also be pre-approved in writing
+                 by Saudi Aramco.
+                 Impressed current anodes for existing tanks, and galvanic anodes shall comply with Section
+                 5.2.8.
+
+
+                                                 © Saudi Arabian Oil Company, 2023                                       Page 25 of 36
+
+Saudi Aramco: Company General Use
+   Document Responsibility: CHOOSE COMMITTEE Standards Committee                                                       SAES-X-600
+   Issue Date: 14 May 2023                                               Cathodic Protection of External Surfaces of Plant Facilities
+   Next Revision: 14 May 2028
+
+                 The resistance to ground of the anodes can be greater than the rated resistance of the rectifier,
+                 however, the combined current capacity of the anodes shall be equal to or greater than the
+                 rectifier rated current.
+   5.5.6         Monitoring
+                 For a new tank bottom, monitoring shall be through access tubes through tank ring walls,
+                 stationery reference electrodes, CP coupons, corrosion probes and slotted monitoring tubes
+                 under the tank bottom according to Standard Drawing AA-036355.
+                 For an existing tank with distributed anodes outside the perimeter of the tank, monitoring shall
+                 be through access tubes through the ring wall, as per Standard Drawing AA-036355, Detail 6.
+   5.5.7         Bonding and Electrical Continuity
+                 A dedicated negative cable shall be connected directly between each tank protected and the
+                 rectifier providing current to that tank. Connect multiple tanks to the rectifier through a
+                 negative junction box.
+                 For large diameter tanks with transformer rectifier rating of 75 Amps and more, at least two
+                 dedicated negative connections to each tank shall be provided.
+   5.5.8         Commissioning
+                 Tank external bottom commissioning shall be carried out with the tanks filled to at least half of
+                 its capacity. This is required to achieve reasonable tank to soil contact. If necessary for the
+                 purpose of commissioning water shall be filled or the commissioning carried out at the time of
+                 hydro test / water fill up test.
+                 Each tank must be provided with at least two ER probes in accordance with AA-036355.
+                 Provision shall be made at the ER probe test station to connect and/or disconnect all of the ER
+                 probes to the CP system through a switch. For the first year after commissioning the center ER
+                 probe shall be connected to the CP system to evaluate status of protected probe.
+                 Initial set of ER probe data shall be collected and recorded within 48 hrs of installation of the
+                 probes. Second set of ER probe data shall be collected just before commissioning of the CP
+                 system and at least once a month for the first 12 months. Thereafter, the monitoring frequency
+                 can be reduced to once every 3 months to evaluate the corrosion status. ER probes data is not
+                 used to decide on the CP system status at the time of commissioning.
+                 Buried Valves and Fittings
+   5.6.1         Design Philosophy
+                 Cathodic protection for small buried isolated metallic structures that are part of a non-metallic
+                 piping system, such as valves and risers shall be protected using galvanic anodes, in accordance
+                 with Standard Drawing AA-036629.
+                         Exception:
+                         For buried metallic fittings used in non-metallic firewater service or any other water service (other
+                         than hydrocarbon), a supplemental (additional) coating system using APCS-113c over top of the
+                         original shop or factory applied coating system can be applied as an alternative to galvanic anodes.
+                         Metallic valves and risers are not covered under this exception.
+   5.6.2         Protection Criteria
+                 The design of the cathodic protection system shall achieve a minimum structure-to-soil
+                 potential for isolated buried metal structures of -1.0 volt with reference to a copper/copper
+                 sulfate electrode and the current on, except if double coatings are used in lieu of CP as detailed
+                 in 5.6.1 Exception above.
+                 Metal Piles, Sheet Piling and Associated Anchors
+   5.7.1         Design Philosophy
+
+
+                                              © Saudi Arabian Oil Company, 2023                                       Page 26 of 36
+
+Saudi Aramco: Company General Use
+   Document Responsibility: CHOOSE COMMITTEE Standards Committee                                                    SAES-X-600
+   Issue Date: 14 May 2023                                            Cathodic Protection of External Surfaces of Plant Facilities
+   Next Revision: 14 May 2028
+
+                 Design cathodic protection for metal piles using impressed current (remote or distributed
+                 anode system) or galvanic anode systems. The current requirements for all metallic buried
+                 structures that are electrically continuous with the protected structure must be considered.
+   5.7.2         Protection Criteria
+                 The minimum structure-to-soil potential for design purposes shall be:
+                     Water: The structure-to-water potential for sheet piling shall be a minimum of -0.90 volt,
+                     with reference to a silver chloride electrode and the current on.
+                     Soil: The structure-to-soil potential for piling shall be a minimum of -0.85 volt, with
+                     reference to a copper/copper sulfate electrode and the current on.
+   5.7.3         DC Power Supply
+                 If an impressed current cathodic protection system is used, the DC power supply shall comply
+                 with Section 5.2.7 of this standard.
+   5.7.4         Bonding and Electrical Continuity
+                 Impressed current designs for pile systems require electrical continuity between all piles within a
+                 common structure, electrical continuity by welded rods or brazing of cables (mechanical joints
+                 are not reliable joints for electrical continuity).
+                 Installation, Records, Commissioning, and Inspection
+                 Refer to Saudi Aramco Best Practice SABP-X-003. SABP-X-003 shall be deemed a mandatory
+                 document for this Standard.
+
+
+
+
+                                             © Saudi Arabian Oil Company, 2023                                     Page 27 of 36
+
+Saudi Aramco: Company General Use
+   Document Responsibility: CHOOSE COMMITTEE Standards Committee                                                           SAES-X-600
+   Issue Date: 14 May 2023                                                   Cathodic Protection of External Surfaces of Plant Facilities
+   Next Revision: 14 May 2028
+
+
+
+
+                                                       Table 1: Potential Criteria
+                                       Equipment Surface Description                         Section
+                                Buried Metal Pipelines                                      5.3.2
+                                Isolated Buried Pipeline Casings                            5.4.2
+                                On Grade Tank Bottoms and Buried Tanks                      5.5.3
+                                Buried Valves, Hydrants, Monitors and Fittings              5.6.2
+                                Metal Piles, Sheet Piling & Associated Anchors              5.7.2
+
+
+
+                                       Table 2: Minimum Surface Current Densities
+                             Equipment Surface Description                  Current Density (mA/m²)
+                           Bare Copper Ground Rods(3)                      50
+                           Stainless Steel Ground Rods (driven)            20
+                           Bare Tinned Copper Cable(3)                     70
+                           Bare Copper Cable(3)                            100
+                                                 (1)
+                           Bare Steel (buried)                             20
+                           Polyethylene Tape coated steel(2)               1.25
+                           Liquid Applied Epoxy coated steel(2)            0.75
+                                                                 (2)
+                           Fusion Bond Epoxy coated steel                  0.10
+       Note (1): For tank bottom external CP calculation, consider the tank bottom bare even if coated. This is to account for
+       the expected coating damages during tank bottom construction. No further safety factor or further current drainage
+       allowances required for Surface Area, Temperature, Micro-Biological corrosion, etc..
+       Note (2): Current density specified above is applicable for ambient temperatures up to 30°C. For structures operating
+       at higher temperatures, suitable temperature correction for current density will be required.
+       Note (3): For copper materials used in earthing and other applications, the current density values to polarize
+       significantly increases in aerated soils. Therefore, when soil conditions indicate significantly high resistivities i.e. higher
+       than 50000 ohm-cm, the current density values indicated here shall be doubled to achieve CP polarization.
+
+
+
+                                       Table 3: Galvanic Anode Material Properties
+                    Anode Material           Consumption (kg/A-Y)              Potential (mV) (Cu/CuSO4)
+                    Aluminum                3.8                               -1,100
+                    Magnesium               10.95                             -1,700
+                    Zinc                    11.8                              -1,100
+       Note: The consumption rates detailed in Table 3 include efficiency; however, a utilization factor of 0.85 may be
+       included for design purposes at the designer’s discretion
+
+
+
+
+                                                  © Saudi Arabian Oil Company, 2023                                       Page 28 of 36
+
+Saudi Aramco: Company General Use
+   Document Responsibility: CHOOSE COMMITTEE Standards Committee                                                       SAES-X-600
+   Issue Date: 14 May 2023                                               Cathodic Protection of External Surfaces of Plant Facilities
+   Next Revision: 14 May 2028
+
+                                Table 4: Impressed Current Anode Design Parameters
+             Anode Material           Consumption (kg/A-Y)            Current Density Maximum (mA/cm2)2
+            HSCI                      0.45                           0.7
+            Mixed Metal Oxide         MMO Anodes shall comply with requirements mentioned in Section
+            (MMO)                     7.1.3 of 17-SAMSS-007
+       Note: The consumption rates detailed in Table 4 have been corrected for efficiency and utilization factor. Shortening
+       of the effective anode length for a HSCI anode due to an end cap at the cable end of the anode shall be neglected in
+       the theoretical calculation of anode current capacity.
+
+
+
+                                        Table 5: Impressed Current Anode Data
+             Type             Dimensions           Weight  Current Capacity               Maximum Commissioning
+                                                    (kg)  per Anode (Amps)                    Current (Amps)
+        TA-2              56 mm x 2133 mm          20.5   2.63                            4.0
+        TA-4              95 mm x 2133 mm          38.6       4.45                        7.0
+        TA-5A             121 mm x 2133 mm 79.4               5.67                        10.0
+        Tubular MMO       16 mm x 1,200mm          n/a        4.2                         6.0
+        Tubular MMO       19 mm x 1,200mm          n/a        5.0                         7.0
+        Tubular MMO       25 mm x 1,200mm          n/a        6.5                         9.0
+       Notes:
+           1.   The maximum acceptable current during commissioning is based on manufacturer's ratings and shall not be
+                used for design. This number shall only be used when determining commissioning acceptance.
+           2.   The consumption rates detailed in Table 5 include utilization factor and effective anode shortening due to end
+                caps.
+           3.   The Tubular MMO anodes stated above are typical and other anode dimensions may be selected as required
+                based on the sizes available in the market.
+
+
+
+                                          Table 6: Standard CP Rectifier Rating
+                     Voltage rating (volts)           10 / 20 / 30 / 40/ 50 / 60 / 100
+                     Current rating (Amps)            5 / 10 / 15 / 25 / 30 / 50 / 60 / 75 / 100 / 150
+
+
+
+
+                                               © Saudi Arabian Oil Company, 2023                                      Page 29 of 36
+
+Saudi Aramco: Company General Use
+   Document Responsibility: CHOOSE COMMITTEE Standards Committee                                                      SAES-X-600
+   Issue Date: 14 May 2023                                              Cathodic Protection of External Surfaces of Plant Facilities
+   Next Revision: 14 May 2028
+
+                    Table 7: Galvanic Anodes for Coated Casings that are Electrically Isolated
+      Casing Diameter (inches)          Number of Casings         Casing Length (meters)            Number of Anodes
+      Any casing diameter               1–3                       Less than 15                      2 on one end
+      Any casing diameter               1–3                       15 to 30                          2 on each end
+       Notes:
+           1.   The above table is for groups of casings that are spaced no more than 6 meters from each other.
+           2.   For groups of casing greater than 3, divide the number of casings by 3 and multiply the number of anodes in
+                the table by the result of this division. Round up to the next whole number for fractional results.
+
+
+
+                                     Table 8: Number of Power Feed Connections
+                       No.    Current Rating (Amps)           Minimum Number of Power Feeds
+                       1      5 / 10                         3
+                       2      15                             4
+                       3      25 / 30                        5
+                       4      50                             7
+                       5      60 / 75                        10
+                       6      100                            15
+                       7      150                            20
+       Notes:
+           1.   Minimum of three power feed connections.
+           2.   At least one power feed connection must be provided on the perpendicular conductor bar.
+
+
+
+
+                                              © Saudi Arabian Oil Company, 2023                                      Page 30 of 36
+
+Saudi Aramco: Company General Use
+   Document Responsibility: CHOOSE COMMITTEE Standards Committee                                                    SAES-X-600
+   Issue Date: 14 May 2023                                            Cathodic Protection of External Surfaces of Plant Facilities
+   Next Revision: 14 May 2028
+
+   Appendices
+                                    Appendix A – Earth Potential Rise Formulas
+
+
+          For a Single Vertical Anode
+
+
+
+
+          For a Single Horizontal Anode
+
+
+
+
+          Where:
+
+                     = Earth potential change (volts) at distance “x” from the anode
+                I    = Current flow (amperes) from the anode
+
+                     = Soil resistivity (ohm-cm)
+                L    = Anode length (cm)
+                x    = Horizontal distance (cm) from the anode to a given point on the structure
+                h    = Depth of burial (cm) to the centerline of the anode
+
+
+
+
+                                             © Saudi Arabian Oil Company, 2023                                     Page 31 of 36
+
+Saudi Aramco: Company General Use
+   Document Responsibility: CHOOSE COMMITTEE Standards Committee                                                    SAES-X-600
+   Issue Date: 14 May 2023                                            Cathodic Protection of External Surfaces of Plant Facilities
+   Next Revision: 14 May 2028
+
+             Appendix B – Tank Bottom CP Testing Procedure for Tanks Sitting on Oily-Sand Pads
+
+
+          Trip #1:
+          Objective:
+          Conduct soil resistivity measurement to specify optimum remote anode depth that will
+               generate the highest voltage gradient.
+          CONTRACTOR will:
+          1.      Pick a (remote) location around 10-40 meters away (10 meters for low resistivity areas
+                  and 40 meters for high resistivity areas) from existing tank under T&I specified by
+                  Proponent, free from any buried metallic structures.
+          2.      Measure remote 4-pin soil resistivity at the proposed remote anode location at depths
+                  from 1 to 6 m with 0.5 m pin-spacing intervals, in low resistivity areas conducive to
+                  four pin measurements. In high resistivity areas, four pin measurements and Geonics
+                  readings will also be taken at 1.5 meters, 3 meters and 6 meter depths.
+          3.      Calculate layer resistivity using the Barnes Two-Layer Method.
+          4.      Determine the best anode installation arrangement (horizontal or vertical and at what
+                  depth) as dictated by the highest resistivity layer measured that will accommodate
+                  anode length (either horizontally or vertically). Ensure that the entire anode length
+                  shall be either all above or all below the water table, where water tables are present.
+          5.      Recommend the optimum orientation (horizontal or vertical), depth, and location for
+                  the Proponent to install one remote anode.
+          Proponent will:
+          6.      Install one TA-4 remote anode as described in point 5 above. Use at least
+                  200 pounds of coke breeze backfill to pour all around the anode.
+          7.      Connect anode to existing or temporary T/R.
+
+
+
+
+                                             © Saudi Arabian Oil Company, 2023                                     Page 32 of 36
+
+Saudi Aramco: Company General Use
+   Document Responsibility: CHOOSE COMMITTEE Standards Committee                                                    SAES-X-600
+   Issue Date: 14 May 2023                                            Cathodic Protection of External Surfaces of Plant Facilities
+   Next Revision: 14 May 2028
+
+          Trip # 2:
+          Objective:
+          Perform voltage gradient mapping using the remote anode to specify the optimum distances
+          at which the voltage gradient is 1 V and 0.5 V, so as to use this data to specify where to
+          place three close anodes (anode-to-tank and anode-to-anode).
+          CONTRACTOR will:
+          8.      Energize the anode so that current output is approx. 4 Amps.
+          9.      Map voltage gradient around the anode with 2 RE: (1) one fixed (remote) and (2) one
+                  approaching anode. Record the gradient measured at approximately
+                  1 meter intervals beginning 20 meters away from the anode on the side opposite of
+                  the anode from the tank and working towards the tank. Continue taking the
+                  measurements until you reach the edge of the tank. Take special note of the
+                  distances at which the voltage shift measured are 0.5 volt and 1 V on each side of the
+                  anode. This will enable CONTRACTOR to determine the optimum anode-to-tank
+                  (where voltage is 1 V) and anode-to-anode (where voltage is 0.5 V) spacing that will
+                  result in a consistent 1-V shift on the tank bottom as measured from outside the tank.
+          10.     Recommend Proponent to install 3 additional TA-4 anodes around the tank at the
+                  depth, distance, and spacing determined by the foregoing tests, as dictated by the
+                  result of the voltage gradient mapping conduct on one remote anodes.
+          11.     Specify location of three 1 meter by 1 meter coupons to be cut from the tank bottom
+                  plate to facilitate potential measurements from inside the tank. Location of the
+                  coupons is determined so as to facilitate obtaining optimum and adequate potential
+                  measurements from inside the tank. The final objective is to be able to map the
+                  voltage gradient lines inside the tank bottom from the coupon locations.
+          12.     Number coupons so that coupon # 1 is closest to tank shell while # 3 towards tank
+                  center.
+          Proponent will:
+          13.     Install 3 anodes at optimum spacing from tank and from each other at depths
+                  previously decided by CONTRACTOR.
+          14.     De-energize existing CP system. Re-route the anode cables to a portable T/R.
+          15.     Cut 3 (1 m x 1 m) coupons by removing 5 cm wide metallic strips all around the
+                  square. Leave the coupons in place completely isolated from the tank (Do not lift the
+                  coupons, and do not add water to them nor to the soil gap). The coupons need to be
+                  equally spaced along a straight line from the sketch and annular plates towards the
+                  tank center.
+
+
+
+
+                                             © Saudi Arabian Oil Company, 2023                                     Page 33 of 36
+
+Saudi Aramco: Company General Use
+   Document Responsibility: CHOOSE COMMITTEE Standards Committee                                                    SAES-X-600
+   Issue Date: 14 May 2023                                            Cathodic Protection of External Surfaces of Plant Facilities
+   Next Revision: 14 May 2028
+
+          Trip # 3:
+          Objective:
+          Determine:
+          1)      coupon corrosion potential.
+          2)      coupon-to-coupon potential difference.
+          3)      coupon-to-ground contact resistance.
+          4)      coupon current pick up.
+          5)      100-mV polarization shift (on coupon).
+          6)      voltage gradient mapping outside the tank going away from each anode, radially away
+                  from the tank center.
+          7)      voltage gradient mapping inside the tank (using cut-out coupon area).
+          8)      voltage gradient mapping outside the tank as measured along the circumference
+                  between every 2 anodes.
+          CONTRACTOR will:
+          16.     Physically Ensure complete electric isolation of coupon #1, #2 and #3 (which is closer
+                  to tank shell) from the tank bottom (Do not lift the coupon).
+          17.     Add sufficient weight on top of each coupon to ensure improved physical contact with
+                  the soil underneath.
+          18.     Try to measure coupon #1, #2 and #3 close free corrosion potential using one
+                  (or more) reference electrodes placed inside the (2-in) gap between coupon and tank.
+                  Do not pour any water in the gap or anywhere else.
+          19.     Install one data logger per coupon to measure the coupon close and remote
+                  potentials.
+          20.     Measure coupon #1, #2 and #3 remote corrosion potential with the reference
+                  electrode placed 20-50 m away from the tank.
+          21.     Measure potential difference between coupon 1&2, 2&3, and 3&1.
+          22.     Skip this step if there is no existing CP system. Turn on existing system, and measure
+                  the current picked up by the coupons through the digital multimeter set to the ammeter
+                  setting. Make sure to connect the leads to the proper terminals of the multimeter.
+                  Turn the existing system back to off.
+          23.     While coupons are isolated, measure coupon #1, #2 and #3 contact resistance using
+                  the 3-pin Megger method and confirm by measuring the resistance between the
+                  coupons and the tank with the 2-pin Megger method
+          24.     Re-confirm resistance measurements by using the 2-pin Megger method between
+                  coupons 1 & 2, then 1 & 3, and finally 2 & 3.
+
+
+
+
+                                             © Saudi Arabian Oil Company, 2023                                     Page 34 of 36
+
+Saudi Aramco: Company General Use
+   Document Responsibility: CHOOSE COMMITTEE Standards Committee                                                    SAES-X-600
+   Issue Date: 14 May 2023                                            Cathodic Protection of External Surfaces of Plant Facilities
+   Next Revision: 14 May 2028
+
+          25.       Energize the temporary CP system and measure remote (where the RE outside the
+                    tank) and close on-potentials on the three coupons.
+          26.       Use the digital multimeter in the ammeter mode to measure the current pick up on
+                    each of the three coupons
+          27.       Utilize 2 current interrupters to simultaneously: (1) interrupt the CP current from the
+                    T/R and (2) isolate coupon from tank. This is to allow obtaining a “true” instant-off
+                    polarized potential for the coupon while completely isolated from the tank.
+          28.       Let coupon polarize, take its instant-off potential and repeat the process twice for each
+                    coupon.
+          29.       Compare measurements with the free corrosion potential values measured earlier.
+          30.       If more than 100 mV polarization shift between free corrosion and instant-off polarized
+                    potential is measured, the coupon is deemed protected. This method is to be used be
+                    for the first time the test is run; for subsequent or repeat tests use the “depolarization”
+                    method.
+          31.       Measure (on) voltage gradient inside tank with 2 RE one remotely placed outside the
+                    tank and the other one moving inside the coupon-to-tank gap.
+          32.       Using the voltage shift formulae, back calculate for the effective resistivity as seen by
+                    the close anodes placed outside the tank bottom. Conducting this test on a number of
+                    tanks and plotting voltage gradient points inside every tank on a graph will generate a
+                    trend. This will permit provision for quantifying the effect of the contribution of the
+                    resistivity of oily-sand layer to the overall soil resistivity underneath the tank seen by
+                    anodes placed outside the tank. This is in addition to the effect on the current
+                    distribution and disturbances in the voltage gradient mapping due to the presence of
+                    the tank bottom near the anodes.
+          NOTE: One of the final outcomes of this study would be to develop a voltage gradient
+                behavior for tanks sitting on oily sand pads.
+          List of Materials Needed for the Test for Each Tank:
+                ▪   4 TA-4 anodes
+                ▪   16 each 50-lb coke breeze bags
+                ▪   200-m # 8 AWG wires
+                ▪   Portable or existing 50-Amp T/R
+          Also, Proponent will be expected to:
+                ▪   Cut three 1 m x 1 m coupons
+                ▪   Excavate 4 holes for 4 anodes as instructed by CONTRACTOR
+                ▪   Thermite weld cables and do the field wire connections as instructed by
+                    CONTRACTOR
+
+
+
+
+                                             © Saudi Arabian Oil Company, 2023                                     Page 35 of 36
+
+Saudi Aramco: Company General Use
+   Document Responsibility: CHOOSE COMMITTEE Standards Committee                                                    SAES-X-600
+   Issue Date: 14 May 2023                                            Cathodic Protection of External Surfaces of Plant Facilities
+   Next Revision: 14 May 2028
+
+   Document History
+    14 May 2023              Major     Major periodic revision.
+    01 February 2021         Editorial Editorial revision to extend due date to 2023.
+    2 May 2019               Editorial Editorial revision to correct the reference title of SAES-D-100.
+    2 April 2018             Major      Reaffirmed the content of the document, and made several changes:
+                                           • Revised the scope of the standard.
+                                           • Added the requirement for designer and site personnel
+                                               qualification and approval.
+                                           • Elaborated the definitions section in line with other CP
+                                               standards.
+                                           • Standard table of Transformer Rectifier Rating added
+                                           • International reference standards added
+                                           • Aligned with international standards
+                                           • SAEP references added
+                                           • Requirement for A0’ sized plot plan drawing showing anode
+                                               layout, anode gradient circles (anode voltage cones) and UG
+                                               piping added
+                                           • Plot plan with hazardous area overlay drawing requirement
+                                               showing clearly all structures that are CP protected and all CP
+                                               equipment added
+                                           • Temperature correction for current density added
+                                           • Life of permanent CP system increased to 25 years
+                                           • Soil resistivity survey requirement added
+                                           • A separate reliable connection either by a bond cable of
+                                               welded brackets added for valves, piles, etc…, (mechanical
+                                               joints are not reliable joints for electrical continuity) added.
+                                           • Installation of isolation devices in hazardous location
+                                               permitted optionally.
+                                           • Note on CP equipment in hazardous location added
+                                           • Included CP coupons in 25% of test stations in plant areas
+                                           • Use of CP coupons, perforated monitoring tube and stationery
+                                               reference electrodes for tank external bottom added.
+                                           • Protection criteria – ON potential upper limit reduced with a
+                                               commentary note. Criteria for other metals such as CRA
+                                               added. Limitation on application of polarization shift criteria
+                                               added.
+                                           • Note about tank bottom CP for tanks operating at high
+                                               temperature added. Number of power feed requirements for
+                                               tank bottoms added.
+
+
+
+
+                                             © Saudi Arabian Oil Company, 2023                                     Page 36 of 36
+
+Saudi Aramco: Company General Use
+
