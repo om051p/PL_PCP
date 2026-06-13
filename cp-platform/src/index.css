@@ -5550,3 +5550,276 @@ body {
   min-height: 420px;
   min-width: 360px;
 }
+
+/* ════════════════════════════════════════════════════════════════════════
+   Toast / Notification System
+   ════════════════════════════════════════════════════════════════════════ */
+
+.toast-viewport {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 380px;
+  width: calc(100% - 32px);
+  pointer-events: none;
+}
+
+.toast {
+  pointer-events: auto;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  background: var(--card, #fff);
+  border: 1px solid var(--border);
+  border-left-width: 3px;
+  border-radius: var(--radius, 6px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  animation: toast-slide-in 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  position: relative;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.toast:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.16);
+}
+
+.toast--success { border-left-color: var(--pass); }
+.toast--error   { border-left-color: var(--fail); }
+.toast--warning { border-left-color: var(--warn); }
+.toast--info    { border-left-color: var(--brand-mid); }
+
+.toast__action {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--brand-mid);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 3px 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.toast__action:hover {
+  background: var(--brand-mid);
+  color: white;
+  border-color: var(--brand-mid);
+}
+
+.toast__dismiss {
+  flex-shrink: 0;
+  border-radius: 3px;
+  transition: all 0.15s;
+}
+.toast__dismiss:hover {
+  background: var(--surface-hover);
+  color: var(--text-primary);
+}
+
+@keyframes toast-slide-in {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toast { animation: none; }
+  .toast:hover { transform: none; }
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   Cursor Highlight & Focus Ring (a11y / cursor location)
+   ════════════════════════════════════════════════════════════════════════ */
+
+/* Every interactive element shows a clear focus ring when navigated via keyboard */
+*:focus { outline: none; }
+
+*:focus-visible {
+  outline: 2px solid var(--brand-mid, #3B8BD4);
+  outline-offset: 2px;
+  border-radius: 3px;
+  transition: outline-offset 0.1s ease;
+}
+
+/* Stronger hover for clickable rows / cards / data items */
+.row-clickable,
+.clickable-card,
+[data-clickable="true"] {
+  cursor: pointer;
+  transition: background-color 0.12s ease, box-shadow 0.12s ease, transform 0.12s ease;
+  position: relative;
+}
+
+.row-clickable:hover,
+.clickable-card:hover,
+[data-clickable="true"]:hover {
+  background-color: var(--surface-hover, rgba(59, 139, 212, 0.08)) !important;
+}
+
+.row-clickable:focus-visible,
+.clickable-card:focus-visible,
+[data-clickable="true"]:focus-visible {
+  background-color: var(--surface-hover, rgba(59, 139, 212, 0.08));
+  outline: 2px solid var(--brand-mid, #3B8BD4);
+  outline-offset: -2px;
+}
+
+.row-clickable:active,
+.clickable-card:active,
+[data-clickable="true"]:active {
+  transform: scale(0.997);
+}
+
+/* Highlight the row under the mouse cursor (slight bg lift) */
+.cursor-highlight {
+  position: relative;
+}
+
+.cursor-highlight::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  pointer-events: none;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(59, 139, 212, 0.04) 50%,
+    transparent 100%);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.cursor-highlight:hover::after {
+  opacity: 1;
+}
+
+/* Status badges — color is not the only signal (icon + text) */
+.status-badge--success::before { content: '● '; }
+.status-badge--warning::before { content: '● '; color: var(--warn); }
+.status-badge--error::before   { content: '● '; color: var(--fail); }
+.status-badge--info::before    { content: '● '; color: var(--brand-mid); }
+
+/* ════════════════════════════════════════════════════════════════════════
+   Save / Undo indicator (auto-save bar)
+   ════════════════════════════════════════════════════════════════════════ */
+
+.save-indicator {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  z-index: 9000;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 99px;
+  font-size: 10.5px;
+  font-weight: 500;
+  background: var(--card, #fff);
+  border: 1px solid var(--border);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  color: var(--text-secondary);
+  transition: all 0.2s ease;
+}
+
+.save-indicator--saving {
+  border-color: var(--brand-mid);
+  color: var(--brand-mid);
+}
+
+.save-indicator--saved {
+  border-color: var(--pass);
+  color: var(--pass);
+}
+
+.save-indicator--error {
+  border-color: var(--fail);
+  color: var(--fail);
+}
+
+.save-indicator__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.save-indicator--saving .save-indicator__dot {
+  animation: save-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes save-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.4; transform: scale(0.85); }
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   Confirmation Dialog (replaces window.confirm)
+   ════════════════════════════════════════════════════════════════════════ */
+
+.confirm-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  animation: confirm-fade 0.18s ease;
+}
+
+@keyframes confirm-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.confirm-dialog {
+  background: var(--card, #fff);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg, 8px);
+  padding: 18px 20px;
+  max-width: 420px;
+  width: 100%;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+  animation: confirm-pop 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes confirm-pop {
+  from { opacity: 0; transform: scale(0.95) translateY(-8px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.confirm-dialog--danger .confirm-dialog__icon { color: var(--fail); }
+.confirm-dialog--warning .confirm-dialog__icon { color: var(--warn); }
+.confirm-dialog--info .confirm-dialog__icon { color: var(--brand-mid); }
+
+.confirm-dialog__title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 6px;
+}
+
+.confirm-dialog__message {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0 0 16px;
+}
+
+.confirm-dialog__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.confirm-dialog__actions button:focus-visible {
+  outline-offset: 4px;
+}

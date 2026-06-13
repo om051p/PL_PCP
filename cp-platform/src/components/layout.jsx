@@ -35,6 +35,7 @@ import {
   Database,
   History,
   Sigma,
+  ScrollText,
 } from 'lucide-react'
 
 const PIPELINE_NAV_ITEMS = [
@@ -43,6 +44,7 @@ const PIPELINE_NAV_ITEMS = [
     items: [
       { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
       { id: 'history', label: 'Audit Trail', icon: History },
+      { id: 'logs', label: 'Activity Log', icon: ScrollText },
     ],
   },
   {
@@ -134,6 +136,7 @@ const VESSEL_NAV_ITEMS = [
 const PAGE_META = {
   dashboard: { title: 'Project Dashboard', sub: 'Overview of all projects and recent activity' },
   history: { title: 'Audit Trail & History', sub: 'Traceability of all project revisions, design changes, and approvals' },
+  logs: { title: 'Activity Log', sub: 'Real-time, filterable log of all project activity — approve, reject, calculate, save' },
   compliance: { title: "Compliance Center", sub: "SAES-X compliance tracking and gap analysis" },
   project: { title: 'Design Basis', sub: 'Client details, station count, system configuration' },
   pipeline: { title: 'Pipeline Parameters', sub: 'Geometry, operating conditions, soil resistivity' },

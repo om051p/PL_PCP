@@ -27,4 +27,5 @@ export { PageVessel } from './PageVessel.jsx'
 export { PageHistory } from './PageHistory.jsx'
 export { PageCompliance } from './PageCompliance.jsx'
 export { PageSensitivity } from './PageSensitivity.jsx'
+export { PageLogs } from './PageLogs.jsx'
 

@@ -821,26 +821,54 @@ export const useProjectStore = create(
 
       // ── Workflow Actions ───────────────────────────────────────────────────
 
-      advanceWorkflow: (stationId, newStatus, notes = '') =>
+      advanceWorkflow: (stationId, newStatus, notes = '') => {
+        // Capture context for the toast notification (outside set())
+        const state = get()
+        const proj = state.projects.find((p) => p.id === state.activeProjectId)
+        const station = proj?.stations.find((s) => s.id === stationId)
+        const oldStatus = station?.status
         set((state) => {
-          const proj = state.projects.find((p) => p.id === state.activeProjectId)
-          if (!proj) return
-          const station = proj.stations.find((s) => s.id === stationId)
-          if (!station) return
-          const oldStatus = station.status
-          station.status = newStatus
-          station.statusNotes = notes
-          station.statusUpdatedAt = new Date().toISOString()
-          proj.updatedAt = new Date().toISOString()
-          
+          const proj2 = state.projects.find((p) => p.id === state.activeProjectId)
+          if (!proj2) return
+          const stn = proj2.stations.find((s) => s.id === stationId)
+          if (!stn) return
+          stn.status = newStatus
+          stn.statusNotes = notes
+          stn.statusUpdatedAt = new Date().toISOString()
+          proj2.updatedAt = new Date().toISOString()
+
           let actionLabel = 'Workflow Changed'
           if (newStatus === 'approved') actionLabel = 'Design Approved'
           else if (newStatus === 'issued_for_construction') actionLabel = 'Design Issued'
           else if (newStatus === 'engineering_review') actionLabel = 'Submitted for Review'
           else if (oldStatus === 'approved' || oldStatus === 'issued_for_construction') actionLabel = 'Design Unlocked'
-          
-          logActivityHelper(proj, actionLabel, 'Validation', `Status changed for station ${station.name} from ${oldStatus.replace(/_/g, ' ')} to ${newStatus.replace(/_/g, ' ')}${notes ? ' (Notes/Justification: ' + notes + ')' : ''}`)
-        }),
+
+          logActivityHelper(proj2, actionLabel, 'Validation', `Status changed for station ${stn.name} from ${oldStatus.replace(/_/g, ' ')} to ${newStatus.replace(/_/g, ' ')}${notes ? ' (Notes/Justification: ' + notes + ')' : ''}`)
+        })
+
+        // Emit toast notification (post-set, outside immer)
+        if (station) {
+          try {
+            const user = useAuthStore.getState().user
+            if (typeof window !== 'undefined' && window.__raxaToast) {
+              const t = window.__raxaToast
+              if (newStatus === 'approved') {
+                t.success('Design approved', `${station.name} is now ready for construction`)
+              } else if (newStatus === 'issued_for_construction') {
+                t.success('Design issued', `${station.name} has been issued for construction`)
+              } else if (newStatus === 'engineering_review') {
+                t.info('Submitted for review', `${station.name} is now in engineering review`)
+              } else if (newStatus === 'rejected') {
+                t.warning('Design rejected', `${station.name} was rejected${notes ? ` — ${notes}` : ''}`)
+              } else if (oldStatus === 'approved' || oldStatus === 'issued_for_construction') {
+                t.warning('Design unlocked', `${station.name} was re-opened for editing`)
+              } else {
+                t.info('Status updated', `${station.name}: ${oldStatus} → ${newStatus}`)
+              }
+            }
+          } catch (_) { /* toast not available — graceful */ }
+        }
+      },
 
       // ── Revision Actions ───────────────────────────────────────────────────
 
