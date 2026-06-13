@@ -238,7 +238,7 @@ src/hooks/
 ## Proposed Future Folder Structure
 
 ```
-PL PCP/
+raxa/
 ├── cp-platform/
 │   ├── src/
 │   │   ├── components/              ← Shared UI primitives (KEEP)

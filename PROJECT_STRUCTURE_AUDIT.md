@@ -9,7 +9,7 @@
 ## 1. Current Structure Map
 
 ```
-PL PCP/                              ← Repository root
+raxa/                              ← Repository root
 ├── cp-platform/                     ← Main application (React SPA)
 │   ├── src/
 │   │   ├── components/              ← Shared UI primitives
