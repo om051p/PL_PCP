@@ -82,11 +82,12 @@ function GridView({ projects, onProjectClick, height }) {
         <Folder size={11} /> Grid view ({projects.length} projects)
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 8, maxHeight: height, overflowY: 'auto' }}>
-        {projects.map((p) => {
+          {projects.map((p) => {
           const color = STATUS_COLORS[p.status] || 'var(--text-tertiary)'
           return (
             <div
               key={p.id}
+              data-testid={`project-card-${p.id}`}
               onClick={() => onProjectClick?.(p)}
               style={{
                 padding: 10,
