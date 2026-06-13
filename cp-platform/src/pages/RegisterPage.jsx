@@ -1,24 +1,39 @@
-import { useState, useEffect } from 'react'
+/**
+ * RegisterPage.jsx
+ *
+ * Refactored to use shared AuthLayout + AuthBanner + PasswordInput.
+ * Adds: password strength meter, password match indicator, terms checkbox,
+ * email format validation, toast notifications, back link.
+ */
+
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate, useLocation, Link } from 'react-router-dom'
-import { Lock, AlertCircle, Eye, EyeOff, Loader2, UserPlus, CheckCircle, ArrowLeft } from 'lucide-react'
+import { Mail, AlertCircle, Loader2, UserPlus, CheckCircle, ShieldCheck } from 'lucide-react'
 import { useAuthStore } from '../store/authStore.js'
 import { useRateLimit } from '../hooks/useRateLimit.js'
 import { AUTH_ALLOWED_DOMAINS } from '../config/authPolicy.js'
+import { AuthLayout } from '../components/AuthLayout.jsx'
+import { AuthBanner, parseAuthMessage } from '../components/AuthBanner.jsx'
+import { PasswordInput } from '../components/PasswordInput.jsx'
+import { useToast } from '../components/Toast.jsx'
+
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 export function RegisterPage() {
   const navigate = useNavigate()
   const location = useLocation()
   const { register, loading, error, clearError } = useAuthStore()
+  const toast = useToast()
+  const emailRef = useRef(null)
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
-  const [showPassword, setShowPassword] = useState(false)
+  const [acceptTerms, setAcceptTerms] = useState(false)
   const [localError, setLocalError] = useState('')
   const [success, setSuccess] = useState(false)
 
-  const from = location.state?.from?.pathname || '/project'
-  const { isRateLimited, recordAttempt, attemptsRemaining, cooldownRemaining } = useRateLimit({
+  const { isRateLimited, recordAttempt, cooldownRemaining } = useRateLimit({
     maxAttempts: 5,
     windowMs: 5 * 60 * 1000,
     cooldownMs: 60 * 1000,
@@ -29,6 +44,10 @@ export function RegisterPage() {
     return () => clearError()
   }, [clearError])
 
+  useEffect(() => {
+    if (!success) emailRef.current?.focus()
+  }, [success])
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLocalError('')
@@ -38,17 +57,22 @@ export function RegisterPage() {
       setLocalError('Please fill in all fields')
       return
     }
-
+    if (!EMAIL_REGEX.test(email)) {
+      setLocalError('Please enter a valid email address')
+      return
+    }
     if (password.length < 8) {
       setLocalError('Password must be at least 8 characters')
       return
     }
-
     if (password !== confirmPassword) {
       setLocalError('Passwords do not match')
       return
     }
-
+    if (!acceptTerms) {
+      setLocalError('Please accept the terms of service and privacy policy to continue')
+      return
+    }
     if (isRateLimited()) {
       setLocalError(`Too many attempts. Please try again in ${cooldownRemaining}s.`)
       return
@@ -57,198 +81,131 @@ export function RegisterPage() {
     try {
       await register(email, password)
       setSuccess(true)
-    } catch {
+      toast.success('Account created', 'Check your email to verify your address')
+    } catch (err) {
       recordAttempt()
+      const msg = err instanceof Error ? err.message : 'Failed to create account'
+      toast.error('Registration failed', msg)
     }
   }
 
   const displayError = localError || error
-
-  const parseAuthMessage = (msg) => {
-    if (!msg) return null
-
-    if (msg.includes('Organization Access Restricted')) {
-      return {
-        type: 'error',
-        title: 'Organization Access Restricted',
-        body: 'Only authorized organization email addresses may access RAXA. If you believe this is an error, contact your administrator.'
-      }
-    }
-
-    // Default error representation
-    return {
-      type: 'error',
-      title: 'Error',
-      body: msg
-    }
-  }
-
   const banner = parseAuthMessage(displayError)
 
   return (
-    <div className="login-page">
-      <div className="login-container">
-        <div className="login-card">
-          <div className="login-header">
-            <div className="login-logo">
-              <UserPlus size={32} className="login-icon" />
-            </div>
-            <h1 className="login-title">Create Account</h1>
-            <p className="login-subtitle">Join the ICCP Engineering Platform</p>
-          </div>
+    <AuthLayout
+      title="Create Account"
+      subtitle="RAXA · Join your engineering team"
+      headerIcon={<UserPlus size={32} className="auth-icon" />}
+      brandingVariant="register"
+      showBackLink
+      backTo="/login"
+      backLabel="Back to Sign In"
+    >
+      <AuthBanner banner={banner} />
 
-          {banner && (
-            <div className={`auth-banner auth-banner--${banner.type}`} role="alert" style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '4px',
-              padding: '12px 14px',
-              borderRadius: 'var(--radius)',
-              fontSize: '12.5px',
-              lineHeight: '1.5',
-              marginBottom: '16px',
-              border: '1px solid',
-              background: `var(--${banner.type === 'error' ? 'fail' : banner.type === 'warning' ? 'warn' : 'pass'}-bg)`,
-              color: `var(--${banner.type === 'error' ? 'fail' : banner.type === 'warning' ? 'warn' : 'pass'})`,
-              borderColor: banner.type === 'error' ? '#fca5a5' : banner.type === 'warning' ? '#fef08a' : '#bbf7d0'
-            }}>
-              <div className="auth-banner-title" style={{ fontWeight: '600', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <AlertCircle size={16} />
-                <span>{banner.title}</span>
-              </div>
-              <div className="auth-banner-body" style={{ marginTop: '2px' }}>
-                {banner.body}
+      {success ? (
+        <div className="auth-form" data-testid="register-success">
+          <div className="auth-form__success" role="status">
+            <CheckCircle size={20} />
+            <div>
+              <div style={{ fontWeight: 600, marginBottom: 2 }}>Account created</div>
+              <div style={{ fontSize: 11.5, opacity: 0.85 }}>
+                A verification email has been sent to <strong>{email}</strong>. Verify your address to enable sign-in.
               </div>
             </div>
-          )}
-
-          {success ? (
-            <div className="login-success" style={{ textAlign: 'center', padding: '10px 0' }}>
-              <CheckCircle size={48} color="var(--pass)" style={{ margin: '0 auto 16px', display: 'block' }} />
-              <h3 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '8px', color: 'var(--text-primary)' }}>Account Created</h3>
-              <p style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: '1.6', marginBottom: '16px' }}>
-                We've sent a verification email to <strong>{email}</strong>. Please check your inbox and click the verification link.
-              </p>
-              <p style={{ fontSize: '12px', color: 'var(--text-tertiary)', lineHeight: '1.5', padding: '10px', background: 'var(--brand-light)', borderRadius: '6px', marginBottom: '24px' }}>
-                Once verified, your account will enter the administrator approval queue. You will gain access as soon as an admin approves your registration.
-              </p>
-              <Link to="/login" className="btn btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', textDecoration: 'none', justifyContent: 'center', width: '100%', padding: '10px 16px' }}>
-                <ArrowLeft size={16} />
-                Back to Sign In
-              </Link>
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="login-form">
-              <div className="form-group">
-                <label className="field-label" htmlFor="email">Email</label>
-                <div className="input-wrapper">
-                  <Lock size={18} className="input-icon" />
-                  <input
-                    id="email"
-                    type="email"
-                    className="field-input"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="engineer@company.com"
-                    autoComplete="email"
-                    disabled={loading}
-                    required
-                  />
-                </div>
-              </div>
-
-              <div className="form-group">
-                <label className="field-label" htmlFor="password">Password</label>
-                <div className="input-wrapper">
-                  <Lock size={18} className="input-icon" />
-                  <input
-                    id="password"
-                    type={showPassword ? 'text' : 'password'}
-                    className="field-input"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Min. 8 characters"
-                    autoComplete="new-password"
-                    disabled={loading}
-                    required
-                  />
-                  <button
-                    type="button"
-                    className="password-toggle"
-                    onClick={() => setShowPassword(!showPassword)}
-                    aria-label={showPassword ? 'Hide password' : 'Show password'}
-                  >
-                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                  </button>
-                </div>
-              </div>
-
-              <div className="form-group">
-                <label className="field-label" htmlFor="confirm-password">Confirm Password</label>
-                <div className="input-wrapper">
-                  <Lock size={18} className="input-icon" />
-                  <input
-                    id="confirm-password"
-                    type={showPassword ? 'text' : 'password'}
-                    className="field-input"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    placeholder="Re-enter password"
-                    autoComplete="new-password"
-                    disabled={loading}
-                    required
-                  />
-                </div>
-              </div>
-
-              <button
-                type="submit"
-                className="btn btn-primary login-submit"
-                disabled={loading || cooldownRemaining > 0}
-              >
-                {loading ? (
-                  <Loader2 size={18} className="spin" />
-                ) : cooldownRemaining > 0 ? (
-                  `Try again in ${cooldownRemaining}s`
-                ) : (
-                  'Create Account'
-                )}
-              </button>
-              {!loading && attemptsRemaining < 5 && attemptsRemaining > 0 && (
-                <div className="rate-limit-warning" style={{ fontSize: '0.75rem', color: 'var(--warn)', marginTop: '0.25rem' }}>
-                  {attemptsRemaining} attempt{attemptsRemaining !== 1 ? 's' : ''} remaining before lockout
-                </div>
-              )}
-            </form>
-          )}
-
-          <div className="login-links">
-            <span className="login-link-text">Already have an account?</span>{' '}
-            <Link to="/login" className="login-forgot-link">
-              Sign In
-            </Link>
           </div>
-
-          <div className="login-footer">
-            <p>{AUTH_ALLOWED_DOMAINS.length > 0 ? `${AUTH_ALLOWED_DOMAINS.join(', ')} accounts` : 'Contact admin for access'}</p>
-          </div>
+          <button
+            type="button"
+            className="btn btn-primary auth-submit"
+            onClick={() => navigate('/login')}
+          >
+            Go to Sign In
+          </button>
         </div>
+      ) : (
+        <form onSubmit={handleSubmit} className="auth-form" noValidate>
+          <p className="auth-form-description">
+            New accounts are subject to administrator approval. You'll receive an email once your access is granted.
+          </p>
 
-        <div className="login-branding">
-          <div className="brand-content">
-            <h2>Professional ICCP Design</h2>
-            <p>
-              Impressed Current Cathodic Protection engineering platform
-              with NACE SP0169 & Saudi Aramco standards compliance.
-            </p>
-            <ul className="feature-list">
-              <li>Deepwell / Shallow Vertical / Distributed Anode modes</li>
-              <li>Automated validation & design optimization</li>
-              <li>BOM generation & PDF/Excel reports</li>
-            </ul>
+          <div className="form-group">
+            <label className="field-label" htmlFor="email">Email</label>
+            <div className="input-wrapper">
+              <Mail size={18} className="input-icon" aria-hidden="true" />
+              <input
+                ref={emailRef}
+                id="email"
+                type="email"
+                className="field-input"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="engineer@ikkgroup.com"
+                autoComplete="email"
+                disabled={loading}
+                required
+                aria-invalid={localError && !EMAIL_REGEX.test(email) ? 'true' : undefined}
+              />
+            </div>
           </div>
-        </div>
+
+          <PasswordInput
+            id="password"
+            label="Password"
+            value={password}
+            onChange={setPassword}
+            disabled={loading}
+            autoComplete="new-password"
+            showStrength
+            testId="register-password"
+          />
+
+          <PasswordInput
+            id="confirm-password"
+            label="Confirm Password"
+            value={confirmPassword}
+            onChange={setConfirmPassword}
+            disabled={loading}
+            autoComplete="new-password"
+            showMatchHint
+            matchValue={password}
+            testId="register-confirm"
+          />
+
+          <label className="auth-form__checkbox">
+            <input
+              type="checkbox"
+              checked={acceptTerms}
+              onChange={(e) => setAcceptTerms(e.target.checked)}
+              disabled={loading}
+              data-testid="accept-terms"
+            />
+            <ShieldCheck size={14} style={{ color: 'var(--brand-mid)' }} aria-hidden="true" />
+            <span>
+              I accept the <a href="#terms" target="_blank" rel="noopener noreferrer">Terms of Service</a> and <a href="#privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
+            </span>
+          </label>
+
+          <button
+            type="submit"
+            className="btn btn-primary auth-submit"
+            disabled={loading || cooldownRemaining > 0}
+            data-testid="register-submit"
+          >
+            {loading ? (
+              <><Loader2 size={16} className="spin" /> Creating account...</>
+            ) : cooldownRemaining > 0 ? (
+              <><AlertCircle size={16} /> Try again in {cooldownRemaining}s</>
+            ) : (
+              <><UserPlus size={16} /> Create Account</>
+            )}
+          </button>
+        </form>
+      )}
+
+      <div className="auth-footer">
+        <p>IKK Group accounts only · {AUTH_ALLOWED_DOMAINS.length > 0 ? AUTH_ALLOWED_DOMAINS.join(', ') : 'Contact admin'}</p>
       </div>
-    </div>
+    </AuthLayout>
   )
 }
