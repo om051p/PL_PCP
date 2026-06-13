@@ -21,11 +21,17 @@ export default defineConfig({
           if (id.includes('node_modules/decimal.js') || id.includes('node_modules/mathjs')) {
             return 'engine'
           }
-          if (id.includes('node_modules/jspdf') || id.includes('node_modules/xlsx')) {
-            return 'reporting'
+          if (id.includes('node_modules/recharts')) {
+            return 'recharts'
           }
           if (id.includes('node_modules/framer-motion')) {
             return 'animation'
+          }
+          if (id.includes('node_modules/jspdf') || id.includes('node_modules/xlsx') || id.includes('node_modules/html2canvas')) {
+            return 'reporting'
+          }
+          if (id.includes('node_modules/lucide-react')) {
+            return 'icons'
           }
         },
       },
@@ -36,6 +42,7 @@ export default defineConfig({
   },
   server: {
     port: 3000,
-    open: true,
+    open: false,
+    host: '0.0.0.0',
   },
 })
