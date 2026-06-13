@@ -6,6 +6,7 @@ import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { StatusBadge, StandardBadge, ThemeToggle } from '../components/ui.jsx'
 import { hasRole } from '../config/authPolicy.js'
 import {
+  Shield,
   FolderOpen,
   Route,
   Zap,
@@ -33,6 +34,7 @@ import {
   Users,
   Database,
   History,
+  Sigma,
 } from 'lucide-react'
 
 const PIPELINE_NAV_ITEMS = [
@@ -48,6 +50,7 @@ const PIPELINE_NAV_ITEMS = [
     items: [
       { id: 'project', label: 'Design Basis', icon: FolderOpen },
       { id: 'pipeline', label: 'Pipeline Parameters', icon: Route },
+      { id: 'resistivity', label: 'Soil Resistivity', icon: Layers },
     ],
   },
   {
@@ -65,6 +68,8 @@ const PIPELINE_NAV_ITEMS = [
     items: [
       { id: 'validation', label: 'Validation', icon: ClipboardCheck, badge: true },
       { id: 'optimizer', label: 'Design Optimizer', icon: Activity },
+      { id: 'sensitivity', label: 'Sensitivity Analysis', icon: Sigma },
+      { id: 'compliance', label: 'Compliance Center', icon: Shield },
     ],
   },
   {
@@ -129,14 +134,17 @@ const VESSEL_NAV_ITEMS = [
 const PAGE_META = {
   dashboard: { title: 'Project Dashboard', sub: 'Overview of all projects and recent activity' },
   history: { title: 'Audit Trail & History', sub: 'Traceability of all project revisions, design changes, and approvals' },
+  compliance: { title: "Compliance Center", sub: "SAES-X compliance tracking and gap analysis" },
   project: { title: 'Design Basis', sub: 'Client details, station count, system configuration' },
   pipeline: { title: 'Pipeline Parameters', sub: 'Geometry, operating conditions, soil resistivity' },
+  resistivity: { title: 'Soil Resistivity', sub: 'Wenner survey, layered soil model, design ρ' },
   current: { title: 'Current Requirement', sub: 'Protection current calculation with temperature correction' },
   groundbed: { title: 'Groundbed Design', sub: 'Anode bed configuration and resistance calculations' },
   cable: { title: 'Cable Resistance', sub: 'Positive and negative circuit cable analysis' },
   tr: { title: 'TR Sizing', sub: 'Circuit analysis and transformer-rectifier verification' },
   validation: { title: 'Engineering Validation', sub: 'Automated PASS/FAIL checks with engineering insights' },
   optimizer: { title: 'Design Optimizer', sub: 'Alternative designs with trade-off analysis' },
+  sensitivity: { title: 'Sensitivity Analysis', sub: 'Tornado, sweep, and scenario comparison for design robustness' },
   bom: { title: 'Bill of Materials', sub: 'Auto-generated material quantities (requires Approved status)' },
   report: { title: 'Engineering Report', sub: 'Consolidated engineering design summary' },
   import: { title: 'Import from Excel', sub: 'Upload PCP.xlsx or RAXA Pipeline/CP Designer export to populate project data' },

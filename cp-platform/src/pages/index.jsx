@@ -10,6 +10,7 @@
 
 export { PageProjectSetup } from './PageProjectSetup.jsx'
 export { PagePipeline } from './PagePipeline.jsx'
+export { PageSoilResistivity } from './PageSoilResistivity.jsx'
 export { PageCurrentRequirement } from './PageCurrentRequirement.jsx'
 export { PageGroundbed } from './PageGroundbed.jsx'
 export { PageCableResistance } from './PageCableResistance.jsx'
@@ -24,4 +25,6 @@ export { PageWorkspace } from './PageWorkspace.jsx'
 export { PageTank } from './PageTank.jsx'
 export { PageVessel } from './PageVessel.jsx'
 export { PageHistory } from './PageHistory.jsx'
+export { PageCompliance } from './PageCompliance.jsx'
+export { PageSensitivity } from './PageSensitivity.jsx'
 
