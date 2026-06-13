@@ -55,11 +55,14 @@ export const useAuthStore = create()(
       failedAttempts: [],
       lockoutUntil: 0,
       sessionStart: 0,
+      requiresTwoFactor: false,
+      twoFactorMethod: 'authenticator',
 
       login: async (email, password) => {
         set((state) => {
           state.loading = true
           state.error = null
+          state.requiresTwoFactor = false
         })
         try {
           const now = Date.now()
@@ -144,6 +147,20 @@ export const useAuthStore = create()(
           }
 
           const user = mergeProfile(normalizedUser, profile)
+
+          // Check 2FA requirement (set on profile by admin or self-enrollment)
+          if (profile.twoFactorEnabled) {
+            set((state) => {
+              state.failedAttempts = []
+              state.requiresTwoFactor = true
+              state.twoFactorMethod = profile.twoFactorMethod || 'authenticator'
+              state.user = null
+              state.loading = false
+              state.error = null
+            })
+            await logAuditEvent('LOGIN_2FA_REQUIRED', email, email, { method: profile.twoFactorMethod || 'authenticator' })
+            return user
+          }
 
           set((state) => {
             state.failedAttempts = []
@@ -335,9 +352,41 @@ export const useAuthStore = create()(
             state.loading = false
             state.error = message
           })
-          throw err
-        }
-      },
+           throw err
+         }
+       },
+
+       /**
+        * Verify a 2FA code after login() has set requiresTwoFactor=true.
+        * For the demo: any 6-digit code is accepted. In production this
+        * would call authRepository.verifyTotp(code) or similar.
+        */
+       verifyTwoFactor: async (_email, code) => {
+         set((state) => {
+           state.loading = true
+           state.error = null
+         })
+         try {
+           if (!code || code.length !== 6 || !/^\d{6}$/.test(code)) {
+             throw new Error('Invalid verification code\n\nPlease enter the 6-digit code from your authenticator app.')
+           }
+           // Simulated 2FA verification — in production, replace with a real
+           // TOTP/SMS/email code check. For now, accept any 6-digit code.
+           await new Promise((r) => setTimeout(r, 400)) // simulate network
+           set((state) => {
+             state.requiresTwoFactor = false
+             state.loading = false
+           })
+           await logAuditEvent('LOGIN_2FA_SUCCESS', _email, _email, { method: get().twoFactorMethod })
+         } catch (err) {
+           const message = err instanceof Error ? err.message : '2FA verification failed'
+           set((state) => {
+             state.loading = false
+             state.error = message
+           })
+           throw err
+         }
+       },
 
       resendVerificationEmail: async (email, password) => {
         set((state) => {
