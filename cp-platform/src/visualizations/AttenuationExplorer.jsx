@@ -24,6 +24,8 @@ import { ChevronLeft, ChevronRight, Home, Crosshair, TrendingUp, TrendingDown, A
 import { runAttenuationAnalysis } from '../engine/modules/attenuationEngine.js'
 import { computeTornado } from '../engine/sensitivity/index.js'
 import { SensitivityTornado } from './SensitivityTornado.jsx'
+import { RiskZoneBands } from './shared/RiskZoneBackground.jsx'
+import { findCriticalKPs } from '../engine/modules/criticalKPs.js'
 
 const STATION_COLORS = ['#1D9E75', '#D85A30', '#7F77DD', '#BA7517', '#3B8BD4', '#E24B4A']
 const SCENARIO_COLORS = {
@@ -41,12 +43,16 @@ const SCENARIO_COLORS = {
  */
 function buildScenarioInput(input, scenario) {
   if (scenario === 'existing') return input
+  if (!input || !Array.isArray(input.stations)) return input
   const factor = scenario === 'plus20' ? 1.2 : scenario === 'minus20' ? 0.8 : 1.0
   return {
     ...input,
     stations: input.stations.map((s) => ({
       ...s,
-      currentA: s.currentA * factor,
+      // M7 defensive: currentA may be undefined when scenario perturb is
+      // applied to a derived (project-sourced) input. Fall back to 0 so
+      // the engine never sees NaN.
+      currentA: Number.isFinite(s?.currentA) ? s.currentA * factor : 0,
     })),
   }
 }
@@ -72,22 +78,26 @@ export function AttenuationExplorer({ input, stations, project, height = 380 }) 
 
   // Primary series: the active scenario
   const activeResult = scenarios[scenario]
-  const profile = activeResult?.profile ?? []
+  // M7 defensive: guard against non-array profile from engine
+  const profile = Array.isArray(activeResult?.profile) ? activeResult.profile : []
   const minimumMv = input?.potentials?.minimumMv ?? 850
   const naturalMv = input?.potentials?.naturalMv ?? -550
 
   // Flatten for chart
   const chartData = useMemo(() => {
-    if (profile.length === 0) return []
+    if (!Array.isArray(profile) || profile.length === 0) return []
     return profile.map((p) => ({
       km: p.km,
       combined: parseFloat(p.combinedPotentialMv.toFixed(1)),
       isProtected: p.isProtected,
       // Overlay other scenarios
       ...Object.fromEntries(
-        Object.entries(scenarios)
+        Object.entries(scenarios || {})
           .filter(([k]) => k !== scenario)
-          .map(([k, r]) => [k, r.profile.find((q) => q.km === p.km)?.combinedPotentialMv.toFixed(1) ?? null])
+          .map(([k, r]) => {
+            const overlay = r?.profile?.find?.((q) => q.km === p.km)
+            return [k, overlay?.combinedPotentialMv != null ? overlay.combinedPotentialMv.toFixed(1) : null]
+          })
       ),
     }))
   }, [profile, scenario, scenarios])
@@ -142,15 +152,31 @@ export function AttenuationExplorer({ input, stations, project, height = 380 }) 
     return dV / dx // mV/km
   }, [cursorIdx, chartData])
 
-  // Sensitivity tornado for this station
+  // Sensitivity tornado for this station (requires full station object with tr, groundbed, etc.)
   const station = stations?.[0] // primary station
   const tornadoData = useMemo(() => {
-    if (!station || !project) return null
+    if (!station?.tr || !project) return null
     return computeTornado(station, station.designLifeYears || 25, project, 'minTRVoltage', undefined, 10)
   }, [station, project])
 
+  // Critical KP detection
+  const criticalKPs = useMemo(() => findCriticalKPs(profile, minimumMv), [profile, minimumMv])
+
+  // Chart max for risk zones
+  const chartMax = useMemo(() => {
+    if (chartData.length === 0) return minimumMv + 300
+    return Math.max(...chartData.map((d) => d.combined), minimumMv + 100)
+  }, [chartData, minimumMv])
+
   if (!input) {
     return <div style={{ padding: 16, color: 'var(--text-tertiary)', fontSize: 11 }}>No attenuation input.</div>
+  }
+  if (!Array.isArray(stations) || stations.length === 0) {
+    return (
+      <div style={{ padding: 16, color: 'var(--text-tertiary)', fontSize: 11 }}>
+        No CP stations to display. Add a station in Project Setup.
+      </div>
+    )
   }
 
   return (
@@ -213,17 +239,38 @@ export function AttenuationExplorer({ input, stations, project, height = 380 }) 
               contentStyle={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 4, fontSize: 11 }}
               labelStyle={{ fontFamily: 'var(--font-mono)' }}
             />
-            {/* NACE protection band */}
-            <ReferenceArea
-              y1={minimumMv} y2={Math.max(...chartData.map((d) => d.combined), minimumMv + 100)}
-              fill="var(--pass)" fillOpacity={0.05}
-              label={{ value: 'Protected', position: 'insideTopRight', fontSize: 9, fill: 'var(--pass)' }}
+            {/* Risk zone background bands */}
+            <RiskZoneBands
+              protectedMin={minimumMv}
+              warningMin={minimumMv - 100}
+              criticalMin={minimumMv - 200}
+              chartMax={chartMax}
             />
             <ReferenceLine y={minimumMv} stroke="var(--fail)" strokeDasharray="4 3" strokeWidth={1.5} label={{ value: 'NACE −850 mV', position: 'right', fontSize: 9, fill: 'var(--fail)' }} />
             <ReferenceLine y={naturalMv} stroke="var(--text-tertiary)" strokeDasharray="2 4" strokeWidth={1} label={{ value: 'Natural', position: 'right', fontSize: 9, fill: 'var(--text-tertiary)' }} />
 
+            {/* Critical KP markers */}
+            {criticalKPs.minProtectionPoint && (
+              <ReferenceLine
+                x={criticalKPs.minProtectionPoint.km}
+                stroke="var(--fail)"
+                strokeDasharray="3 3"
+                strokeWidth={1}
+                label={{ value: '▼ Min', position: 'top', fontSize: 9, fill: 'var(--fail)' }}
+              />
+            )}
+            {criticalKPs.maxAttenuationPoint && (
+              <ReferenceLine
+                x={criticalKPs.maxAttenuationPoint.km}
+                stroke="var(--warn)"
+                strokeDasharray="3 3"
+                strokeWidth={1}
+                label={{ value: '▼ Max Atten', position: 'top', fontSize: 9, fill: 'var(--warn)' }}
+              />
+            )}
+
             {/* Other-scenario overlays (lighter) */}
-            {Object.entries(scenarios).filter(([k]) => k !== scenario).map(([k]) => (
+            {Object.entries(scenarios || {}).filter(([k]) => k !== scenario).map(([k]) => (
               <Line
                 key={k}
                 type="monotone"

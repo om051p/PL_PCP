@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 /**
  * ConfirmDialog.jsx
  *
@@ -14,6 +15,7 @@
  *     confirmLabel: 'Approve',
  *     cancelLabel: 'Cancel',
  *   })
+ *   if (ok) { ... }
  *   if (ok) { ... }
  */
 
@@ -33,8 +35,8 @@ const confirmStore = {
   state: { open: false, options: null, resolve: null, id: 0 },
   listeners: new Set(),
   setState(updater) {
-    if (typeof updater === 'function') updater = updater(this.state)
-    else this.state = { ...this.state, ...updater }
+    const nextState = typeof updater === 'function' ? updater(this.state) : updater
+    this.state = { ...this.state, ...nextState }
     this.listeners.forEach((l) => l())
   },
   subscribe(l) { this.listeners.add(l); return () => this.listeners.delete(l) },

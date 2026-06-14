@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 /**
  * Toast.jsx
  *
@@ -17,7 +18,7 @@
  *   - color is not the only signal (icon + text)
  */
 
-import { createContext, useContext, useState, useCallback, useEffect, useRef } from 'react'
+import { createContext, useContext, useState, useCallback, useEffect, useRef, useMemo } from 'react'
 import { CheckCircle2, AlertCircle, AlertTriangle, Info, X } from 'lucide-react'
 
 const ToastContext = createContext(null)
@@ -101,14 +102,14 @@ export function ToastProvider({ children, defaultDuration = 5000, maxStack = 5 }
     return () => window.removeEventListener('keydown', onKey)
   }, [toasts.length, dismissAll])
 
-  const api = {
+  const api = useMemo(() => ({
     success: (title, description, opts) => show('success', title, description, opts),
     error: (title, description, opts) => show('error', title, description, opts),
     warning: (title, description, opts) => show('warning', title, description, opts),
     info: (title, description, opts) => show('info', title, description, opts),
     dismiss,
     dismissAll,
-  }
+  }), [show, dismiss, dismissAll])
 
   // Expose to the global store (for actions triggered from non-React code).
   // This is a controlled escape hatch: stores can dispatch toasts without

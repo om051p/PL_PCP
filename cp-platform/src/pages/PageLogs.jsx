@@ -46,11 +46,15 @@ export function PageLogs() {
   // Subscribe to live activity
   useEffect(() => {
     if (!project?.id) {
-      setEntries([])
-      setLoading(false)
+      Promise.resolve().then(() => {
+        setEntries([])
+        setLoading(false)
+      })
       return undefined
     }
-    setLoading(true)
+    Promise.resolve().then(() => {
+      setLoading(true)
+    })
     const unsub = subscribeToActivity(project.id, (e) => {
       setEntries(e)
       setLoading(false)

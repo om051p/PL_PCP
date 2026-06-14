@@ -3,25 +3,14 @@
  *
  * Top-level orchestrator that calls the existing engineeringAdvisorEngine,
  * transforms its output to the user's 4-category / 4-priority vocabulary,
- * and layers on 3 new cost-reduction rules.
+ * layers on cost-reduction rules, and incorporates new advisory rules (proximity, TR band, coating, etc.).
  *
- * The existing engineeringAdvisorEngine is NOT modified — this is a pure
- * transformation layer on top.
- *
- * Returns:
- *   {
- *     recommendations: [{ id, category, priority, severity, title, message, action, observedValue, threshold, source }],
- *     score,        // 0-100, from existing engine
- *     scoreLabel,   // 'Optimal' | 'Good' | 'Marginal' | 'Critical' | 'Severe'
- *     byCategory: { optimization: [...], warning: [...], compliance: [...], cost_reduction: [...] },
- *     byPriority:  { critical: [...], high: [...], medium: [...], low: [...] },
- *     summary,      // from existing engine
- *     inputEcho,
- *   }
+ * Links each recommendation to its corresponding Trace Step ID.
  */
 
 import { analyze as analyzeBase } from './engineeringAdvisorEngine.js'
 import { evaluateCostReduction } from './costReductionRules.js'
+import { evaluateNewRules } from './newAdvisorRules.js'
 import {
   mapRecommendation,
   RECOMMENDATION_CATEGORIES,
@@ -54,6 +43,25 @@ function emptyPriorityBuckets() {
 }
 
 /**
+ * Maps a recommendation's prefix or ID to the corresponding Trace Step ID.
+ */
+function getTraceStepIdForRec(rec) {
+  if (rec.traceStepId) return rec.traceStepId
+  if (!rec.id) return null
+  if (rec.id.startsWith('soil.')) return 'GROUNDBED_RESISTANCE'
+  if (rec.id.startsWith('pipeline.')) return 'SURFACE_AREA'
+  if (rec.id.startsWith('current.')) return 'CURRENT_REQUIREMENT'
+  if (rec.id.startsWith('groundbed.')) return 'GROUNDBED_RESISTANCE'
+  if (rec.id.startsWith('tr.')) return 'TR_CIRCUIT_ANALYSIS'
+  if (rec.id.startsWith('cable.')) return 'CABLE_RESISTANCE'
+  if (rec.id.startsWith('design_life.')) return 'DESIGN_LIFE'
+  if (rec.id.startsWith('cost.tr_oversized')) return 'TR_CIRCUIT_ANALYSIS'
+  if (rec.id.startsWith('cost.groundbed_underutilized')) return 'GROUNDBED_RESISTANCE'
+  if (rec.id.startsWith('cost.excess_anode_count')) return 'DESIGN_LIFE'
+  return null
+}
+
+/**
  * Transform a single advisor recommendation into the new vocabulary.
  * Adds `category`, `priority`, and preserves all original fields.
  */
@@ -63,6 +71,7 @@ function transformRec(rec) {
     ...rec,
     category,
     priority,
+    traceStepId: getTraceStepIdForRec(rec),
   }
 }
 
@@ -82,11 +91,12 @@ function costRecFromRule(rule) {
     threshold: rule.threshold,
     source: 'rule',
     confidence: 0.8,
+    traceStepId: getTraceStepIdForRec(rule),
   }
 }
 
 /**
- * Main entry point. Calls the existing advisor and layers on cost-reduction rules.
+ * Main entry point. Calls the existing advisor and layers on cost-reduction and new rules.
  */
 export function analyze(input = {}) {
   const baseResult = analyzeBase(input)
@@ -98,8 +108,11 @@ export function analyze(input = {}) {
   const costRules = evaluateCostReduction(input)
   const costRecs = costRules.map(costRecFromRule)
 
+  // Evaluate new advisory rules (proximity, TR band, life gap, coating soil mismatch)
+  const newRules = evaluateNewRules(input)
+
   // Merge and sort by priority
-  const all = [...transformed, ...costRecs]
+  const all = [...transformed, ...costRecs, ...newRules]
   all.sort((a, b) => (PRIORITY_ORDER[a.priority] ?? 9) - (PRIORITY_ORDER[b.priority] ?? 9))
 
   // Build category buckets

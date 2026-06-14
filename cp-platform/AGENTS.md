@@ -30,6 +30,33 @@ This project already has working infrastructure. Do NOT reinstall, replace, or r
 - **Focus only on the requested feature** — no scope creep
 - **Run `detect_changes()` before committing**
 
+## M7 — Attenuation is a pure downstream consumer (2026-06-14)
+
+Since release 2.2.0, **attenuation must consume actual project assets** — never synthetic defaults. The contract:
+
+- `src/services/attenuationInputBuilder.js` — pure function: `buildAttenuationInputFromProject(project, activeStationId)` derives the engine input from `project.stations`, station `tr`, station `groundbed`, station `pipelineSegments`, and `project.designBasis`. **No defaults, no synthetic assets.** If required assets are missing, returns `{ input: null, validation: { isReady: false, reasons, guidance } }`.
+- `src/services/attenuationStateMachine.js` — `resolveAttenuationState({...})` returns one of `EMPTY | INCOMPLETE | READY | CALCULATED | STALE | ERROR`. UI must render accordingly.
+- `src/store/slices/attenuationSlice.js` — exposes `attenuationState`, `attenuationGuidance`, `markAttenuationStale()`.
+- `src/store/slices/stationSlice.js` — every station/TR/groundbed/segment mutation sets `attenuationDirty = true`.
+
+**Never** add a `DEFAULT_INPUT` constant back to the attenuation page. **Never** fabricate stations/TRs/groundbeds to "make the page render". **Never** access `station.km` or `r.km` without an `?` guard.
+
+## Architecture audit deliverables (2026-06-14)
+
+Seven documents at the repository root define the platform contract. Read these **before** any architectural change:
+
+| File | What it is |
+|---|---|
+| `../MODULE_DEPENDENCY_MATRIX.md` | Per-module inputs, outputs, hard deps, soft deps, forbidden ops, hardcoded values. |
+| `../ENGINEERING_DATAFLOW_MAP.md` | Persistence tiers, live-action flows, consumer→producer table, mermaid. |
+| `../BROKEN_LINK_ANALYSIS.md` | 30 broken-link findings (BL-01..BL-30), 16 single-source violations (HV-01..HV-16). |
+| `../STALE_DATA_ANALYSIS.md` | Per-module staleness detection, 8 walk-throughs, `dataVersion` design. |
+| `../MODULE_VALIDATION_DESIGN.md` | Per-page `Validate Data` button spec for 13 modules. |
+| `../DASHBOARD_RECOMMENDATIONS.md` | Project-management-only Dashboard scope. 15 components to move out. |
+| `../REPORT_SYNC_AUDIT.md` | 17 findings on Excel/PDF report sync. |
+
+**Before editing any module, scan the relevant audit document for the broken-link and stale-data findings.**
+
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence
 

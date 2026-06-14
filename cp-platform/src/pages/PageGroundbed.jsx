@@ -23,18 +23,21 @@ import {
 import { FormulaCard, FormulaCardGroup } from '../components/FormulaCard.jsx'
 import { CalculationBreakdown } from '../components/CalculationBreakdown.jsx'
 import { FormulaDrawer } from '../components/FormulaDrawer.jsx'
+import { TracePanel } from '../components/TracePanel.jsx'
+import { analyze } from '../engine/engineeringAdvisor/recommendationEngine.js'
+import { useMemo } from 'react'
 import { DESIGN_MODES, ANODE_SPECS, getActiveStandard } from '../constants/index.js'
 import { Layers, BarChart3 } from 'lucide-react'
+import { RightSideEngineeringPanel, GroundbedGaugeRow, GroundbedOptimizationPanel } from '../visualizations/index.js'
 
 export function PageGroundbed() {
   const station = useProjectStore((s) => s.getActiveStation())
   const updateStation = useProjectStore((s) => s.updateStation)
   const calculateStation = useProjectStore((s) => s.calculateStation)
   const project = useProjectStore((s) => s.getProject())
-  if (!station) return null
-  const r = station.lastCalcResult
-  const gb = station.groundbed
-  const isDeep = gb.type === 'deepwell'
+  const r = station?.lastCalcResult
+  const gb = station?.groundbed
+  const isDeep = gb?.type === 'deepwell'
   const std = getActiveStandard(project)
 
   // Build formula drawer formulas
@@ -120,6 +123,24 @@ export function PageGroundbed() {
     dlBreakdownSteps.push({ label: 'Utilization Factor', symbol: 'U_f', value: 0.85, unit: 'unitless', source: 'NACE SP0169' })
   }
 
+  const combinedInput = useMemo(() => {
+    if (!station) return {}
+    return {
+      ...station,
+      ...r,
+      targetDesignLifeYears: project?.designBasis?.systemDesignLifeYears || 25,
+      sacrificialAnodeCount: station.proposedAnodes,
+      calculatedAnodeCount: station.proposedAnodes,
+    }
+  }, [station, r, project])
+
+  const recommendations = useMemo(() => {
+    if (!station || !r) return []
+    return analyze(combinedInput).recommendations
+  }, [combinedInput, station, r])
+
+  if (!station) return null
+
   return (
     <div className="page">
       <StationTabs />
@@ -132,6 +153,15 @@ export function PageGroundbed() {
         pageTitle="Groundbed Design Formulas"
         formulas={groundbedFormulas}
         panelPosition="right"
+      >
+      <RightSideEngineeringPanel
+        panelTitle="Groundbed Intelligence"
+        panel={
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+            {r && <GroundbedGaugeRow result={r} groundbed={gb} project={project} />}
+            {r && <GroundbedOptimizationPanel groundbed={gb} result={r} project={project} />}
+          </div>
+        }
       >
 
         <Grid2>
@@ -170,7 +200,7 @@ export function PageGroundbed() {
                 step={0.5}
                 onChange={(v) =>
                   updateStation(station.id, (s) => {
-                    s.groundbed.startDepthM = v
+                     s.groundbed.startDepthM = v
                   })
                 }
               />
@@ -390,6 +420,7 @@ export function PageGroundbed() {
             )}
           </SectionCard>
         </Grid2>
+      </RightSideEngineeringPanel>
       </FormulaDrawer>
 
       {station.insights
@@ -402,6 +433,12 @@ export function PageGroundbed() {
         .map((ins, i) => (
           <InsightCard key={i} insight={ins} />
         ))}
+
+      {r && (
+        <div style={{ marginTop: 20 }}>
+          <TracePanel station={station} recommendations={recommendations} />
+        </div>
+      )}
     </div>
   )
 }

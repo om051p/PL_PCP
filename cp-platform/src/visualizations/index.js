@@ -33,6 +33,30 @@ export {
 // Input summary builders (pure functions, not components)
 import { buildGroundbedInputsUsed, buildCableInputsUsed, buildAttenuationInputsUsed } from './sidePanel/inputSummaries.js'
 
+// Visualization 2.0 — Shared components
+export { EngineeringKPIRow } from './shared/EngineeringKPIRow.jsx'
+export { RiskZoneBackground, RiskZoneBands } from './shared/RiskZoneBackground.jsx'
+export { AnimatedCurrentFlow, DirectionalArrow, CurrentLabel } from './shared/AnimatedCurrentFlow.jsx'
+export { OptimizationSuggestion } from './shared/OptimizationSuggestion.jsx'
+export { EngineeringGauge, GaugeRow } from './shared/EngineeringGauge.jsx'
+
+// Visualization 2.0 — Module-specific components
+export { SensitivitySliders } from './SensitivitySliders.jsx'
+export { CriticalKPDetector } from './CriticalKPDetector.jsx'
+export { StationSpacingRecommendation } from './StationSpacingRecommendation.jsx'
+export { CableHeatMap } from './CableHeatMap.jsx'
+export { CableContributionChart } from './CableContributionChart.jsx'
+export { CableOptimizationPanel } from './CableOptimizationPanel.jsx'
+export { GroundbedGaugeRow } from './GroundbedGaugeRow.jsx'
+export { GroundbedOptimizationPanel } from './GroundbedOptimizationPanel.jsx'
+export { SoilColumnVisualization } from './SoilColumnVisualization.jsx'
+export { CorrosivityGauge } from './CorrosivityGauge.jsx'
+export { SoilImpactPanel } from './SoilImpactPanel.jsx'
+export { SurveyQualityScore } from './SurveyQualityScore.jsx'
+export { PipelineRouteMap } from './PipelineRouteMap.jsx'
+export { PipelineTimeline } from './PipelineTimeline.jsx'
+export { ProjectStatusDashboard } from './ProjectStatusDashboard.jsx'
+
 export {
   buildGroundbedInputsUsed,
   buildCableInputsUsed,

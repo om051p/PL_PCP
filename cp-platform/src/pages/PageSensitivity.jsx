@@ -16,6 +16,7 @@ import { SectionCard, SelectField, FieldInput } from '../components/ui.jsx'
 import { SensitivityTornado } from '../visualizations/SensitivityTornado.jsx'
 import { SensitivitySweep } from '../visualizations/SensitivitySweep.jsx'
 import { SensitivityRadar } from '../visualizations/SensitivityRadar.jsx'
+import { ScenarioAnalysisPanel } from '../components/ScenarioAnalysisPanel.jsx'
 import {
   computeTornado,
   computeSweep,
@@ -48,7 +49,11 @@ export function PageSensitivity() {
   )
 
   useEffect(() => {
-    if (station && !selectedStationId) setSelectedStationId(station.id)
+    if (station && !selectedStationId) {
+      Promise.resolve().then(() => {
+        setSelectedStationId(station.id)
+      })
+    }
   }, [station, selectedStationId])
 
   // Run sensitivity calculations
@@ -167,6 +172,13 @@ export function PageSensitivity() {
         sub="Compare alternative designs on multiple outputs"
       >
         <SensitivityRadar data={radarData} height={340} />
+      </SectionCard>
+
+      <SectionCard
+        title={<span><TrendingUp size={14} style={{ marginRight: 6, verticalAlign: 'middle' }} />What-If Simulation Sandbox</span>}
+        sub="Simulate shifts in parameters on-the-fly and save custom design scenarios"
+      >
+        <ScenarioAnalysisPanel station={station} />
       </SectionCard>
     </div>
   )

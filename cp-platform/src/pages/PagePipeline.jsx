@@ -14,6 +14,7 @@ import {
 } from '../components/ui.jsx'
 import { getSoilClassification } from '../constants/index.js'
 import { Route, Zap, Layers, Plus, Trash2, Edit, TableProperties } from 'lucide-react'
+import { RightSideEngineeringPanel, PipelineRouteMap, PipelineTimeline, ProjectStatusDashboard } from '../visualizations/index.js'
 
 export function PagePipeline() {
   const [activeViewTab, setActiveViewTab] = useState('form') // 'form' or 'bulk'
@@ -57,6 +58,20 @@ export function PagePipeline() {
           </button>
         </div>
       </div>
+
+      <RightSideEngineeringPanel
+        panelTitle="Pipeline Intelligence"
+        panel={
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+            <PipelineRouteMap
+              stations={project?.stations || []}
+              totalLengthKm={station.pipelineSegments?.reduce((sum, s) => sum + (s.lengthM || 0), 0) / 1000 || 100}
+            />
+            <PipelineTimeline station={station} />
+            <ProjectStatusDashboard station={station} />
+          </div>
+        }
+      >
 
       {activeViewTab === 'bulk' ? (
         <div style={{ marginBottom: 32 }}>
@@ -208,6 +223,7 @@ export function PagePipeline() {
           )}
         </SectionCard>
       </Grid2>
+      </RightSideEngineeringPanel>
     </div>
   )
 }

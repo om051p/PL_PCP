@@ -51,6 +51,11 @@ export const TransformerRectifierSchema = z.object({
   ratedCurrent: z.number().positive('TR current must be positive'),
   backEMF: z.number().nonnegative(),
   structureResistance: z.number().nonnegative(),
+  coolingType: z.string().optional(),
+  wellCasingShared: z.boolean().optional(),
+  powerSourceType: z.string().optional(),
+  hasRMU: z.boolean().optional(),
+  hazardousAreaClass: z.string().optional(),
 })
 
 export const StationSchema = z.object({

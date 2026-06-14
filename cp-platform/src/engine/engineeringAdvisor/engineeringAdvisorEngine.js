@@ -316,10 +316,10 @@ export function analyze(input = {}) {
   }
   const out = []
   for (const r of RULES) {
-    let ok = false
+    let ok
     try { ok = !!r.when(safe) } catch { ok = false }
     if (!ok) continue
-    let built = null
+    let built
     try { built = r.build(safe) } catch { built = null }
     if (!built) continue
     out.push({

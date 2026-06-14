@@ -103,7 +103,7 @@ export function evaluateCostReduction(input) {
   const safe = input && typeof input === 'object' ? input : {}
   const out = []
   for (const rule of COST_REDUCTION_RULES) {
-    let built = null
+    let built
     try { built = rule(safe) } catch { built = null }
     if (built) out.push(built)
   }

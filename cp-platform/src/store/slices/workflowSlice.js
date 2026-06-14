@@ -1,4 +1,4 @@
-import { v4 as uuid } from 'uuid'
+import { newId } from '../../utils/id.js'
 import { useAuthStore } from '../authStore.js'
 import { logActivityHelper } from './projectSlice.js'
 
@@ -59,7 +59,7 @@ export const createWorkflowSlice = (set, get) => ({
       const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
       const revNum = `Revision ${letters[proj.revisions.length] || String(proj.revisions.length)}`
       const revision = {
-        id: uuid(),
+        id: newId(),
         revNumber: revNum,
         description,
         createdAt: new Date().toISOString(),

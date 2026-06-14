@@ -1,4 +1,4 @@
-import { Component, useState, useEffect } from 'react'
+import { Component, useState, useEffect, lazy, Suspense } from 'react'
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { MotionConfig, motion } from 'framer-motion'
 import { useProjectStore } from './store/projectStore.js'
@@ -8,34 +8,52 @@ import { SessionTimeoutDialog } from './components/SessionTimeoutDialog.jsx'
 import { ConfirmDialogHost } from './components/ConfirmDialog.jsx'
 import { SaveIndicator } from './components/SaveIndicator.jsx'
 import { useSessionTimeout } from './hooks/useSessionTimeout.js'
-import { LoginPage } from './pages/LoginPage.jsx'
-import { ForgotPasswordPage } from './pages/ForgotPasswordPage.jsx'
-import { RegisterPage } from './pages/RegisterPage.jsx'
-import {
-  PageProjectSetup,
-  PagePipeline,
-  PageSoilResistivity,
-  PageCurrentRequirement,
-  PageGroundbed,
-  PageCableResistance,
-  PageTRSizing,
-  PageValidation,
-  PageOptimizer,
-  PageBOM,
-  PageReport,
-  PageImport,
-  PageAttenuation,
-  PageWorkspace,
-  PageTank,
-  PageVessel,
-  PageHistory,
-  PageCompliance,
-  PageSensitivity,
-  PageLogs,
-} from './pages/index.jsx'
-import PageDashboard from './pages/PageDashboard.jsx'
-import SettingsPage from './pages/SettingsPage.jsx'
-import UserManagementPage from './pages/UserManagementPage.jsx'
+import { OfflineStatusBar } from './components/OfflineStatusBar.jsx'
+
+// Lazy loaded page components
+const LoginPage = lazy(() => import('./pages/LoginPage.jsx').then(m => ({ default: m.LoginPage })))
+const ForgotPasswordPage = lazy(() => import('./pages/ForgotPasswordPage.jsx').then(m => ({ default: m.ForgotPasswordPage })))
+const RegisterPage = lazy(() => import('./pages/RegisterPage.jsx').then(m => ({ default: m.RegisterPage })))
+
+const PageProjectSetup = lazy(() => import('./pages/PageProjectSetup.jsx').then(m => ({ default: m.PageProjectSetup })))
+const PagePipeline = lazy(() => import('./pages/PagePipeline.jsx').then(m => ({ default: m.PagePipeline })))
+const PageSoilResistivity = lazy(() => import('./pages/PageSoilResistivity.jsx').then(m => ({ default: m.PageSoilResistivity })))
+const PageCurrentRequirement = lazy(() => import('./pages/PageCurrentRequirement.jsx').then(m => ({ default: m.PageCurrentRequirement })))
+const PageGroundbed = lazy(() => import('./pages/PageGroundbed.jsx').then(m => ({ default: m.PageGroundbed })))
+const PageCableResistance = lazy(() => import('./pages/PageCableResistance.jsx').then(m => ({ default: m.PageCableResistance })))
+const PageTRSizing = lazy(() => import('./pages/PageTRSizing.jsx').then(m => ({ default: m.PageTRSizing })))
+const PageValidation = lazy(() => import('./pages/PageValidation.jsx').then(m => ({ default: m.PageValidation })))
+const PageOptimizer = lazy(() => import('./pages/PageOptimizer.jsx').then(m => ({ default: m.PageOptimizer })))
+const PageBOM = lazy(() => import('./pages/PageBOM.jsx').then(m => ({ default: m.PageBOM })))
+const PageReport = lazy(() => import('./pages/PageReport.jsx').then(m => ({ default: m.PageReport })))
+const PageImport = lazy(() => import('./pages/PageImport.jsx').then(m => ({ default: m.PageImport })))
+const PageAttenuation = lazy(() => import('./pages/PageAttenuation.jsx').then(m => ({ default: m.PageAttenuation })))
+const PageWorkspace = lazy(() => import('./pages/PageWorkspace.jsx').then(m => ({ default: m.PageWorkspace })))
+const PageTank = lazy(() => import('./pages/PageTank.jsx').then(m => ({ default: m.PageTank })))
+const PageVessel = lazy(() => import('./pages/PageVessel.jsx').then(m => ({ default: m.PageVessel })))
+const PageHistory = lazy(() => import('./pages/PageHistory.jsx').then(m => ({ default: m.PageHistory })))
+const PageCompliance = lazy(() => import('./pages/PageCompliance.jsx').then(m => ({ default: m.PageCompliance })))
+const PageSensitivity = lazy(() => import('./pages/PageSensitivity.jsx').then(m => ({ default: m.PageSensitivity })))
+const PageLogs = lazy(() => import('./pages/PageLogs.jsx').then(m => ({ default: m.PageLogs })))
+const PageKnowledge = lazy(() => import('./pages/PageKnowledge.jsx').then(m => ({ default: m.PageKnowledge })))
+
+const PageDashboard = lazy(() => import('./pages/PageDashboard.jsx'))
+const SettingsPage = lazy(() => import('./pages/SettingsPage.jsx'))
+const UserManagementPage = lazy(() => import('./pages/UserManagementPage.jsx'))
+
+function PageSkeleton() {
+  return (
+    <div className="page-skeleton" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+      <div style={{ height: '32px', width: '250px', background: 'var(--surface-hover)', borderRadius: 'var(--radius)', opacity: 0.6, animation: 'pulse 1.5s infinite' }} />
+      <div style={{ display: 'flex', gap: '16px' }}>
+        <div style={{ height: '120px', flex: 1, background: 'var(--surface-hover)', borderRadius: 'var(--radius)', opacity: 0.6, animation: 'pulse 1.5s infinite' }} />
+        <div style={{ height: '120px', flex: 1, background: 'var(--surface-hover)', borderRadius: 'var(--radius)', opacity: 0.6, animation: 'pulse 1.5s infinite' }} />
+        <div style={{ height: '120px', flex: 1, background: 'var(--surface-hover)', borderRadius: 'var(--radius)', opacity: 0.6, animation: 'pulse 1.5s infinite' }} />
+      </div>
+      <div style={{ height: '300px', width: '100%', background: 'var(--surface-hover)', borderRadius: 'var(--radius)', opacity: 0.6, animation: 'pulse 1.5s infinite' }} />
+    </div>
+  )
+}
 
 class ErrorBoundary extends Component {
   constructor(props) {
@@ -154,10 +172,12 @@ function AppShell() {
       <div className="portal-shell">
         <main className="portal-content">
           <ErrorBoundary>
-            <Routes>
-              <Route path="/workspace" element={<PageWorkspace />} />
-              <Route path="*" element={<Navigate to="/workspace" replace />} />
-            </Routes>
+            <Suspense fallback={<PageSkeleton />}>
+              <Routes>
+                <Route path="/workspace" element={<PageWorkspace />} />
+                <Route path="*" element={<Navigate to="/workspace" replace />} />
+              </Routes>
+            </Suspense>
           </ErrorBoundary>
         </main>
         <SessionTimeoutDialog
@@ -194,40 +214,43 @@ function AppShell() {
         )}
         <main className="page-content">
           <ErrorBoundary>
-            <Routes>
-              <Route path="/" element={
-                activeWorkspace === 'tank' ? <Navigate to="/tank" replace /> :
-                activeWorkspace === 'vessel' ? <Navigate to="/vessel" replace /> :
-                <Navigate to="/dashboard" replace />
-              } />
-              <Route path="/dashboard" element={<PageDashboard />} />
-              <Route path="/project" element={<RoleRoute requiredRole="engineer"><PageProjectSetup /></RoleRoute>} />
-              <Route path="/pipeline" element={<RoleRoute requiredRole="engineer"><PagePipeline /></RoleRoute>} />
-              <Route path="/resistivity" element={<RoleRoute requiredRole="engineer"><PageSoilResistivity /></RoleRoute>} />
-              <Route path="/current" element={<RoleRoute requiredRole="engineer"><PageCurrentRequirement /></RoleRoute>} />
-              <Route path="/groundbed" element={<RoleRoute requiredRole="engineer"><PageGroundbed /></RoleRoute>} />
-              <Route path="/cable" element={<RoleRoute requiredRole="engineer"><PageCableResistance /></RoleRoute>} />
-              <Route path="/tr" element={<RoleRoute requiredRole="engineer"><PageTRSizing /></RoleRoute>} />
-              <Route path="/validation" element={<PageValidation />} />
-              <Route path="/optimizer" element={<RoleRoute requiredRole="engineer"><PageOptimizer /></RoleRoute>} />
-              <Route path="/sensitivity" element={<RoleRoute requiredRole="engineer"><PageSensitivity /></RoleRoute>} />
-              <Route path="/bom" element={<RoleRoute requiredRole="engineer"><PageBOM /></RoleRoute>} />
-              <Route path="/report" element={<PageReport />} />
-              <Route path="/history" element={<PageHistory />} />
-              <Route path="/logs" element={<PageLogs />} />
-              <Route path="/compliance" element={<PageCompliance />} />
-              <Route path="/import" element={<RoleRoute requiredRole="engineer"><PageImport /></RoleRoute>} />
-              <Route path="/attenuation" element={<RoleRoute requiredRole="engineer"><PageAttenuation /></RoleRoute>} />
-              <Route path="/tank" element={<RoleRoute requiredRole="engineer"><PageTank /></RoleRoute>} />
-              <Route path="/vessel" element={<RoleRoute requiredRole="engineer"><PageVessel /></RoleRoute>} />
-              <Route path="/settings" element={<RoleRoute requiredRole="admin"><SettingsPage /></RoleRoute>} />
-              <Route path="/users" element={<RoleRoute requiredRole="admin"><UserManagementPage /></RoleRoute>} />
-              <Route path="*" element={
-                activeWorkspace === 'tank' ? <Navigate to="/tank" replace /> :
-                activeWorkspace === 'vessel' ? <Navigate to="/vessel" replace /> :
-                <Navigate to="/dashboard" replace />
-              } />
-            </Routes>
+            <Suspense fallback={<PageSkeleton />}>
+              <Routes>
+                <Route path="/" element={
+                  activeWorkspace === 'tank' ? <Navigate to="/tank" replace /> :
+                  activeWorkspace === 'vessel' ? <Navigate to="/vessel" replace /> :
+                  <Navigate to="/dashboard" replace />
+                } />
+                <Route path="/dashboard" element={<PageDashboard />} />
+                <Route path="/project" element={<RoleRoute requiredRole="engineer"><PageProjectSetup /></RoleRoute>} />
+                <Route path="/pipeline" element={<RoleRoute requiredRole="engineer"><PagePipeline /></RoleRoute>} />
+                <Route path="/resistivity" element={<RoleRoute requiredRole="engineer"><PageSoilResistivity /></RoleRoute>} />
+                <Route path="/current" element={<RoleRoute requiredRole="engineer"><PageCurrentRequirement /></RoleRoute>} />
+                <Route path="/groundbed" element={<RoleRoute requiredRole="engineer"><PageGroundbed /></RoleRoute>} />
+                <Route path="/cable" element={<RoleRoute requiredRole="engineer"><PageCableResistance /></RoleRoute>} />
+                <Route path="/tr" element={<RoleRoute requiredRole="engineer"><PageTRSizing /></RoleRoute>} />
+                <Route path="/validation" element={<PageValidation />} />
+                <Route path="/optimizer" element={<RoleRoute requiredRole="engineer"><PageOptimizer /></RoleRoute>} />
+                <Route path="/sensitivity" element={<RoleRoute requiredRole="engineer"><PageSensitivity /></RoleRoute>} />
+                <Route path="/bom" element={<RoleRoute requiredRole="engineer"><PageBOM /></RoleRoute>} />
+                <Route path="/report" element={<PageReport />} />
+                <Route path="/history" element={<PageHistory />} />
+                <Route path="/logs" element={<PageLogs />} />
+                <Route path="/compliance" element={<PageCompliance />} />
+                <Route path="/knowledge" element={<PageKnowledge />} />
+                <Route path="/import" element={<RoleRoute requiredRole="engineer"><PageImport /></RoleRoute>} />
+                <Route path="/attenuation" element={<RoleRoute requiredRole="engineer"><PageAttenuation /></RoleRoute>} />
+                <Route path="/tank" element={<RoleRoute requiredRole="engineer"><PageTank /></RoleRoute>} />
+                <Route path="/vessel" element={<RoleRoute requiredRole="engineer"><PageVessel /></RoleRoute>} />
+                <Route path="/settings" element={<RoleRoute requiredRole="admin"><SettingsPage /></RoleRoute>} />
+                <Route path="/users" element={<RoleRoute requiredRole="admin"><UserManagementPage /></RoleRoute>} />
+                <Route path="*" element={
+                  activeWorkspace === 'tank' ? <Navigate to="/tank" replace /> :
+                  activeWorkspace === 'vessel' ? <Navigate to="/vessel" replace /> :
+                  <Navigate to="/dashboard" replace />
+                } />
+              </Routes>
+            </Suspense>
           </ErrorBoundary>
         </main>
       </div>
@@ -243,24 +266,27 @@ function AppShell() {
 export default function App() {
   return (
     <MotionConfig reducedMotion="user">
-      <Routes>
-        {/* Public routes — no sidebar/topbar */}
-        <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
-        <Route path="/forgot-password" element={<PublicRoute><ForgotPasswordPage /></PublicRoute>} />
-        <Route path="/register" element={<PublicRoute><RegisterPage /></PublicRoute>} />
+      <Suspense fallback={<div className="loading-screen" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', background: 'var(--bg-primary)' }}>Loading...</div>}>
+        <Routes>
+          {/* Public routes — no sidebar/topbar */}
+          <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
+          <Route path="/forgot-password" element={<PublicRoute><ForgotPasswordPage /></PublicRoute>} />
+          <Route path="/register" element={<PublicRoute><RegisterPage /></PublicRoute>} />
 
-        {/* Protected routes — full app shell */}
-        <Route
-          path="/*"
-          element={
-            <ProtectedRoute>
-              <AppShell />
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
+          {/* Protected routes — full app shell */}
+          <Route
+            path="/*"
+            element={
+              <ProtectedRoute>
+                <AppShell />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </Suspense>
       <ConfirmDialogHost />
       <SaveIndicator />
+      <OfflineStatusBar />
     </MotionConfig>
   )
 }

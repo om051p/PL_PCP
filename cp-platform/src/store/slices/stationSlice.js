@@ -1,4 +1,4 @@
-import { v4 as uuid } from 'uuid'
+import { newId } from '../../utils/id.js'
 import { makeDefaultStation } from '../factories.js'
 
 export const createStationSlice = (set, get) => ({
@@ -18,6 +18,7 @@ export const createStationSlice = (set, get) => ({
       proj.stations.push(newStation)
       state.activeStationId = newStation.id
       proj.updatedAt = new Date().toISOString()
+      state.attenuationDirty = true
     }),
 
   removeStation: (stationId) =>
@@ -30,6 +31,7 @@ export const createStationSlice = (set, get) => ({
         state.activeStationId = proj.stations[0].id
       }
       proj.updatedAt = new Date().toISOString()
+      state.attenuationDirty = true
     }),
 
   updateStation: (stationId, updater) =>
@@ -47,6 +49,9 @@ export const createStationSlice = (set, get) => ({
       station.lastCalcResult = null
       station.status = station.status === 'draft' ? 'draft' : 'input_complete'
       proj.updatedAt = new Date().toISOString()
+      // M7 hardening: any TR / groundbed / pipeline edit invalidates the
+      // cached attenuation result. Page will display "recalculation required".
+      state.attenuationDirty = true
     }),
 
   updateSegment: (stationId, segmentId, fields) =>
@@ -60,6 +65,7 @@ export const createStationSlice = (set, get) => ({
       Object.assign(seg, fields)
       station.lastCalcResult = null
       proj.updatedAt = new Date().toISOString()
+      state.attenuationDirty = true
     }),
 
   addSegment: (stationId) =>
@@ -71,7 +77,7 @@ export const createStationSlice = (set, get) => ({
       const segCount = station.pipelineSegments.length
       const lastSeg = station.pipelineSegments[segCount - 1]
       const newSeg = {
-        id: uuid(),
+        id: newId(),
         name: `Segment-${segCount + 1}`,
         od: lastSeg?.od ?? 48,
         wallThk: lastSeg?.wallThk ?? 0.875,
@@ -84,6 +90,7 @@ export const createStationSlice = (set, get) => ({
       station.pipelineSegments.push(newSeg)
       station.lastCalcResult = null
       proj.updatedAt = new Date().toISOString()
+      state.attenuationDirty = true
     }),
 
   removeSegment: (stationId, segmentId) =>
@@ -96,5 +103,6 @@ export const createStationSlice = (set, get) => ({
       station.pipelineSegments = station.pipelineSegments.filter((s) => s.id !== segmentId)
       station.lastCalcResult = null
       proj.updatedAt = new Date().toISOString()
+      state.attenuationDirty = true
     }),
 })

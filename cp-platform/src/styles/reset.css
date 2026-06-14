@@ -1,0 +1,55 @@
+/* RESET.CSS */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+html,
+body,
+#root {
+  height: 100%;
+  overflow: hidden;
+}
+body {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--text-primary);
+  background: var(--surface);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'cv01', 'cv02', 'cv03', 'cv04';
+  font-optical-sizing: auto;
+  text-rendering: optimizeLegibility;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+.sidebar,
+.section-card,
+.section-card-header,
+.topbar,
+.field-input,
+.field-unit,
+.stat-card,
+.station-tabs,
+.station-row-num,
+.alt-card,
+.alt-stat,
+.formula-box,
+.calc-preview,
+.workflow-step-dot,
+.info-box,
+.check-row,
+.dialog,
+.dialog-overlay,
+.standard-badge,
+.validation-errors-banner {
+  transition: background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+.app-shell {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+

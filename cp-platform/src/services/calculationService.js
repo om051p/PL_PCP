@@ -12,6 +12,8 @@ import { generateAlternatives } from '../engine/optimizer/optimizer.js'
 import { generateBOM } from '../engine/rules/bomEngine.js'
 import { validateStation } from '../engine/modules/validation.js'
 import { getActiveStandard } from '../constants/index.js'
+import { captureInputAudit } from '../engine/trace/inputAuditEngine.js'
+import { buildTraceRecord } from '../engine/trace/calculationTraceEngine.js'
 
 /**
  * Run the full calculation pipeline for a station.
@@ -40,6 +42,9 @@ export function runFullCalculation(station, project) {
     return { success: false, validationErrors: validation.errors }
   }
 
+  // 1b. Capture input audit snapshot BEFORE calculations
+  const inputAudit = captureInputAudit(station, project)
+
   // 2. Resolve active standard
   const activeStandard = getActiveStandard(project)
 
@@ -62,6 +67,9 @@ export function runFullCalculation(station, project) {
   result.insights = insights
   result.allChecksPassed = allPassed
   result.bom = bom
+
+  // 7. Enrich with calculation trace
+  result.trace = buildTraceRecord(station, project, result, inputAudit)
 
   return {
     success: true,

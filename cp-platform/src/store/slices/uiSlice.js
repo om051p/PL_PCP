@@ -27,7 +27,9 @@ export const createUiSlice = (set, get) => ({
       state.ui.theme = theme
       try {
         localStorageApi.setItem('cp-designer-theme', theme)
-      } catch (_) {}
+      } catch (_) {
+        // ignore storage errors
+      }
     }),
 
   toggleTheme: () =>
@@ -36,7 +38,9 @@ export const createUiSlice = (set, get) => ({
       state.ui.theme = nextTheme
       try {
         localStorageApi.setItem('cp-designer-theme', nextTheme)
-      } catch (_) {}
+      } catch (_) {
+        // ignore storage errors
+      }
     }),
 
   setActiveWorkspace: (workspace) =>

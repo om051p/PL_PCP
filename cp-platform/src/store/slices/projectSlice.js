@@ -1,4 +1,4 @@
-import { v4 as uuid } from 'uuid'
+import { newId } from '../../utils/id.js'
 import { makeDefaultProject } from '../factories.js'
 import { useAuthStore } from '../authStore.js'
 
@@ -10,7 +10,7 @@ export function logActivityHelper(proj, action, moduleName, details) {
   const userEmail = user?.email || user?.displayName || 'Engineer'
   
   proj.activityLog.push({
-    id: uuid(),
+    id: newId(),
     timestamp: new Date().toISOString(),
     user: userEmail,
     action,
@@ -76,7 +76,7 @@ export const createProjectSlice = (set, get) => ({
       if (!source) return
       const now = new Date().toISOString()
       const duplicate = JSON.parse(JSON.stringify(source))
-      duplicate.id = uuid()
+      duplicate.id = newId()
       duplicate.projectNumber = `${source.projectNumber} (Copy)`
       duplicate.projectName = `${source.projectName} — Copy`
       duplicate.createdAt = now
@@ -88,7 +88,7 @@ export const createProjectSlice = (set, get) => ({
       
       // Give stations new IDs
       duplicate.stations.forEach((st) => {
-        st.id = uuid()
+        st.id = newId()
         st.lastCalcResult = null
         st.insights = []
         st.alternatives = []

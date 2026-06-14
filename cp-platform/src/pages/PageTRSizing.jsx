@@ -21,15 +21,35 @@ import { CalculationBreakdown } from '../components/CalculationBreakdown.jsx'
 import { FormulaDrawer } from '../components/FormulaDrawer.jsx'
 import { getActiveStandard, THRESHOLDS } from '../constants/index.js'
 import { Cpu, BarChart3, AlertTriangle } from 'lucide-react'
+import { TracePanel } from '../components/TracePanel.jsx'
+import { analyze } from '../engine/engineeringAdvisor/recommendationEngine.js'
+import { useMemo } from 'react'
 
 export function PageTRSizing() {
   const station = useProjectStore((s) => s.getActiveStation())
   const updateStation = useProjectStore((s) => s.updateStation)
   const calculateStation = useProjectStore((s) => s.calculateStation)
   const project = useProjectStore((s) => s.getProject())
+  const r = station?.lastCalcResult
+  const tr = station?.tr
+
+  const combinedInput = useMemo(() => {
+    if (!station || !r) return {}
+    return {
+      ...station,
+      ...r,
+      targetDesignLifeYears: project?.designBasis?.systemDesignLifeYears || 25,
+      sacrificialAnodeCount: station.proposedAnodes,
+      calculatedAnodeCount: station.proposedAnodes,
+    }
+  }, [station, r, project])
+
+  const recommendations = useMemo(() => {
+    if (!station || !r) return []
+    return analyze(combinedInput).recommendations
+  }, [combinedInput, station, r])
+
   if (!station) return null
-  const r = station.lastCalcResult
-  const tr = station.tr
 
   const std = getActiveStandard(project)
   const ts = std?.trSizing || {}
@@ -272,6 +292,12 @@ export function PageTRSizing() {
           )}
         </SectionCard>
       </Grid2>
+
+      {r && (
+        <div style={{ marginTop: 20 }}>
+          <TracePanel station={station} recommendations={recommendations} />
+        </div>
+      )}
     </div>
   )
 }

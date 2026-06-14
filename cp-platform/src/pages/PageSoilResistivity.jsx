@@ -36,6 +36,7 @@ import { useProjectStore } from '../store/projectStore.js'
 import { SectionCard, Grid2, FieldInput, SelectField, ResultRow } from '../components/ui.jsx'
 import { StandardBadge } from '../components/ui.jsx'
 import { Layers as LayersIcon, FlaskConical, Activity, ClipboardCheck, Table2, BarChart3, LineChart as LineChartIcon, Sigma, GitBranch, Clipboard, Upload, Droplets, Thermometer, CheckCircle2, AlertTriangle } from 'lucide-react'
+import { RightSideEngineeringPanel, SoilColumnVisualization, CorrosivityGauge, SoilImpactPanel, SurveyQualityScore } from '../visualizations/index.js'
 
 const SOURCE_LABELS = {
   standard: 'Standard default',
@@ -396,6 +397,24 @@ export function PageSoilResistivity() {
         <StandardBadge project={project} />
       </div>
 
+      <RightSideEngineeringPanel
+        panelTitle="Soil Intelligence"
+        panel={
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+            <SoilColumnVisualization
+              layers={(layers || []).map((l, i) => ({
+                depthM: l.depthFromM || 0,
+                thicknessM: (l.depthToM || 0) - (l.depthFromM || 0),
+                resistivityOhmCm: l.resistivityOhmCm || 0,
+                material: l.material || `Layer ${i + 1}`,
+              }))}
+            />
+            <CorrosivityGauge resistivityOhmCm={designRho} />
+            <SoilImpactPanel resistivityOhmCm={designRho} />
+            <SurveyQualityScore surveyData={survey} layers={layers} />
+          </div>
+        }
+      >
       <div className="enterprise-2col">
         {/* Left: Input Configuration */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -563,6 +582,7 @@ export function PageSoilResistivity() {
           </SectionCard>
         </div>
       </div>
+      </RightSideEngineeringPanel>
 
       {/* Bottom: Dependency Map */}
       <SectionCard title="Engineering Traceability" icon={GitBranch}>

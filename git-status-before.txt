@@ -1,0 +1,110 @@
+D  cp-platform/debug_page.js
+ M cp-platform/index.html
+ M cp-platform/src/App.jsx
+ M cp-platform/src/components/AuthBanner.jsx
+ M cp-platform/src/components/AuthPageShell.jsx
+ M cp-platform/src/components/AuthPageShell.test.jsx
+ M cp-platform/src/components/ConfirmDialog.jsx
+ M cp-platform/src/components/EngineeringAdvisorPanel.jsx
+ M cp-platform/src/components/PasswordInput.jsx
+ M cp-platform/src/components/SaveIndicator.jsx
+ M cp-platform/src/components/Toast.jsx
+ M cp-platform/src/components/layout.jsx
+ M cp-platform/src/engine/engineeringAdvisor/costReductionRules.js
+ M cp-platform/src/engine/engineeringAdvisor/engineeringAdvisorEngine.js
+ M cp-platform/src/engine/engineeringAdvisor/recommendationEngine.js
+ M cp-platform/src/engine/modules/standardsValidationEngine.js
+ M cp-platform/src/engine/modules/validation.js
+ M cp-platform/src/index.css
+ M cp-platform/src/main.jsx
+ M cp-platform/src/pages/AttenuationPage.jsx
+ M cp-platform/src/pages/ForgotPasswordPage.jsx
+ M cp-platform/src/pages/LoginPage.jsx
+ M cp-platform/src/pages/PageCableResistance.jsx
+ M cp-platform/src/pages/PageCompliance.jsx
+ M cp-platform/src/pages/PageCurrentRequirement.jsx
+ M cp-platform/src/pages/PageDashboard.jsx
+ M cp-platform/src/pages/PageGroundbed.jsx
+ M cp-platform/src/pages/PageLogs.jsx
+ M cp-platform/src/pages/PagePipeline.jsx
+ M cp-platform/src/pages/PageSensitivity.jsx
+ M cp-platform/src/pages/PageSoilResistivity.jsx
+ M cp-platform/src/pages/PageTRSizing.jsx
+ M cp-platform/src/pages/RegisterPage.jsx
+ M cp-platform/src/services/calculationService.js
+ M cp-platform/src/store/factories.js
+ M cp-platform/src/store/projectStore.js
+ M cp-platform/src/store/slices/attenuationSlice.js
+ M cp-platform/src/store/slices/calculationSlice.js
+ M cp-platform/src/store/slices/projectSlice.js
+ M cp-platform/src/store/slices/stationSlice.js
+ M cp-platform/src/store/slices/uiSlice.js
+ M cp-platform/src/store/slices/workflowSlice.js
+ M cp-platform/src/visualizations/AttenuationExplorer.jsx
+ M cp-platform/src/visualizations/KPITrendWidget.jsx
+ M cp-platform/src/visualizations/ProtectionHeatMap.jsx
+ M cp-platform/src/visualizations/index.js
+ D resistivityEngine.js
+ D resistivityEngine.test.js
+?? .gitnexus_home/
+?? .kilo/plans/REPOSITORY_BASELINE.md
+?? .kilo/plans/REPOSITORY_CLEANUP_PLAN.md
+?? .kilo/plans/phase-6-7-8-decision-platform.md
+?? .kilo/plans/saas-upgrade-roadmap.md
+?? .mimocode/
+?? RELEASE_NOTES_2.1.md
+?? cp-platform/ATTENUATION_STABILITY_REPORT.md
+?? cp-platform/CSS_REFACTOR_REPORT.md
+?? cp-platform/DASHBOARD_REPORT.md
+?? cp-platform/DIGITAL_TWIN_FOUNDATION.md
+?? cp-platform/OFFLINE_ARCHITECTURE.md
+?? cp-platform/PLATFORM_ROADMAP_COMPLETION_REPORT.md
+?? cp-platform/SAES_COMPLIANCE_GAP_REPORT.md
+?? cp-platform/SCENARIO_ANALYSIS_REPORT.md
+?? cp-platform/STORE_SPLIT_REPORT.md
+?? cp-platform/TECH_DEBT_REPORT.md
+?? cp-platform/TRACEABILITY_REPORT.md
+?? cp-platform/VISUALIZATION_REPORT.md
+?? cp-platform/scripts/split-css.mjs
+?? cp-platform/src/components/OfflineStatusBar.jsx
+?? cp-platform/src/components/ScenarioAnalysisPanel.jsx
+?? cp-platform/src/components/TracePanel.jsx
+?? cp-platform/src/components/__tests__/
+?? cp-platform/src/digitalTwin/
+?? cp-platform/src/engine/engineeringAdvisor/newAdvisorRules.js
+?? cp-platform/src/engine/engineeringAdvisor/newAdvisorRules.test.js
+?? cp-platform/src/engine/modules/criticalKPs.js
+?? cp-platform/src/engine/modules/standardsValidationEngine.test.js
+?? cp-platform/src/engine/modules/stationSpacing.js
+?? cp-platform/src/engine/scenarios/
+?? cp-platform/src/engine/trace/
+?? cp-platform/src/hooks/__tests__/
+?? cp-platform/src/hooks/useOfflineStatus.js
+?? cp-platform/src/knowledge/
+?? cp-platform/src/offline/
+?? cp-platform/src/pages/PageKnowledge.jsx
+?? cp-platform/src/store/attenuationStore.test.js
+?? cp-platform/src/store/scenarioStore.test.js
+?? cp-platform/src/store/slices/scenarioSlice.js
+?? cp-platform/src/styles/
+?? cp-platform/src/sync/
+?? cp-platform/src/utils/
+?? cp-platform/src/visualizations/CableContributionChart.jsx
+?? cp-platform/src/visualizations/CableHeatMap.jsx
+?? cp-platform/src/visualizations/CableOptimizationPanel.jsx
+?? cp-platform/src/visualizations/CableWaterfallChart.jsx
+?? cp-platform/src/visualizations/CorrosivityGauge.jsx
+?? cp-platform/src/visualizations/CriticalKPDetector.jsx
+?? cp-platform/src/visualizations/GroundbedGaugeRow.jsx
+?? cp-platform/src/visualizations/GroundbedOptimizationPanel.jsx
+?? cp-platform/src/visualizations/PipelineRouteMap.jsx
+?? cp-platform/src/visualizations/PipelineTimeline.jsx
+?? cp-platform/src/visualizations/ProjectStatusDashboard.jsx
+?? cp-platform/src/visualizations/SensitivitySliders.jsx
+?? cp-platform/src/visualizations/SoilColumnVisualization.jsx
+?? cp-platform/src/visualizations/SoilImpactPanel.jsx
+?? cp-platform/src/visualizations/StationSpacingRecommendation.jsx
+?? cp-platform/src/visualizations/SurveyQualityScore.jsx
+?? cp-platform/src/visualizations/TROperatingPointChart.jsx
+?? cp-platform/src/visualizations/shared/
+?? git-status-before.txt

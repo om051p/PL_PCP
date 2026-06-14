@@ -260,6 +260,164 @@ export const STANDARDS_RULES = [
       }
     },
   },
+  {
+    id: 'SAES-400-Table5-CD',
+    standard: 'SAES-X-400 Table 5',
+    module: 'Groundbed Design',
+    description: 'MMO anode current density shall not exceed SAES limits (7 A/m² fresh water, 35 A/m² salt water)',
+    severity: 'CRITICAL',
+    autoValidatable: true,
+    evaluate: (station, _project) => {
+      const anode = ANODE_SPECS[station.anodeSpec?.id] || station.anodeSpec
+      if (!anode || anode.type !== 'MMO') return null
+      const numAnodes = station.proposedAnodes
+      if (!numAnodes || numAnodes <= 0) return null
+      const currentPerAnode = station.tr.ratedCurrent / numAnodes
+      const area = Math.PI * (anode.diameterM || 0.025) * (anode.lengthM || 1.0)
+      const cd = currentPerAnode / area
+      const limit = anode.maxCurrentDensity || 35.0
+      const pass = cd <= limit
+      return {
+        pass,
+        message: pass
+          ? `MMO anode current density ${cd.toFixed(2)} A/m² ≤ limit ${limit} A/m² ✓`
+          : `MMO anode current density ${cd.toFixed(2)} A/m² exceeds SAES limit ${limit} A/m² ✗`,
+        detail: { currentPerAnode, area, cd, limit },
+      }
+    },
+  },
+  {
+    id: 'SAES-600-5.2.5-COMM-VOLT',
+    standard: 'SAES-X-600 §5.2.5',
+    module: 'TR Sizing',
+    description: 'Commissioning target current shall be achieved at 30%-70% of TR rated voltage',
+    severity: 'HIGH',
+    autoValidatable: true,
+    evaluate: (station, _project) => {
+      const r = station.lastCalcResult
+      if (!r) return null
+      const minTRVoltage = r.minTRVoltage
+      const ratedVoltage = station.tr.ratedVoltage
+      if (!ratedVoltage) return null
+      const ratio = minTRVoltage / ratedVoltage
+      const pass = ratio >= 0.3 && ratio <= 0.7
+      return {
+        pass,
+        message: pass
+          ? `Required voltage ratio ${Math.round(ratio * 100)}% falls within 30%-70% commissioning range ✓`
+          : `Required voltage ratio ${Math.round(ratio * 100)}% falls outside 30%-70% commissioning range ✗`,
+        detail: { minTRVoltage, ratedVoltage, ratio },
+      }
+    },
+  },
+  {
+    id: 'SAES-600-5.2.5-OP-MARGIN',
+    standard: 'SAES-X-600 §5.2.5',
+    module: 'TR Sizing',
+    description: 'TR normal operating voltage shall have >10% voltage adjustment remaining',
+    severity: 'HIGH',
+    autoValidatable: true,
+    evaluate: (station, _project) => {
+      const r = station.lastCalcResult
+      if (!r) return null
+      const minTRVoltage = r.minTRVoltage
+      const ratedVoltage = station.tr.ratedVoltage
+      if (!ratedVoltage) return null
+      const margin = (ratedVoltage - minTRVoltage) / ratedVoltage
+      const pass = margin >= 0.10
+      return {
+        pass,
+        message: pass
+          ? `TR operating voltage margin ${(margin * 100).toFixed(1)}% ≥ 10% required ✓`
+          : `TR operating voltage margin ${(margin * 100).toFixed(1)}% < 10% required ✗`,
+        detail: { minTRVoltage, ratedVoltage, margin },
+      }
+    },
+  },
+  {
+    id: 'SAES-700-6.1.1-SHARED',
+    standard: 'SAES-X-700 §6.1.1',
+    module: 'Validation',
+    description: 'Shared well casings are prohibited except for solar power source with multiple wells',
+    severity: 'CRITICAL',
+    autoValidatable: true,
+    evaluate: (station, _project) => {
+      const isShared = station.wellCasingShared || station.tr?.wellCasingShared || false
+      const isSolar = station.powerSourceType === 'solar' || station.tr?.powerSourceType === 'solar' || false
+      const pass = !isShared || isSolar
+      return {
+        pass,
+        message: pass
+          ? `Shared well casing: ${isShared ? 'Yes (Solar allowed)' : 'No'} ✓`
+          : `Shared well casing detected on non-solar power source ✗ (prohibited per SAES-X-700 §6.1.1)`,
+        detail: { isShared, isSolar },
+      }
+    },
+  },
+  {
+    id: 'SAES-700-6.5.4-DIST',
+    standard: 'SAES-X-700 §6.5.4/5',
+    module: 'Groundbed Design',
+    description: 'Anode bed separation distance must be ≥150m for ≥25A or ≥75m for <25A discharge current',
+    severity: 'HIGH',
+    autoValidatable: true,
+    evaluate: (station, _project) => {
+      const r = station.lastCalcResult
+      if (!r) return null
+      const current = station.tr.ratedCurrent
+      const actual = station.actualRemotenesM || r.actualRemotenesM
+      if (!actual) return null
+      const limit = current >= 25 ? 150 : 75
+      const pass = actual >= limit
+      return {
+        pass,
+        message: pass
+          ? `Anode bed remoteness ${actual}m ≥ required ${limit}m for ${current}A discharge ✓`
+          : `Anode bed remoteness ${actual}m < required ${limit}m for ${current}A discharge ✗`,
+        detail: { current, actual, limit },
+      }
+    },
+  },
+  {
+    id: 'SAES-600-5.1.2.4-RMU',
+    standard: 'SAES-X-600 §5.1.2.4',
+    module: 'Validation',
+    description: 'Remote Monitoring Unit (RMU) is mandatory for new CP systems',
+    severity: 'HIGH',
+    autoValidatable: true,
+    evaluate: (station, _project) => {
+      const hasRMU = station.hasRMU || station.tr?.hasRMU || false
+      const pass = hasRMU === true
+      return {
+        pass,
+        message: pass
+          ? `Remote Monitoring Unit (RMU) is configured ✓`
+          : `Remote Monitoring Unit (RMU) is required but not configured ✗`,
+        detail: { hasRMU },
+      }
+    },
+  },
+  {
+    id: 'SAES-600-5.2.7-HAZ',
+    standard: 'SAES-X-600 §5.2.7',
+    module: 'TR Sizing',
+    description: 'Transformer-Rectifier type must comply with hazardous area cooling requirements (oil-immersed in hazardous area)',
+    severity: 'HIGH',
+    autoValidatable: true,
+    evaluate: (station, _project) => {
+      const hazClass = station.hazardousAreaClass || station.tr?.hazardousAreaClass || 'non_hazardous'
+      const cooling = station.tr?.coolingType || 'air_cooled'
+      if (hazClass === 'non_hazardous') return { pass: true, message: 'Non-hazardous area: no special cooling required ✓', detail: {} }
+      const pass = cooling === 'oil_immersed'
+      return {
+        pass,
+        message: pass
+          ? `Oil-immersed TR configured for hazardous area (${hazClass}) ✓`
+          : `Air-cooled TR configured for hazardous area (${hazClass}). Oil-immersed TR is required ✗`,
+        detail: { hazClass, cooling },
+      }
+    },
+  },
 ]
 
 // ─── Rule Evaluator ──────────────────────────────────────────────────────────

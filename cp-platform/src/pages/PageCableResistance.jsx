@@ -20,9 +20,16 @@ import {
   CableWidgets,
   StatusList,
   InsightList,
+  RightSideEngineeringPanel,
+  CableHeatMap,
+  CableContributionChart,
+  CableOptimizationPanel,
 } from '../visualizations/index.js'
 import { describeCableSegments, classifyCircuitMargin } from '../visualizations/cableVoltage.js'
 import { Cable, BarChart3 } from 'lucide-react'
+import { TracePanel } from '../components/TracePanel.jsx'
+import { analyze } from '../engine/engineeringAdvisor/recommendationEngine.js'
+import { useMemo } from 'react'
 
 function CableDiagnosticsInline({ station }) {
   const r = station?.lastCalcResult
@@ -79,11 +86,28 @@ export function PageCableResistance() {
   const station = useProjectStore((s) => s.getActiveStation())
   const updateStation = useProjectStore((s) => s.updateStation)
   const project = useProjectStore((s) => s.getProject())
-  if (!station) return null
-  const r = station.lastCalcResult
-  const cb = station.cables
-  const N = station.proposedAnodes
+  const r = station?.lastCalcResult
+  const cb = station?.cables
+  const N = station?.proposedAnodes
   const std = getActiveStandard(project)
+
+  const combinedInput = useMemo(() => {
+    if (!station || !r) return {}
+    return {
+      ...station,
+      ...r,
+      targetDesignLifeYears: project?.designBasis?.systemDesignLifeYears || 25,
+      sacrificialAnodeCount: station.proposedAnodes,
+      calculatedAnodeCount: station.proposedAnodes,
+    }
+  }, [station, r, project])
+
+  const recommendations = useMemo(() => {
+    if (!station || !r) return []
+    return analyze(combinedInput).recommendations
+  }, [combinedInput, station, r])
+
+  if (!station) return null
 
   // Cable resistance formulas
   const parallelResFormula = 'R_ac = 1 / Σ(1 / (L_i × r))'
@@ -155,23 +179,36 @@ export function PageCableResistance() {
         <StandardBadge project={project} />
       </div>
 
-      {/* Top: Large Cable Network Visualization */}
-      <div className="viz-fullwidth" style={{ marginBottom: 10 }}>
-        <div className="viz-fullwidth__header">
-          <span className="viz-fullwidth__title">
-            <Cable size={14} /> Cable Network
-          </span>
-          <span style={{ fontSize: 11, color: 'var(--text-tertiary)' }}>
-            {N} anode{N !== 1 ? 's' : ''} · {station.name}
-          </span>
+      {/* Main visualization with side panel */}
+      <RightSideEngineeringPanel
+        panelTitle="Cable Intelligence"
+        panel={
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+            <CableDiagnosticsInline station={station} />
+            <CableInsightsInline station={station} />
+            <CableHeatMap station={station} />
+            <CableContributionChart station={station} />
+            <CableOptimizationPanel station={station} />
+          </div>
+        }
+      >
+        {/* Cable Network Visualization */}
+        <div className="viz-fullwidth" style={{ marginBottom: 10 }}>
+          <div className="viz-fullwidth__header">
+            <span className="viz-fullwidth__title">
+              <Cable size={14} /> Cable Network
+            </span>
+            <span style={{ fontSize: 11, color: 'var(--text-tertiary)' }}>
+              {N} anode{N !== 1 ? 's' : ''} · {station.name}
+            </span>
+          </div>
+          <div className="viz-fullwidth__body" style={{ minHeight: 380, padding: 8 }}>
+            <CableNetworkVisualizer station={station} />
+          </div>
         </div>
-        <div className="viz-fullwidth__body" style={{ minHeight: 380, padding: 8 }}>
-          <CableNetworkVisualizer station={station} />
-        </div>
-      </div>
 
-      {/* Bottom: KPIs + Diagnostics side by side */}
-      <div className="enterprise-2col">
+        {/* Bottom: KPIs + Diagnostics side by side */}
+        <div className="enterprise-2col">
         {/* Left: Circuit details */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
           <SectionCard title="Anode Tail Cables — Positive Circuit" icon={Cable}>
@@ -331,8 +368,6 @@ export function PageCableResistance() {
 
         {/* Right: Diagnostics, Health, Insights */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-          <CableDiagnosticsInline station={station} />
-          <CableInsightsInline station={station} />
           {r && (
             <section className="viz-side-section" style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', padding: 12 }}>
               <h3 className="viz-side-section-title">Compact KPIs</h3>
@@ -341,6 +376,13 @@ export function PageCableResistance() {
           )}
         </div>
       </div>
+      </RightSideEngineeringPanel>
+
+      {r && (
+        <div style={{ marginTop: 20 }}>
+          <TracePanel station={station} recommendations={recommendations} />
+        </div>
+      )}
     </div>
   )
 }

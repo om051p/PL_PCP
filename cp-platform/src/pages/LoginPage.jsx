@@ -83,13 +83,12 @@ export function LoginPage() {
     try {
       await login(email, password)
       // Persist remember-me preference
-      try { localStorage.setItem('raxa.rememberMe', String(remember)) } catch {}
+      try { localStorage.setItem('raxa.rememberMe', String(remember)) } catch (e) { /* ignore storage error */ }
       // 2FA check happens via the state flag (set by login()).
       // We use a microtask to ensure the flag has been set.
       setTimeout(() => {
         if (useAuthStore.getState().requiresTwoFactor) {
           setPendingEmail(email)
-          setTwoFactorMethod(useAuthStore.getState().twoFactorMethod || 'authenticator')
           setPhase('2fa')
           toast.info('Verification needed', 'Check your authenticator app')
         } else {

@@ -1,4 +1,4 @@
-import { v4 as uuid } from 'uuid'
+import { newId } from '../utils/id.js'
 import { ANODE_SPECS } from '../constants/index.js'
 
 /**
@@ -50,7 +50,7 @@ export function defaultLearningV2Flag(createdAt) {
 }
 
 export function makeDefaultStation(overrides = {}) {
-  const id = uuid()
+  const id = newId()
   return {
     id,
     name: 'ICCP Station-1',
@@ -58,7 +58,7 @@ export function makeDefaultStation(overrides = {}) {
     designMode: 'deepwell',
     pipelineSegments: [
       {
-        id: uuid(),
+        id: newId(),
         name: '48" Gas Sales Pipeline',
         od: 48,
         wallThk: 0.875,
@@ -113,7 +113,7 @@ export function makeDefaultStation(overrides = {}) {
 export function makeDefaultProject(overrides = {}) {
   const now = new Date().toISOString()
   return {
-    id: uuid(),
+    id: newId(),
     projectNumber: 'ECP25-0292',
     clientName: 'Client Name',
     endClient: '-',
@@ -168,6 +168,7 @@ export function makeDefaultProject(overrides = {}) {
     dashboardV3Enabled: defaultDashboardV3Flag(now),
     intelligenceV2Enabled: defaultIntelligenceV2Flag(now),
     learningV2Enabled: defaultLearningV2Flag(now),
+    scenarios: [],
     ...overrides,
   }
 }

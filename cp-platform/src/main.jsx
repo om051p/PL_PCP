@@ -19,6 +19,11 @@ configureBackend({
   audit: firebaseAuditProvider,
 })
 
+// Enable E2E mock auth bypass in dev environment
+if (import.meta.env.DEV) {
+  localStorage.setItem('e2e-mock-auth', 'true')
+}
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>

@@ -1,9 +1,8 @@
 /**
- * RegisterPage.jsx
+ * RegisterPage.jsx — M13 Redesign
  *
- * Refactored to use shared AuthLayout + AuthBanner + PasswordInput.
- * Adds: password strength meter, password match indicator, terms checkbox,
- * email format validation, toast notifications, back link.
+ * Migrated from AuthLayout → AuthPageShell (glassmorphism + animated mesh).
+ * Adds premium dark-mode form with segmented password strength bar.
  */
 
 import { useState, useEffect, useRef } from 'react'
@@ -12,16 +11,22 @@ import { Mail, AlertCircle, Loader2, UserPlus, CheckCircle, ShieldCheck } from '
 import { useAuthStore } from '../store/authStore.js'
 import { useRateLimit } from '../hooks/useRateLimit.js'
 import { AUTH_ALLOWED_DOMAINS } from '../config/authPolicy.js'
-import { AuthLayout } from '../components/AuthLayout.jsx'
+import { AuthPageShell } from '../components/AuthPageShell.jsx'
 import { AuthBanner, parseAuthMessage } from '../components/AuthBanner.jsx'
-import { PasswordInput } from '../components/PasswordInput.jsx'
+import { PasswordInput, computePasswordStrength } from '../components/PasswordInput.jsx'
 import { useToast } from '../components/Toast.jsx'
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
+const STRENGTH_META = [
+  { label: 'Weak',   cls: 'weak'   },
+  { label: 'Fair',   cls: 'fair'   },
+  { label: 'Good',   cls: 'good'   },
+  { label: 'Strong', cls: 'strong' },
+]
+
 export function RegisterPage() {
   const navigate = useNavigate()
-  const location = useLocation()
   const { register, loading, error, clearError } = useAuthStore()
   const toast = useToast()
   const emailRef = useRef(null)
@@ -91,14 +96,18 @@ export function RegisterPage() {
 
   const displayError = localError || error
   const banner = parseAuthMessage(displayError)
+  const strength = computePasswordStrength(password)
+
+  // Map score 0-4 → 0-3 (4 segments: Weak/Fair/Good/Strong)
+  const strengthIdx = strength.score === 0 ? -1 : Math.min(strength.score - 1, 3)
 
   return (
-    <AuthLayout
+    <AuthPageShell
       title="Create Account"
-      subtitle="RAXA · Join your engineering team"
-      headerIcon={<UserPlus size={32} className="auth-icon" />}
-      brandingVariant="register"
-      showBackLink
+      subtitle="Join your engineering team on RAXA"
+      heroTitle={"Join the\nplatform."}
+      heroBody="Register for access to the RAXA CP Engineering Platform. New accounts are subject to administrator approval."
+      testId="auth-register"
       backTo="/login"
       backLabel="Back to Sign In"
     >
@@ -129,13 +138,14 @@ export function RegisterPage() {
             New accounts are subject to administrator approval. You'll receive an email once your access is granted.
           </p>
 
+          {/* Email */}
           <div className="form-group">
-            <label className="field-label" htmlFor="email">Email</label>
+            <label className="field-label" htmlFor="reg-email">Email</label>
             <div className="input-wrapper">
               <Mail size={18} className="input-icon" aria-hidden="true" />
               <input
                 ref={emailRef}
-                id="email"
+                id="reg-email"
                 type="email"
                 className="field-input"
                 value={email}
@@ -149,8 +159,9 @@ export function RegisterPage() {
             </div>
           </div>
 
+          {/* Password + strength bar */}
           <PasswordInput
-            id="password"
+            id="reg-password"
             label="Password"
             value={password}
             onChange={setPassword}
@@ -160,8 +171,37 @@ export function RegisterPage() {
             testId="register-password"
           />
 
+          {/* Premium segmented strength bar */}
+          {password.length > 0 && (
+            <div style={{ marginTop: -8 }}>
+              <div className="password-strength-bar" role="presentation" aria-hidden="true">
+                {[0, 1, 2, 3].map((i) => (
+                  <div
+                    key={i}
+                    className={`password-strength-bar__segment ${
+                      i <= strengthIdx
+                        ? `password-strength-bar__segment--active-${
+                            strengthIdx === 0 ? 'weak'
+                            : strengthIdx === 1 ? 'fair'
+                            : strengthIdx === 2 ? 'good'
+                            : 'strong'
+                          }`
+                        : ''
+                    }`}
+                  />
+                ))}
+              </div>
+              {strengthIdx >= 0 && (
+                <div className={`password-strength-label password-strength-label--${STRENGTH_META[strengthIdx]?.cls}`}>
+                  {STRENGTH_META[strengthIdx]?.label}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Confirm password */}
           <PasswordInput
-            id="confirm-password"
+            id="reg-confirm"
             label="Confirm Password"
             value={confirmPassword}
             onChange={setConfirmPassword}
@@ -172,6 +212,7 @@ export function RegisterPage() {
             testId="register-confirm"
           />
 
+          {/* Terms */}
           <label className="auth-form__checkbox">
             <input
               type="checkbox"
@@ -180,12 +221,13 @@ export function RegisterPage() {
               disabled={loading}
               data-testid="accept-terms"
             />
-            <ShieldCheck size={14} style={{ color: 'var(--brand-mid)' }} aria-hidden="true" />
+            <ShieldCheck size={14} style={{ color: 'rgba(45,106,159,0.8)', flexShrink: 0 }} aria-hidden="true" />
             <span>
               I accept the <a href="#terms" target="_blank" rel="noopener noreferrer">Terms of Service</a> and <a href="#privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
             </span>
           </label>
 
+          {/* Submit */}
           <button
             type="submit"
             className="btn btn-primary auth-submit"
@@ -206,6 +248,6 @@ export function RegisterPage() {
       <div className="auth-footer">
         <p>IKK Group accounts only · {AUTH_ALLOWED_DOMAINS.length > 0 ? AUTH_ALLOWED_DOMAINS.join(', ') : 'Contact admin'}</p>
       </div>
-    </AuthLayout>
+    </AuthPageShell>
   )
 }

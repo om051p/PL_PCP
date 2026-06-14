@@ -1,16 +1,15 @@
 /**
- * ForgotPasswordPage.jsx
+ * ForgotPasswordPage.jsx — M13 Redesign
  *
- * Refactored to use shared AuthLayout + AuthBanner + parseAuthMessage.
- * Adds: email format validation, toast notifications, back link via layout.
+ * Migrated from AuthLayout → AuthPageShell (glassmorphism + animated mesh).
  */
 
 import { useState, useEffect, useRef } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
-import { Mail, AlertCircle, Loader2, KeyRound, Send, CheckCircle } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+import { Mail, AlertCircle, Loader2, Send, CheckCircle } from 'lucide-react'
 import { useAuthStore } from '../store/authStore.js'
 import { useRateLimit } from '../hooks/useRateLimit.js'
-import { AuthLayout } from '../components/AuthLayout.jsx'
+import { AuthPageShell } from '../components/AuthPageShell.jsx'
 import { AuthBanner, parseAuthMessage } from '../components/AuthBanner.jsx'
 import { useToast } from '../components/Toast.jsx'
 
@@ -26,7 +25,11 @@ export function ForgotPasswordPage() {
   const [localError, setLocalError] = useState('')
   const [success, setSuccess] = useState(false)
 
-  const { isRateLimited, recordAttempt, cooldownRemaining } = useRateLimit({ maxAttempts: 3, windowMs: 10 * 60 * 1000, cooldownMs: 120 * 1000 })
+  const { isRateLimited, recordAttempt, cooldownRemaining } = useRateLimit({
+    maxAttempts: 3,
+    windowMs: 10 * 60 * 1000,
+    cooldownMs: 120 * 1000,
+  })
 
   useEffect(() => {
     clearError()
@@ -71,12 +74,12 @@ export function ForgotPasswordPage() {
   const banner = parseAuthMessage(displayError)
 
   return (
-    <AuthLayout
+    <AuthPageShell
       title="Reset Password"
-      subtitle="RAXA · Secure Account Recovery"
-      headerIcon={<KeyRound size={32} className="auth-icon" />}
-      brandingVariant="reset"
-      showBackLink
+      subtitle="We'll send a secure recovery link to your email"
+      heroTitle={"Secure\nrecovery."}
+      heroBody="Enter your email address and we'll send you a link to securely reset your password."
+      testId="auth-forgot"
       backTo="/login"
       backLabel="Back to Sign In"
     >
@@ -104,16 +107,16 @@ export function ForgotPasswordPage() {
       ) : (
         <form onSubmit={handleSubmit} className="auth-form" noValidate>
           <p className="auth-form-description">
-            Enter your email address and we'll send you a secure link to reset your password.
+            Enter your registered email address and we'll send you a secure link to reset your password.
           </p>
 
           <div className="form-group">
-            <label className="field-label" htmlFor="email">Email</label>
+            <label className="field-label" htmlFor="forgot-email">Email</label>
             <div className="input-wrapper">
               <Mail size={18} className="input-icon" aria-hidden="true" />
               <input
                 ref={emailRef}
-                id="email"
+                id="forgot-email"
                 type="email"
                 className="field-input"
                 value={email}
@@ -143,6 +146,6 @@ export function ForgotPasswordPage() {
           </button>
         </form>
       )}
-    </AuthLayout>
+    </AuthPageShell>
   )
 }

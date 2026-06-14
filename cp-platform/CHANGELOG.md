@@ -1,5 +1,56 @@
 # Changelog
 
+## [2.2.0] — 2026-06-14
+
+### M7 — Attenuation hardening (no formula changes)
+
+**Attenuation is now a pure downstream consumer of actual project assets.** No synthetic stations, no default TRs, no default groundbeds. No page crashes on missing data. Stale-data detection on upstream changes.
+
+**Added**
+- `src/services/attenuationInputBuilder.js` — pure function deriving `AttenuationInput` from `project.stations` / TR / groundbed / pipeline segments / designBasis. Returns `{ input, validation: { isReady, reasons, guidance } }`. 36 unit tests.
+- `src/services/attenuationStateMachine.js` — `EMPTY \| INCOMPLETE \| READY \| CALCULATED \| STALE \| ERROR` state machine. 8 unit tests.
+- 8 new validation reasons: `NO_PROJECT, NO_STATIONS, NO_PIPELINE, NO_TR, NO_GROUNDBED, MISSING_STATION_CHAINAGE, MISSING_SOIL_RESISTIVITY, MISSING_TR_VOLTAGE`. Each maps to an engineering guidance message + "Go to …" deep link.
+
+**Changed**
+- `src/pages/AttenuationPage.jsx` — removed `DEFAULT_INPUT` and synthetic stations. Renders state-machine-driven UI. `EmptyStateCard` with "Go to TR Sizing" / "Go to Project Setup" / "Go to Soil Resistivity" / "Go to Groundbed Sizing" actions. "Attenuation requires recalculation" banner on `STALE`. Defensive `?.` everywhere.
+- `src/services/attenuationService.js` — preflight structural validation. Wraps engine in try/catch. Never throws. Returns engineering messages.
+- `src/store/slices/attenuationSlice.js` — adds `attenuationState`, `attenuationGuidance`, `markAttenuationStale()`. State machine state mirrored in the store.
+- `src/store/slices/stationSlice.js` — `addStation`, `removeStation`, `updateStation`, `addSegment`, `removeSegment`, `updateSegment` all set `attenuationDirty = true`.
+- `src/visualizations/AttenuationExplorer.jsx` — defensive `Array.isArray(stations)`, `Number.isFinite(currentA)` guard in `buildScenarioInput`.
+- `src/visualizations/CriticalKPDetector.jsx` — defensive `Array.isArray(profile)`, `Number.isFinite` formatting, hooks always run before early return.
+- `src/visualizations/StationSpacingRecommendation.jsx` — defensive `Number.isFinite` formatting, safe array iteration.
+
+**Tests**
+- 44 new unit tests (36 builder + 8 state machine).
+- Total: 1218 tests pass, 16 skipped, 1 pre-existing Firebase-emulator test fails (env, not code).
+- All 27 pre-existing `attenuationStore` tests pass — full backward compatibility.
+- ESLint: 0 errors, 10 pre-existing warnings.
+
+**Behaviour**
+- 1 station / 1 TR / 1 groundbed → attenuation uses exactly those assets.
+- 3 of each → uses exactly those three.
+- Delete TR / station / groundbed → `INCOMPLETE` with engineering guidance, no crash.
+- Edit TR / groundbed / pipeline / soil ρ / cable → `STALE` banner.
+- Missing chainage / soil ρ / TR voltage → `INCOMPLETE` with the specific guidance.
+
+### Documentation — Architecture Audit
+
+Seven new deliverables at the repository root. **No code changes** — these are the contract for future refactors.
+
+| File | Size | Purpose |
+|---|---|---|
+| `MODULE_DEPENDENCY_MATRIX.md` | 34 KB | Per-module inputs/outputs/deps/forbidden ops/hardcoded values. |
+| `ENGINEERING_DATAFLOW_MAP.md` | 25 KB | Persistence tiers, live-action flows, consumer→producer table, mermaid. |
+| `BROKEN_LINK_ANALYSIS.md` | 26 KB | 30 broken links (BL-01..BL-30), 16 single-source violations (HV-01..HV-16). |
+| `STALE_DATA_ANALYSIS.md` | 20 KB | Per-module staleness detection. 8 walk-throughs. `dataVersion` design. |
+| `MODULE_VALIDATION_DESIGN.md` | 21 KB | Per-page `Validate Data` button spec for 13 modules. |
+| `DASHBOARD_RECOMMENDATIONS.md` | 9 KB | Project-management-only Dashboard scope. 15 components to move out. |
+| `REPORT_SYNC_AUDIT.md` | 16 KB | 17 findings on Excel/PDF report sync. Engineering-content reachability matrix. |
+
+See `RELEASE_NOTES_2.2.md` for the full release notes.
+
+---
+
 ## [2.0.0] — 2026-06-13
 
 ### Fixed (BREAKING — formula audit)

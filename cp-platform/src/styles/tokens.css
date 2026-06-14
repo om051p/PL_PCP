@@ -1,0 +1,180 @@
+/* TOKENS.CSS — M14 Brand Refresh */
+/* Design System: RAXA CP Engineering Platform */
+
+:root {
+  /* ── Typography ──────────────────────────────────────────── */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* ── Brand Palette (HSL) ─────────────────────────────────── */
+  /* Core brand: deep navy → ocean blue spectrum */
+  --brand-hue: 214;
+  --brand:        hsl(214, 55%, 24%);   /* #1e3d62 — deep navy */
+  --brand-mid:    hsl(211, 54%, 40%);   /* #2c6aa0 — ocean blue */
+  --brand-bright: hsl(209, 68%, 52%);   /* #2e88d4 — vivid blue */
+  --brand-light:  hsl(212, 50%, 95%);   /* #e8f2fb — pale blue tint */
+
+  /* Accent: rich amber-gold (ICCP engineering feel) */
+  --accent:       hsl(36, 88%, 40%);    /* #c67e0b — warm gold */
+  --accent-mid:   hsl(36, 88%, 52%);    /* #e59a1a — mid gold */
+  --accent-light: hsl(36, 85%, 94%);    /* #fdf4e1 — pale gold */
+
+  /* ── Semantic Colors ─────────────────────────────────────── */
+  --pass:         hsl(152, 68%, 35%);   /* #19a364 — emerald */
+  --pass-bg:      hsl(152, 55%, 94%);   /* #e6f7ee */
+  --fail:         hsl(0,   70%, 54%);   /* #e03535 — clear red */
+  --fail-bg:      hsl(0,   72%, 96%);   /* #fef0f0 */
+  --warn:         hsl(38,  90%, 48%);   /* #e89f0a — amber */
+  --warn-bg:      hsl(46,  90%, 94%);   /* #fef8e6 */
+  --info:         hsl(217, 84%, 52%);   /* #2563eb — vivid blue */
+  --info-bg:      hsl(217, 85%, 96%);   /* #eff3ff */
+
+  /* ── Neutrals (light mode) ───────────────────────────────── */
+  --text-primary:   hsl(222, 20%, 10%);   /* #111827 */
+  --text-secondary: hsl(220, 10%, 36%);   /* #4b5563 */
+  --text-tertiary:  hsl(218,  9%, 58%);   /* #8a9299 */
+  --border:         hsl(216, 16%, 90%);   /* #e2e6eb */
+  --border-strong:  hsl(215, 13%, 83%);   /* #cfd5dc */
+  --surface:        hsl(220, 20%, 97%);   /* #f6f8fb */
+  --surface-hover:  hsl(218, 17%, 94%);   /* #eff1f5 */
+  --card:           hsl(0, 0%, 100%);     /* #ffffff */
+  --background:     hsl(220, 20%, 97%);
+
+  /* ── Border Radius ───────────────────────────────────────── */
+  --radius-xs: 3px;
+  --radius-sm: 5px;
+  --radius:    8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 24px;
+
+  /* ── Elevation / Shadows ─────────────────────────────────── */
+  --shadow-xs: 0 1px 2px hsl(220 14% 10% / 0.04);
+  --shadow-sm: 0 1px 3px hsl(220 14% 10% / 0.06), 0 1px 2px hsl(220 14% 10% / 0.04);
+  --shadow:    0 2px 6px hsl(220 14% 10% / 0.08), 0 1px 3px hsl(220 14% 10% / 0.05);
+  --shadow-md: 0 4px 12px hsl(220 14% 10% / 0.08), 0 2px 5px hsl(220 14% 10% / 0.05);
+  --shadow-lg: 0 10px 28px hsl(220 14% 10% / 0.10), 0 4px 10px hsl(220 14% 10% / 0.06);
+  --shadow-xl: 0 20px 56px hsl(220 14% 10% / 0.14), 0 8px 22px hsl(220 14% 10% / 0.08);
+
+  /* ── Layout Dims ─────────────────────────────────────────── */
+  --sidebar-w: 224px;
+  --sidebar-collapsed-w: 52px;
+  --topbar-h: 56px;
+
+  /* ── Spacing Scale ───────────────────────────────────────── */
+  --space-xs:  4px;
+  --space-sm:  8px;
+  --space-md: 12px;
+  --space-lg: 16px;
+  --space-xl: 20px;
+  --space-2xl: 24px;
+  --space-3xl: 32px;
+
+  /* ── Glass / Blur Panels ─────────────────────────────────── */
+  --glass-bg:     rgba(255, 255, 255, 0.75);
+  --glass-border: rgba(0, 0, 0, 0.07);
+  --glass-blur:   14px;
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+
+  /* ── Gradients ───────────────────────────────────────────── */
+  --gradient-brand: linear-gradient(135deg, hsl(214, 55%, 20%) 0%, hsl(211, 56%, 38%) 100%);
+  --gradient-brand-vivid: linear-gradient(135deg, hsl(211, 54%, 36%) 0%, hsl(209, 68%, 52%) 100%);
+  --gradient-dark:  linear-gradient(135deg, hsl(222, 30%, 8%) 0%, hsl(218, 22%, 15%) 100%);
+  --gradient-gold:  linear-gradient(135deg, hsl(36, 88%, 38%) 0%, hsl(36, 88%, 54%) 100%);
+  --gradient-surface: linear-gradient(180deg, hsl(0, 0%, 100%) 0%, hsl(220, 20%, 97%) 100%);
+
+  /* ── Animation Tokens ────────────────────────────────────── */
+  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-in:     cubic-bezier(0.4, 0, 1, 1);
+  --ease-out:    cubic-bezier(0, 0, 0.2, 1);
+  --dur-fast:   100ms;
+  --dur-base:   160ms;
+  --dur-slow:   260ms;
+  --dur-enter:  220ms;
+}
+
+/* ── Dark Mode ──────────────────────────────────────────────── */
+.dark {
+  --background:     hsl(222, 28%, 7%);    /* #0d1117 */
+  --surface:        hsl(220, 20%, 10%);   /* #141720 */
+  --surface-hover:  hsl(218, 18%, 14%);   /* #1d2230 */
+  --card:           hsl(220, 18%, 12%);   /* #181d27 */
+  --text-primary:   hsl(215, 20%, 96%);   /* #f0f4fa */
+  --text-secondary: hsl(215, 15%, 72%);   /* #b0bac6 */
+  --text-tertiary:  hsl(216, 10%, 50%);   /* #757d88 */
+  --border:         hsl(218, 15%, 20%);   /* #28303f */
+  --border-strong:  hsl(216, 14%, 28%);   /* #393f4d */
+  --brand-light:    hsl(218, 28%, 16%);   /* dark brand tint */
+  --glass-bg:       rgba(18, 22, 32, 0.82);
+  --glass-border:   rgba(255, 255, 255, 0.07);
+  --glass-shadow:   0 8px 32px rgba(0, 0, 0, 0.45);
+  --gradient-brand: linear-gradient(135deg, hsl(214, 55%, 22%) 0%, hsl(211, 56%, 40%) 100%);
+  --gradient-dark:  linear-gradient(135deg, hsl(222, 28%, 5%) 0%, hsl(218, 22%, 10%) 100%);
+  --shadow-xs: 0 1px 2px hsl(0 0% 0% / 0.30);
+  --shadow-sm: 0 1px 3px hsl(0 0% 0% / 0.40), 0 1px 2px hsl(0 0% 0% / 0.30);
+  --shadow:    0 2px 8px hsl(0 0% 0% / 0.50), 0 1px 3px hsl(0 0% 0% / 0.35);
+  --shadow-md: 0 4px 16px hsl(0 0% 0% / 0.55), 0 2px 6px hsl(0 0% 0% / 0.40);
+  --shadow-lg: 0 10px 32px hsl(0 0% 0% / 0.60), 0 4px 12px hsl(0 0% 0% / 0.50);
+  --shadow-xl: 0 20px 60px hsl(0 0% 0% / 0.70), 0 8px 24px hsl(0 0% 0% / 0.60);
+  --accent-light: hsl(36, 45%, 14%);
+  --info-bg:   hsl(217, 60%, 16%);
+  --pass-bg:   hsl(152, 50%, 11%);
+  --fail-bg:   hsl(0,   55%, 13%);
+  --warn-bg:   hsl(38,  60%, 12%);
+}
+
+/* ── Scoped dark mode overrides ─────────────────────────────── */
+.dark .field-input:focus {
+  box-shadow: 0 0 0 3px hsl(209 68% 52% / 0.28);
+}
+
+.dark .status-badge--draft {
+  background: hsl(220, 14%, 18%);
+  color: hsl(216, 10%, 60%);
+}
+.dark .status-badge--input-complete {
+  background: hsl(217, 50%, 18%);
+  color: hsl(214, 80%, 72%);
+}
+.dark .status-badge--calculated {
+  background: hsl(270, 40%, 18%);
+  color: hsl(270, 65%, 78%);
+}
+.dark .status-badge--engineering-review {
+  background: hsl(36, 50%, 16%);
+  color: hsl(40, 80%, 68%);
+}
+.dark .status-badge--issued-for-construction {
+  background: hsl(162, 50%, 12%);
+  color: hsl(160, 60%, 60%);
+}
+
+.dark .dialog {
+  box-shadow: 0 20px 60px hsl(0 0% 0% / 0.65);
+}
+.dark .standard-badge {
+  border-color: hsl(211, 54%, 40% / 0.18);
+}
+
+/* Scrollbar — dark mode */
+.dark .page-content::-webkit-scrollbar-track { background: transparent; }
+.dark .page-content::-webkit-scrollbar-thumb { background: hsl(218, 15%, 30%); }
+.dark .page-content::-webkit-scrollbar-thumb:hover { background: hsl(218, 14%, 40%); }
+
+.dark .alt-card--selected {
+  background: hsl(214, 40%, 14%);
+  border-color: var(--brand-mid);
+}
+
+/* BOM tags — dark mode */
+.dark .tag-anode    { background: hsl(0,   55%, 15%); color: hsl(0,   80%, 70%); }
+.dark .tag-cable    { background: hsl(217, 55%, 18%); color: hsl(214, 80%, 72%); }
+.dark .tag-tr       { background: hsl(270, 45%, 18%); color: hsl(270, 65%, 78%); }
+.dark .tag-coke     { background: hsl(36,  55%, 16%); color: hsl(40,  80%, 68%); }
+.dark .tag-backfill { background: hsl(200, 55%, 16%); color: hsl(198, 75%, 65%); }
+.dark .tag-other    { background: hsl(220, 14%, 22%); color: hsl(215, 10%, 65%); }

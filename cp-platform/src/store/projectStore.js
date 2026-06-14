@@ -12,6 +12,8 @@ import { createCalculationSlice } from './slices/calculationSlice.js'
 import { createWorkflowSlice } from './slices/workflowSlice.js'
 import { createAttenuationSlice } from './slices/attenuationSlice.js'
 import { createUiSlice } from './slices/uiSlice.js'
+import { createScenarioSlice } from './slices/scenarioSlice.js'
+import { createAssetSlice } from '../digitalTwin/assetSlice.js'
 
 export { makeDefaultStation, makeDefaultProject, defaultDashboardV3Flag, defaultIntelligenceV2Flag, defaultLearningV2Flag }
 
@@ -97,6 +99,10 @@ function migrateLegacyState(state, version) {
     if (p.learningV2Enabled === undefined) {
       p.learningV2Enabled = defaultLearningV2Flag(p.createdAt)
     }
+    // Phase 9-11 migration: add scenarios list.
+    if (!p.scenarios) {
+      p.scenarios = []
+    }
     return p
   })
 
@@ -113,6 +119,8 @@ export const useProjectStore = create(
       ...createWorkflowSlice(set, get),
       ...createAttenuationSlice(set, get),
       ...createUiSlice(set, get),
+      ...createScenarioSlice(set, get),
+      ...createAssetSlice(set, get),
       
       // Override empty projects from slice with default seeded project
       projects: [makeDefaultProject()],

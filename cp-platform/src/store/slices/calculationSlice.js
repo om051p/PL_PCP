@@ -2,6 +2,7 @@ import { runFullCalculation } from '../../services/calculationService.js'
 import { generateStationBOM } from '../../services/bomService.js'
 import { logActivityHelper } from './projectSlice.js'
 import { collectFromCalculation } from '../feedbackCollector.js'
+import { cacheCalculation } from '../../offline/calculationCache.js'
 
 export const createCalculationSlice = (set, get) => ({
   calculateStation: (stationId) => {
@@ -47,6 +48,11 @@ export const createCalculationSlice = (set, get) => ({
         st.insights = calcResult.insights
         st.alternatives = calcResult.alternatives
         st.status = 'calculated'
+
+        // Cache the calculation result asynchronously
+        cacheCalculation(stationId, calcResult.result).catch((err) => {
+          console.warn('[CalculationCache] Failed to cache calculation in IndexedDB:', err.message)
+        })
         
         const allCalc = p.stations.every((s) => s.status === 'calculated')
         if (allCalc) {

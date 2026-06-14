@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 /**
  * EngineeringAdvisorPanel.jsx
  *
@@ -188,6 +189,18 @@ export function EngineeringAdvisorPanel({ project, station, defaultMode = 'summa
   const result = useMemo(() => analyze(input), [input])
   // V2 result: layered engine with new vocabulary + cost-reduction rules
   const resultV2 = useMemo(() => enableV2 ? analyzeV2(input) : null, [enableV2, input])
+
+  // Use V2 result when enabled, otherwise fall back to V1
+  const activeResult = resultV2 || { recommendations: result?.recommendations || [] }
+  const activeRecommendations = activeResult.recommendations || []
+
+  // Log every shown recommendation as PENDING so we can capture user feedback later.
+  // Only runs when there are actual recommendations to log.
+  const feedbackRef = useFeedbackLogging(project, station, activeRecommendations)
+  const acceptFeedback = useRecommendationFeedbackStore((s) => s.acceptFeedback)
+  const overrideFeedback = useRecommendationFeedbackStore((s) => s.overrideFeedback)
+  const addressFeedback = useRecommendationFeedbackStore((s) => s.addressFeedback)
+
   if (!project || !station) {
     return (
       <div className="advisor-panel advisor-panel--empty" data-testid={testId}>
@@ -199,10 +212,6 @@ export function EngineeringAdvisorPanel({ project, station, defaultMode = 'summa
       </div>
     )
   }
-
-  // Use V2 result when enabled, otherwise fall back to V1
-  const activeResult = resultV2 || { recommendations: result.recommendations }
-  const activeRecommendations = activeResult.recommendations
 
   // Treat "all recommendations are SUCCESS" (positive feedback) as all-clear too
   const allSuccess = activeRecommendations.length > 0 &&
@@ -222,13 +231,6 @@ export function EngineeringAdvisorPanel({ project, station, defaultMode = 'summa
       </div>
     )
   }
-
-  // Log every shown recommendation as PENDING so we can capture user feedback later.
-  // Only runs when there are actual recommendations to log.
-  const feedbackRef = useFeedbackLogging(project, station, activeRecommendations)
-  const acceptFeedback = useRecommendationFeedbackStore((s) => s.acceptFeedback)
-  const overrideFeedback = useRecommendationFeedbackStore((s) => s.overrideFeedback)
-  const addressFeedback = useRecommendationFeedbackStore((s) => s.addressFeedback)
 
   function handleAccept(recId) {
     const recordId = feedbackRef.current[recId]

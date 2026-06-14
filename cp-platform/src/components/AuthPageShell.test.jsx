@@ -36,8 +36,11 @@ describe('<AuthPageShell />', () => {
 
   it('renders the hero panel with default copy', () => {
     render(<AuthPageShell title="X"><div /></AuthPageShell>)
-    expect(screen.getByText(/Engineering, calculated/)).toBeInTheDocument()
-    expect(screen.getByText(/NACE SP0169/)).toBeInTheDocument()
+    // Default heroTitle contains 'Engineering' — may match multiple elements
+    const matches = screen.getAllByText(/Engineering/)
+    expect(matches.length).toBeGreaterThan(0)
+    // NACE SP0169 appears in compliance badges
+    expect(screen.getByText('NACE SP0169')).toBeInTheDocument()
   })
 
   it('renders custom hero title and body', () => {
@@ -50,18 +53,14 @@ describe('<AuthPageShell />', () => {
     expect(screen.getByText('Custom body text here.')).toBeInTheDocument()
   })
 
-  it('renders the animated mesh background', () => {
+  it('renders the electric-circuit background', () => {
     const { container } = render(<AuthPageShell title="X"><div /></AuthPageShell>)
-    const mesh = container.querySelector('.auth-mesh')
-    expect(mesh).toBeInTheDocument()
-    const blobs = container.querySelectorAll('.auth-mesh__blob')
-    expect(blobs.length).toBe(3)
-  })
-
-  it('renders the decorative SVGs', () => {
-    const { container } = render(<AuthPageShell title="X"><div /></AuthPageShell>)
-    const decos = container.querySelectorAll('.auth-deco')
-    expect(decos.length).toBe(2)
+    const electricBg = container.querySelector('.electric-bg')
+    expect(electricBg).toBeInTheDocument()
+    const circuitSvg = container.querySelector('.circuit-svg')
+    expect(circuitSvg).toBeInTheDocument()
+    const orbs = container.querySelectorAll('.orb')
+    expect(orbs.length).toBe(3)
   })
 
   it('renders the grid layout with form-pane and hero-pane', () => {
@@ -74,9 +73,9 @@ describe('<AuthPageShell />', () => {
 
   it('renders the hero stats with 3 metrics', () => {
     render(<AuthPageShell title="X"><div /></AuthPageShell>)
-    expect(screen.getByText('7')).toBeInTheDocument() // engineering workspaces
-    expect(screen.getByText('38+')).toBeInTheDocument() // input dependencies
-    expect(screen.getByText('3')).toBeInTheDocument() // live scenarios
+    expect(screen.getByText('12+')).toBeInTheDocument()  // engineering modules
+    expect(screen.getByText('1,175')).toBeInTheDocument() // verified tests
+    expect(screen.getByText('3')).toBeInTheDocument()    // live standards
   })
 
   it('applies a custom testid', () => {

@@ -27,6 +27,7 @@ import {
   Activity,
   Shield,
   ArrowRight,
+  Info,
 } from 'lucide-react'
 import { useProjectStore } from '../store/projectStore.js'
 import { subscribeToActivity } from '../services/activityLogger.js'
@@ -34,6 +35,7 @@ import { analyze } from '../engine/engineeringAdvisor/engineeringAdvisorEngine.j
 import { computeWorkflow, WORKFLOW_STATES } from '../engine/dashboard/workflowEngine.js'
 import { computeAllKPIs } from '../engine/dashboard/projectHealthEngine.js'
 import { nextBestAction } from '../engine/dashboard/dashboardStatusEngine.js'
+import { DigitalTwinSummary } from './DigitalTwinSummary.jsx'
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -231,6 +233,117 @@ function WorkflowProgressPanel({ workflow }) {
   )
 }
 
+const SEVERITY_LABELS = {
+  error: { label: 'HIGH', color: 'var(--fail)' },
+  warn:  { label: 'MEDIUM', color: 'var(--warn)' },
+  info:  { label: 'LOW', color: 'var(--text-tertiary)' },
+  success: { label: 'OK', color: 'var(--pass)' },
+}
+
+const SEVERITY_ICONS = {
+  error: AlertCircle,
+  warn:  AlertTriangle,
+  info:  Info,
+  success: CheckCircle2,
+}
+
+function OpenIssuesList({ recommendations }) {
+  if (!recommendations || recommendations.length === 0) {
+    return (
+      <div
+        className="section-card"
+        style={{
+          marginTop: 12,
+          background: 'var(--card)',
+          border: '1px solid var(--pass)',
+          padding: '12px 14px',
+          borderRadius: 'var(--radius-lg)',
+          boxShadow: 'var(--shadow-sm)',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <CheckCircle2 size={16} style={{ color: 'var(--pass)' }} />
+          <span style={{ fontSize: 13, fontWeight: 600 }}>No open issues</span>
+        </div>
+        <p style={{ fontSize: 12, color: 'var(--text-secondary)', margin: '4px 0 0' }}>
+          All advisor rules pass.
+        </p>
+      </div>
+    )
+  }
+
+  // Group by severity
+  const groups = { error: [], warn: [], info: [], success: [] }
+  recommendations.forEach((r) => {
+    const sev = r.severity || 'info'
+    if (!groups[sev]) groups[sev] = []
+    groups[sev].push(r)
+  })
+
+  return (
+    <div className="section-card" style={{ marginTop: 12 }}>
+      <div className="section-card-header">
+        <span className="section-card-title">
+          <AlertCircle size={14} /> Open Engineering Issues
+        </span>
+        <span style={{ fontSize: 10, color: 'var(--text-tertiary)' }}>
+          {recommendations.length} total
+        </span>
+      </div>
+      <div className="section-card-body" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+        {['error', 'warn', 'info', 'success'].map((sev) => {
+          const items = groups[sev]
+          if (!items || items.length === 0) return null
+          const meta = SEVERITY_LABELS[sev]
+          return (
+            <div key={sev}>
+              <div style={{
+                fontSize: 9,
+                textTransform: 'uppercase',
+                color: meta.color,
+                fontWeight: 600,
+                letterSpacing: '0.04em',
+                marginBottom: 4,
+              }}>
+                {meta.label} ({items.length})
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                {items.map((r) => {
+                  const Icon = SEVERITY_ICONS[sev] || Info
+                  return (
+                    <div
+                      key={r.id || r.title}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'flex-start',
+                        gap: 8,
+                        padding: '6px 8px',
+                        borderRadius: 4,
+                        background: 'var(--surface)',
+                        fontSize: 11,
+                      }}
+                    >
+                      <Icon size={13} style={{ color: meta.color, marginTop: 1, flexShrink: 0 }} />
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{r.title}</div>
+                        {r.message && (
+                          <div style={{ color: 'var(--text-secondary)', marginTop: 2, lineHeight: 1.4 }}>
+                            {r.message}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
 function ActivityFeedPanel({ projectId, stations, filters, onFilterChange }) {
   const [realActivity, setRealActivity] = useState([])
 
@@ -421,7 +534,11 @@ export function DashboardCommandCenter({ project }) {
       <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 12, marginTop: 12 }}>
         <CurrentProjectFocus action={action} onNavigate={navigate} />
         <WorkflowProgressPanel workflow={workflow} />
+        <OpenIssuesList recommendations={advisorRecs} />
       </div>
+
+      {/* Digital Twin Summary */}
+      <DigitalTwinSummary project={project} />
 
       {/* Engineering Activity Feed */}
       <ActivityFeedPanel

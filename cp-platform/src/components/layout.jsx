@@ -36,6 +36,7 @@ import {
   History,
   Sigma,
   ScrollText,
+  BookOpen,
 } from 'lucide-react'
 
 const PIPELINE_NAV_ITEMS = [
@@ -85,6 +86,7 @@ const PIPELINE_NAV_ITEMS = [
     section: 'TOOLS',
     items: [
       { id: 'import', label: 'Import Excel', icon: Upload },
+      { id: 'knowledge', label: 'Knowledge Base', icon: BookOpen },
     ],
   },
   {
@@ -151,6 +153,7 @@ const PAGE_META = {
   bom: { title: 'Bill of Materials', sub: 'Auto-generated material quantities (requires Approved status)' },
   report: { title: 'Engineering Report', sub: 'Consolidated engineering design summary' },
   import: { title: 'Import from Excel', sub: 'Upload PCP.xlsx or RAXA Pipeline/CP Designer export to populate project data' },
+  knowledge: { title: 'Engineering Knowledge Base', sub: 'CP engineering reference: formulas, standards, worked examples, and common mistakes' },
   attenuation: { title: 'Attenuation Analysis', sub: 'Transmission-line cosh model · NACE SP0169 · ISO 15589-1' },
   settings: { title: 'Settings', sub: 'Application settings and configuration' },
   users: { title: 'User Management', sub: 'Manage user access and roles' },
